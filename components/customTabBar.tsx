@@ -1,8 +1,9 @@
-// components/customTabBar.tsx
 import { View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function CustomTabBar({ state, descriptors, navigation }) {
+  return null; // Hide bottom tab bar
+
   return (
     <View
       style={{

@@ -3,12 +3,12 @@ import tw from "tailwind-react-native-classnames";
 import { Link } from "expo-router";
 import { globalStyles, loginStyles } from "../../styles/styles"
 
-export default function Register() {
+export default function Login() {
   return (
     <View style={globalStyles.screen}>
       {/* HEADER */}
       <Text style={globalStyles.title}>WeLearn</Text>
-      <Text style={globalStyles.subtitle}>REGISTER</Text>
+      <Text style={globalStyles.subtitle}>LOGIN</Text>
 
       {/* INPUT FIELD [USERNAME & PASSWORD] */}
       <Text style={globalStyles.label}>Username</Text>
@@ -17,7 +17,7 @@ export default function Register() {
       <TextInput placeholder="Password" style={loginStyles.inputField}/>
 
       <Text style={{fontSize: 60, color: "white"}}>
-        <Link href="/_screens/login">Go to Login</Link>
+        <Link href="/_screens/register">Go to Register</Link>
       </Text>
     </View>
   );

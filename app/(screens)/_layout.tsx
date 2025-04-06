@@ -23,23 +23,26 @@ export default function RootLayout() {
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{
+        headerShown: false
+      }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          tabBarLabel: "Home",
+          tabBarLabel: "Home"
         }}
       />
             <Tabs.Screen
         name="login"
         options={{
-          tabBarLabel: "Login",
+          tabBarLabel: "Login"
         }}
       />
       <Tabs.Screen
         name="register"
         options={{
-          tabBarLabel: "Register",
+          tabBarLabel: "Register"
         }}
       />
     </Tabs>
