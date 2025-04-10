@@ -10,12 +10,11 @@ export default function Index() {
       <Text style={globalStyles.subtitle}>DEBUGGING MENU</Text>
 
       <Text style={{fontSize: 60, color: "white"}}>
-        <Link href="/(screens)/login">Go to Login</Link>
+        <Link href="/login">Login</Link>
       </Text>
       <Text style={{fontSize: 60, color: "white"}}>
-        <Link href="/(screens)/register">Go to Register</Link>
+        <Link href="/signUp">Sign Up</Link>
       </Text>
-
     </View>
   );
 }

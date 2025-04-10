@@ -2,10 +2,11 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 export const colors = {
-    primary: "#5BC82F",
-    secondary: "#2FC850",
-    support: "#8DC837",
-    accent: "#000000",
+    primary: "#1773EA",
+    secondary: "#115CBD",
+    support: "#EA8E17",
+    accent: "#F7F7F7",
     white: "#FFFFFF",
+    black: "#000000",
     gray: "#bfbfbf"
   };
