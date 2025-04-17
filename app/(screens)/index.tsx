@@ -1,11 +1,14 @@
 import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
 import { Link, router } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { globalStyles, loginStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIREBASE
-import { auth } from "../../configurations/firebaseConfig";
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../../configurations/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { getDoc, setDoc, doc } from "firebase/firestore";  // Import Firestore functions
+import { FirebaseError } from "firebase/app";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +17,7 @@ export default function Login() {
   // STATES
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   // HANDLES
   const handlePressSignUpButton = () => {
@@ -22,38 +26,85 @@ export default function Login() {
 
   const pressLoginButton = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password); // You must store email and password in state
+      // Sign in the user with email and password
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
   
-      Alert.alert(
-        "Success!",
-        "Redirecting to the main page...",
-        [
-          {
-            text: "Continue",
-            onPress: () => {
-              router.replace('/dashboard');
+      // Check if the user profile exists in Firestore
+      const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+      if (userProfileDoc.exists()) {
+        const userProfileData = userProfileDoc.data();
+        console.log("Fetched Profile Data:", userProfileData); // Log the fetched profile data
+  
+        // If the profile is incomplete, redirect to setupInformation
+        if (userProfileData.completedInformation === false) {
+          Alert.alert("Setup Required", "Please complete your profile setup.", [
+            {
+              text: "Continue",
+              onPress: () => router.replace('/setupInformation'), // Redirect to setup information
             },
-          },
-        ],
-        { cancelable: false }
-      );
-    } catch (error: any) {
-      console.error("Firebase login error:", error); // Add this for debugging
-    
-      let message = "An error occurred. Please try again.";
-      if (error.code === "auth/user-not-found") {
-        message = "No account found with this email.";
-      } else if (error.code === "auth/wrong-password") {
-        message = "Incorrect password.";
-      } else if (error.code === "auth/invalid-email") {
-        message = "Invalid email format.";
+          ]);
+        } else {
+          // If profile is complete, redirect to the dashboard
+          Alert.alert("Success", "You are logged in!", [
+            { text: "Continue", onPress: () => router.replace('/') }, // Redirect to the dashboard
+          ]);
+        }
+      } else {
+        // Handle the case if profile document does not exist
+        Alert.alert("Error", "An error occurred while fetching your profile information.");
       }
-    
-      Alert.alert("Login Failed", message);
-    }    
+    } catch (error) {
+      console.error("Login Error: ", error); // Log the error to console for debugging
+  
+      if (error instanceof FirebaseError) {
+        // Check for specific error codes and provide user-friendly messages
+        switch (error.code) {
+          case 'auth/invalid-email':
+            Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
+            break;
+          case 'auth/user-not-found':
+            Alert.alert("User Not Found", "No user found with this email. Please check and try again.");
+            break;
+          case 'auth/wrong-password':
+            Alert.alert("Incorrect Password", "The password you entered is incorrect. Please try again.");
+            break;
+          default:
+            Alert.alert("Login Error", "An unknown error occurred. Please try again later.");
+        }
+      } else {
+        Alert.alert("Login Error", "An unexpected error occurred. Please try again later.");
+      }
+    }
   };
 
+    // Check if the user is logged in on app start
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setIsLoading(false); // Stop loading
+        if (user) {
+          // Check user profile and redirect accordingly
+          const userProfileDoc = getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+          userProfileDoc.then((userProfile) => {
+            if (userProfile.exists()) {
+              const userProfileData = userProfile.data();
+              if (userProfileData.completedInformation === false) {
+                router.replace('/setupInformation');
+              } else {
+                router.replace('/');
+              }
+            } else {
+              router.replace('/setupInformation'); // No profile, go to setup
+            }
+          });
+        } else {
+          setIsLoading(false); // If no user, stop loading and stay on login screen
+        }
+      });
+  
+      return unsubscribe; // Cleanup on unmount
+    }, []);
+  
   return (
     <View style={globalStyles.screen}>
       {/* HEADER */}

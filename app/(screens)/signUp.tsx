@@ -11,7 +11,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import * as AuthSession from 'expo-auth-session';
 import { FirebaseError } from "firebase/app";
 // FIRESTORE DATABASE
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../configurations/firebaseConfig";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
@@ -39,45 +39,65 @@ export default function SignUp() {
       await setDoc(doc(db, "users", user.uid), {
         email: email,
         uid: user.uid,
-        courses: [],
         createdAt: new Date().toISOString()
       });
 
       // STUDENT INFORMATION
       await setDoc(doc(db, "users", user.uid, "profile", "studentProfile"), {
         name: name,
-        studentID: "",
+        ID: "",
         course: "",
         department: "",
         email: email,
+        courses: [],
         enrolledSubjects: [""],
         isEnrolled: false,
+        completedInformation: false,
         type: ""
       });
 
-      Alert.alert("Success", "You have signed up!", [
-        { text: "Continue", onPress: () => router.replace('/') },
-      ]);
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        // Check for specific error codes and provide user-friendly messages
-        switch (error.code) {
-          case 'auth/invalid-email':
-            Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
-            break;
-          case 'auth/email-already-in-use':
-            Alert.alert("Email Already in Use", "This email address is already registered. Please log in or use a different email.");
-            break;
-          case 'auth/weak-password':
-            Alert.alert("Weak Password", "Your password must be at least 6 characters long. Please choose a stronger password.");
-            break;
-          default:
-            Alert.alert("Sign Up Error", "An unknown error occurred. Please try again later.");
-        }
+    // Check if completedInformation is false and redirect accordingly
+    const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+    if (userProfileDoc.exists()) {
+      const userProfileData = userProfileDoc.data();
+      if (userProfileData.completedInformation === false) {
+        // If information is not completed, redirect to setupInformation
+        Alert.alert("Setup Required", "Please complete your profile setup.", [
+          {
+            text: "Continue",
+            onPress: () => router.replace('/setupInformation'), // Redirect to setup information
+          },
+        ]);
       } else {
-        Alert.alert("Sign Up Error", "An unexpected error occurred. Please try again later.");
+        // If information is completed, redirect to the main page
+        Alert.alert("Success", "You have signed up!", [
+          { text: "Continue", onPress: () => router.replace('/') },
+        ]);
       }
+    } else {
+      // Handle the case if profile document does not exist
+      Alert.alert("Error", "An error occurred while fetching your profile information.");
     }
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      // Check for specific error codes and provide user-friendly messages
+      switch (error.code) {
+        case 'auth/invalid-email':
+          Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
+          break;
+        case 'auth/email-already-in-use':
+          Alert.alert("Email Already in Use", "This email address is already registered. Please log in or use a different email.");
+          break;
+        case 'auth/weak-password':
+          Alert.alert("Weak Password", "Your password must be at least 6 characters long. Please choose a stronger password.");
+          break;
+        default:
+          Alert.alert("Sign Up Error", "An unknown error occurred. Please try again later.");
+      }
+    } else {
+      Alert.alert("Sign Up Error", "An unexpected error occurred. Please try again later.");
+    }
+  }
   };
 
   // HANDLE: Google Sign-In
@@ -188,6 +208,7 @@ export default function SignUp() {
             style={signUpStyles.inputField}
             value={password}
             onChangeText={setPassword} // Update the name state when the user types
+            secureTextEntry={true}
           />
         </View>
       </View>

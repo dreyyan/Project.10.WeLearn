@@ -5,8 +5,7 @@ import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // FIRESTORE DATABASE
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../configurations/firebaseConfig";
-import { auth } from "../../configurations/firebaseConfig"; // Import Firebase Auth to get the current user
+import { db, auth } from "../../configurations/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';

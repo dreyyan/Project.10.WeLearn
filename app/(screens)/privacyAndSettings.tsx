@@ -43,7 +43,7 @@ export default function privacyAndSettings() {
             size={40}
             color="#FFFFFF"
             onPress={handleBurgerMenu}
-            style={dashboardStyles.burgerMenu}
+            style={burgerMenuStyles.burgerMenu}
             />
         </View>
         

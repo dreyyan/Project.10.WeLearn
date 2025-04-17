@@ -36,9 +36,202 @@ export const globalStyles = StyleSheet.create({
     },
 })
 
+export const setupInformationStyles = StyleSheet.create({
+    formContainer: {
+        height: 300,
+        borderWidth: 1
+    },
+    titleContainer: {
+        backgroundColor: colors.accent,
+        
+        display: "flex",
+
+        height: 80,
+        marginTop: "20%",
+        marginBottom: "10%",
+        paddingHorizontal: "6%",
+        borderRadius: 10,
+    },
+    title: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+        color: colors.primary,
+
+        textAlign: "center"
+    },
+    nextButton: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+
+        width: 300,
+        height: 60,
+
+        marginTop: 20,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+
+        position: "absolute",
+        top: 600,
+        left: 60,
+        zIndex: 1,
+
+        borderRadius: 30,
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    nextButtonLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
+        color: "white",
+    },
+    selectButton: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+
+        width: 160,
+        height: 60,
+
+        marginHorizontal: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 6,
+
+        borderWidth: 2,
+        borderColor: colors.primary,
+        borderRadius: 14,
+    },
+    selectButtonLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+
+        backgroundColor: '#fff',
+
+        marginTop: 40,
+        marginBottom: 16,
+        paddingHorizontal: 10,
+
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 14,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    inputField: {
+        backgroundColor: "white",
+
+        fontFamily: 'Lklavika',
+
+        width: 220,
+        height: 50,
+
+        marginVertical: 2
+    },
+    dropdownMenu: {
+        backgroundColor: colors.white,
+        borderColor: colors.primary,
+        borderWidth: 2,
+
+        marginTop: 30,
+    },
+    dropdownContainer: {
+        borderColor: colors.primary,
+        borderWidth: 2,
+
+        borderRadius: 8,
+        marginTop: 30,
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+    },
+    dropdownText: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 20,
+    },
+    dropdownPlaceholder: {
+        fontFamily: 'Lklavika-Medium',
+        color: colors.primary,
+        fontSize: 20,
+
+        marginLeft: 10,
+    },
+    dropdownLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 20,
+        color: colors.secondary,
+
+        marginTop: 2,
+        marginLeft: 10,
+        lineHeight: 22, // optional: improves multi-line readability
+    },
+    vector: {
+        width: 180,
+        height: 180,
+
+        marginTop: "8%",
+        marginBottom: "4%",
+        alignSelf: 'center',
+    },
+    imageContainer: {
+        display: "flex",
+        flexDirection: "row",
+
+    },
+    screen2ButtonContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+
+        marginTop: 20,
+        height: 80
+    },
+    screen3ButtonContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+
+        height: "10%"
+    },
+})
+
 export const loginStyles = StyleSheet.create({
     formContainer: {
         height: 300
+    },
+    titleContainer: {
+        backgroundColor: colors.accent,
+        
+        display: "flex",
+        alignItems: "center",
+
+        height: 50,
+        marginTop: "20%",
+        marginBottom: "20%",
+        paddingHorizontal: "6%",
+        borderRadius: 10,
+    },
+    title: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+        color: colors.primary,
     },
     inputContainer: {
         flexDirection: 'row',
@@ -111,11 +304,6 @@ export const loginStyles = StyleSheet.create({
         marginTop: "4%",
         marginBottom: "0.5%"
     },
-    title: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 32,
-        color: colors.primary,
-    },
     subtitle: {
         fontFamily: 'Lklavika-Medium',
         fontSize: 20,
@@ -123,18 +311,6 @@ export const loginStyles = StyleSheet.create({
 
         alignSelf: "center",
         fontStyle: "italic"
-    },
-    titleContainer: {
-        backgroundColor: colors.accent,
-        
-        display: "flex",
-        alignItems: "center",
-
-        height: 50,
-        marginTop: "20%",
-        marginBottom: "20%",
-        paddingHorizontal: "6%",
-        borderRadius: 10,
     },
 })
 
