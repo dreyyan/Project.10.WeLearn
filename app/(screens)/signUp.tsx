@@ -35,14 +35,26 @@ export default function SignUp() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
   
-      // Add user to Firestore
+      // STUDENT CREDENTIALS
       await setDoc(doc(db, "users", user.uid), {
-        name: name,
         email: email,
         uid: user.uid,
         courses: [],
         createdAt: new Date().toISOString()
       });
+
+      // STUDENT INFORMATION
+      await setDoc(doc(db, "users", user.uid, "profile", "studentProfile"), {
+        name: name,
+        studentID: "",
+        course: "",
+        department: "",
+        email: email,
+        enrolledSubjects: [""],
+        isEnrolled: false,
+        type: ""
+      });
+
       Alert.alert("Success", "You have signed up!", [
         { text: "Continue", onPress: () => router.replace('/') },
       ]);
@@ -126,16 +138,16 @@ export default function SignUp() {
       <StatusBar backgroundColor="#1773EA" style="light" />
 
       {/* TITLE */}
-      <View style={globalStyles.titleContainer}>
-        <Text style={globalStyles.title}>SIGN UP</Text>
+      <View style={signUpStyles.titleContainer}>
+        <Text style={signUpStyles.title}>Sign Up to WeLearn</Text>
+        <Text style={signUpStyles.subtitle}>"Join us on a journey of learning and growth."'</Text>
       </View>
 
       {/* BACK BUTTON */}
       <TouchableOpacity
         style={signUpStyles.backButton}
         onPress={pressBackButton}
-      >
-        <Text style={signUpStyles.backButtonLabel}>‹</Text>
+      ><Text style={signUpStyles.backButtonLabel}>‹</Text>
       </TouchableOpacity>
 
       {/* INPUT FORM */}
@@ -156,7 +168,7 @@ export default function SignUp() {
         {/* 2. EMAIL */}
         <Text style={signUpStyles.label}>Email</Text>
         <View style={signUpStyles.inputContainer}>
-          <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
+          <Ionicons name="mail-outline" size={20} color={colors.primary} style={globalStyles.icon} />
           <TextInput
             placeholder="example@email.com"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
@@ -169,7 +181,7 @@ export default function SignUp() {
         {/* 3. PASSWORD */}
         <Text style={signUpStyles.label}>Password</Text>
         <View style={signUpStyles.inputContainer}>
-          <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
+          <Ionicons name="lock-closed-outline" size={20} color={colors.primary} style={globalStyles.icon} />
           <TextInput
             placeholder="********"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
@@ -177,22 +189,21 @@ export default function SignUp() {
             value={password}
             onChangeText={setPassword} // Update the name state when the user types
           />
-  
         </View>
+      </View>
 
-        <View style={signUpStyles.buttonContainer}>
-          {/* CONTINUE BUTTON */}
+      <View style={signUpStyles.buttonContainer}>
+          {/* LOGIN BUTTON */}
           <TouchableOpacity
-            style={globalStyles.continueButton}
+            style={signUpStyles.signUpButton}
             onPress={pressSignUpButton}
-          >
-            <Text style={signUpStyles.continueButtonLabel}>SIGN UP</Text>
+          ><Text style={signUpStyles.signUpButtonLabel}>SIGN UP</Text>
           </TouchableOpacity>
 
         </View>
 
         {/* DIVIDER */}
-        <Text style={signUpStyles.textDivider}>or Sign up with</Text>
+        <Text style={signUpStyles.textDivider}> ------------------   or Sign Up with   ------------------ </Text>
 
         {/* SIGNUP BUTTONS */}
         <TouchableOpacity
@@ -205,7 +216,6 @@ export default function SignUp() {
           resizeMode="contain"
         />
         </TouchableOpacity>
-      </View>
     </View>
   );
 }

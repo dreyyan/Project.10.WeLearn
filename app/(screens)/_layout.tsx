@@ -33,12 +33,6 @@ export default function RootLayout() {
           tabBarLabel: "Home"
         }}
       />
-            <Tabs.Screen
-        name="login"
-        options={{
-          tabBarLabel: "Login"
-        }}
-      />
       <Tabs.Screen
         name="signUp"
         options={{

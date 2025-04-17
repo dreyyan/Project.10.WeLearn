@@ -1,21 +1,33 @@
 import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback } from "react-native";
 import { dashboardStyles, burgerMenuStyles, globalStyles } from "../../styles/styles"
-import { Ionicons } from '@expo/vector-icons';
-import * as Clipboard from "expo-clipboard";
-import { Feather } from "@expo/vector-icons";
-import { Modal } from "react-native";
+import { colors } from "@/styles/colors";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // FIRESTORE DATABASE
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../configurations/firebaseConfig";
 import { auth } from "../../configurations/firebaseConfig"; // Import Firebase Auth to get the current user
+import { onAuthStateChanged } from "firebase/auth";
+// LIBRARY COMPONENTS
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
+import { Modal } from "react-native";
+import * as Clipboard from "expo-clipboard";
 
 export default function dashboard() {
+    type StudentInfo = {
+      name: string;
+      studentId: string;
+      department: string;
+      course: string;
+      status: string;
+    };
+
     // STATES
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const [userData, setUserData] = useState<any>(null); // State to store user data
     const [loading, setLoading] = useState(true); // Loading state while fetching data
+    const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
 
     // HANDLES
     const goToStudentProfile = () => {
@@ -43,86 +55,97 @@ export default function dashboard() {
     };
 
     const handleCopy = async () => {
-      await Clipboard.setStringAsync("117591120149");
-    const studentID = "117591120149";
-    };
-
-
-    // Fetch user data from Firestore
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const docRef = doc(db, 'users', user.uid); // Reference to Firestore user document
-        try {
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setUserData(docSnap.data()); // Set user data from Firestore
-          } else {
-            Alert.alert('Error', 'User data not found');
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          Alert.alert('Error', 'An error occurred while fetching data');
-        } finally {
-          setLoading(false); // Stop loading after fetching data
-        }
-      } else {
-        Alert.alert('Error', 'No user is logged in');
-        setLoading(false);
+      if (studentInfo?.studentId) {
+        await Clipboard.setStringAsync(studentInfo.studentId);
+        Alert.alert("Copied!", `Student ID ${studentInfo.studentId} copied to clipboard.`);
       }
     };
-
-    fetchUserData(); // Call the function to fetch user data
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={dashboardStyles.screen}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+    
+    // Fetch user data from Firestore
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const docRef = doc(db, 'users', user.uid);
+          try {
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              setStudentInfo(docSnap.data() as StudentInfo);
+            } else {
+              Alert.alert('Error', 'User data not found');
+            }
+          } catch (error) {
+            console.error('Error fetching user data:', error);
+            Alert.alert('Error', 'An error occurred while fetching data');
+          } finally {
+            setLoading(false);
+          }
+        } else {
+          Alert.alert('Error', 'No user is logged in');
+          setLoading(false);
+        }
+      });
+    
+      return () => unsubscribe(); // Cleanup listener
+    }, []);
 
 
   return (
     <View style={dashboardStyles.screen}>
-        <View style={dashboardStyles.titleContainer}>
-            <Text style={dashboardStyles.title}>WeLearn</Text>
-            <Ionicons
-            name="menu"
-            size={40}
-            color="#FFFFFF"
-            onPress={handleBurgerMenu}
-            style={dashboardStyles.burgerMenu}
-            />
-        </View>
+      {/* HEADER */}
+      <Image
+      source={require("../../assets/images/banner-WeLearn.png")}
+      style={globalStyles.banner}
+      resizeMode="contain"
+      />
+      {/* BURGER MENU ICON */}
+      <View style={burgerMenuStyles.burgerMenuContainer}>
+        <Ionicons
+        name="menu"
+        size={44}
+        color={colors.accent}
+        onPress={handleBurgerMenu}
+        style={burgerMenuStyles.burgerMenu}
+        />
+      </View>
+
+      {/* PERSONALIZATION: Change StatusBar color */}
+      <StatusBar backgroundColor="#1773EA" style="light" />
         
         <View style={dashboardStyles.subtitleContainer}>
             <Text style={dashboardStyles.subtitle}>DASHBOARD</Text>
         </View>
 
+        <Image
+        source={require("../../assets/images/profile-placeholder.jpg")}
+        style={dashboardStyles.studentPicture}
+        resizeMode="cover"
+        />
+
+        {/* STUDENT INFORMATION */}
         <View style={dashboardStyles.studentInformationContainer}>
-            <View style={dashboardStyles.studentInformationFirstColumn}>
-                <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Full Name: </Text>
-                <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Student ID: </Text>
-                <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Department: </Text>
-                <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Course: </Text>
-                <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Status: </Text>
-            </View>
-            <View style={dashboardStyles.studentInformationSecondColumn}>
-                <Text style={dashboardStyles.studentInformationSecondColumnLabel}>Adrian Dominic L. Tan</Text>
-                <View style={dashboardStyles.idRow}>
-                    <Text style={dashboardStyles.studentInformationSecondColumnLabel}>117591120149</Text>
-                    <TouchableOpacity
-                    style={dashboardStyles.copyContainer}
-                    onPress={handleCopy}
-                    ><Feather name="copy" size={14} color="#1773EA" /></TouchableOpacity>
-                </View>
-                <Text style={dashboardStyles.studentInformationSecondColumnLabel}>CICT</Text>
-                <Text style={dashboardStyles.studentInformationSecondColumnLabel}>BSCS</Text>
-                <Text style={dashboardStyles.studentInformationSecondColumnLabel}>Enrolled</Text>
-            </View>
+          {/* FIRST COLUMN */}
+          <View style={dashboardStyles.studentInformationFirstColumn}>
+              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Full Name: </Text>
+              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Student ID: </Text>
+              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Department: </Text>
+              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Course: </Text>
+              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Status: </Text>
+          </View>
+          {/* SECOND COLUMN */}
+          <View style={dashboardStyles.studentInformationSecondColumn}>
+              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.name}</Text>
+              {/* COPY FEATURE */}
+              <View style={dashboardStyles.idRow}>
+                  <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.studentId}</Text>
+                  <TouchableOpacity
+                  style={dashboardStyles.copyContainer}
+                  onPress={handleCopy}
+                  ><Feather name="copy" size={16} color="#1773EA" /></TouchableOpacity>
+              </View>
+              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.department}</Text>
+              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.course}</Text>
+              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.status}</Text>
+          </View>
         </View>
 
         {/* EDIT INFORMATION BUTTON */}

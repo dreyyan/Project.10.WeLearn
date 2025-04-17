@@ -5,7 +5,7 @@ export const colors = {
     primary: "#1773EA",
     secondary: "#115CBD",
     support: "#EA8E17",
-    accent: "#F7F7F7",
+    accent: "#FFF",
 
     white: "#FFFFFF",
     black: "#000000",
