@@ -6,8 +6,9 @@ export const colors = {
     secondary: "#115CBD",
     support: "#EA8E17",
     accent: "#F7F7F7",
+
     white: "#FFFFFF",
     black: "#000000",
     gray: "#bfbfbf",
-    text: "#0F50A4"
+    text: "#000000"
   };

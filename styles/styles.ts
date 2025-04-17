@@ -6,38 +6,26 @@ export const globalStyles = StyleSheet.create({
     screen: {
         flex: 1,
         alignItems: 'center',
+        backgroundColor: colors.accent,
+    },
+    titleContainer: {
         backgroundColor: colors.primary,
-    },
-    div: {
-        flex: 1
-    },
-    // titleContainer: {
-    //     backgroundColor: colors.primary,
+        
+        display: "flex",
+        justifyContent: "center",
 
-    //     width: "100%",
-    //     alignItems: 'center'
-    // },
+        height: 70,
+        marginTop: "20%",
+        marginBottom: "10%",
+        paddingHorizontal: "6%",
+        borderRadius: 10,
+
+
+    },
     title: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 80,
-        color: "white",
-
-        marginTop: "2%",
-        marginBottom: "10%"
-    },
-    // subtitleContainer: {
-    //     backgroundColor: colors.primary,
-
-    //     width: "100%",
-    //     alignItems: 'center',
-    // },
-    subtitle: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 38,
-        color: "white",
-
-        marginTop: "4%",
-        marginBottom: "4%"
+        fontSize: 40,
+        color: colors.white,
     },
     label: {
         fontFamily: 'Lklavika-Medium',
@@ -58,14 +46,32 @@ export const globalStyles = StyleSheet.create({
 
         alignSelf: "center"
     },
-    backButton: {
-        backgroundColor: colors.primary,
+    banner: {
+        width: "100%",
+        height: 106,
+    },
+    icon: {
+        marginLeft: 8,
+        marginRight: 6,
+    },
+})
 
-        alignSelf: "center",
-        marginRight: 30,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 8,
+export const loginStyles = StyleSheet.create({
+    formContainer: {
+        height: 300
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+
+        backgroundColor: '#fff',
+
+        marginBottom: 16,
+        paddingHorizontal: 10,
+
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 14,
 
         // iOS Shadow
         shadowColor: colors.secondary,
@@ -75,14 +81,32 @@ export const globalStyles = StyleSheet.create({
         // Android Shadow
         elevation: 8
     },
-    continueButton: {
+    inputField: {
+        backgroundColor: "white",
+
+        fontFamily: 'Lklavika',
+
+        width: 220,
+        height: 50,
+
+        marginVertical: 2
+    },
+    loginButton: {
         backgroundColor: colors.primary,
 
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         alignSelf: "center",
+
+        width: 300,
+        height: 60,
+
+        marginTop: 20,
         paddingVertical: 12,
         paddingHorizontal: 20,
-        borderRadius: 8,
 
+        borderRadius: 30,
         // iOS Shadow
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -90,105 +114,88 @@ export const globalStyles = StyleSheet.create({
         shadowRadius: 6,
         // Android Shadow
         elevation: 8
-    }
-})
-
-export const loginStyles = StyleSheet.create({
-    inputField: {
-        backgroundColor: "white",
-
-        fontFamily: 'Lklavika',
-
-        width: 260,
-        height: 44,
-
-        marginTop: 0,
-        marginBottom: 6,
-        paddingLeft: 20,
-
-        borderRadius: 18
-    },
-    buttonContainer: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
-
-        height: "20%"
     },
     loginButtonLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 20,
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
         color: "white"
     },
-    noAccountLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 14,
-        color: "white",
-
-        marginBottom: "0.5%",
-    },
-    signUpLink: {
+    createAccountLink: {
         fontFamily: 'Lklavika-Bold',
         fontSize: 14,
-        color: "white",
-
+        color: colors.text,
         textDecorationLine: "underline",
 
-        marginTop: "3%",
-        marginBottom: "0.5%"
-    },
-    usernameLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 20,
-        color: "white",
+        alignSelf: "center",
 
-        marginTop: "1.8%",
+        marginTop: "4%",
         marginBottom: "0.5%"
     },
 })
 
 export const signUpStyles = StyleSheet.create({
-    form: {
-
-    },
     formContainer: {
-        height: "63%",
-        width: "61.4%"
+        height: 300,
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+
+        backgroundColor: '#fff',
+
+        marginBottom: 16,
+        paddingHorizontal: 10,
+
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 14,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
     },
     inputField: {
         backgroundColor: "white",
 
         fontFamily: 'Lklavika',
 
-        width: 260,
-        height: 44,
+        width: 220,
+        height: 50,
 
-        marginTop: 0,
-        marginBottom: 10,
-        paddingLeft: 20,
-
-        borderRadius: 18
+        marginVertical: 2
     },
-    inputFieldMiddleInitial: {
-        backgroundColor: "#bfbfbf",
-
-        fontFamily: 'Lklavika',
-
-        width: 260,
-        height: 44,
-
-        marginTop: 0,
-        marginBottom: 10,
-        paddingLeft: 20,
-
-        borderRadius: 18
-    },
-    ageLabel: {
+    label: {
         fontFamily: 'Lklavika-Medium',
-        fontSize: 20,
-        color: "white",
+        fontSize: 16,
+        color: colors.text,
 
-        marginTop: "6%"
+        marginBottom: "0.5%"
+    },
+    backButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "center",
+        marginRight: 30,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+
+        position: "absolute",
+        top: 240, // adjust as needed (depends on your header or status bar height)
+        left: 20, // distance from the left edge
+        zIndex: 1, // ensures it's on top of other components
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
     },
     buttonContainer: {
         display: "flex",
@@ -437,13 +444,15 @@ export const burgerMenuStyles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "flex-start",
       },
-      
       menuContainer: {
         width: "70%",
         height: "100%",
-        backgroundColor: "#fff",
-        paddingTop: 60,
-        paddingHorizontal: 20,
+        backgroundColor: colors.primary,
+
+        paddingTop: "10%",
+        paddingLeft: "6%",
+        paddingRight: "8%",
+
         elevation: 5,
       },
       
@@ -453,16 +462,6 @@ export const burgerMenuStyles = StyleSheet.create({
         marginBottom: 20,
         color: "#0A3D91",
       },
-      
-      menuItem: {
-        marginBottom: 20,
-      },
-      
-      menuItemText: {
-        fontSize: 18,
-        color: "#0A3D91",
-      },
-      
       menuCloseButton: {
         marginTop: 40,
       },
@@ -470,5 +469,44 @@ export const burgerMenuStyles = StyleSheet.create({
       menuCloseText: {
         fontSize: 16,
         color: "gray",
-      },      
+      },
+      studentPicture: {
+        width: 140,
+        height: 140,
+
+        alignSelf: "center",
+        marginTop: "6%",
+        marginBottom: "8%",
+        borderRadius: 70
+      },
+      profile: {
+        marginBottom: "20%",
+        display: "flex",
+        alignItems: "flex-end"
+      },
+      profileTitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 40,
+        color: colors.white,
+
+        alignSelf: "center",
+      },
+      studentName: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
+        color: colors.white,
+      },
+      studentSection: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 20,
+        color: colors.white,
+      },
+      menuItem: {
+        marginBottom: 20,
+      },
+      menuItemText: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 30,
+        color: colors.accent,
+      },
 })

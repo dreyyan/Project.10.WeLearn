@@ -2,13 +2,20 @@
 import { Text, View, TextInput, ScrollView, TouchableOpacity, Alert, Image } from "react-native";
 import { router } from "expo-router";
 import { globalStyles, signUpStyles } from "../../styles/styles"
+import { colors } from "@/styles/colors";
 import { useState, useEffect } from "react";
+// FIREBASE AUTHENTICATION
 import { createUserWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
-import * as WebBrowser from 'expo-web-browser';
+import { auth } from "../../configurations/firebaseConfig";
 import * as Google from 'expo-auth-session/providers/google';
 import * as AuthSession from 'expo-auth-session';
-import { FirebaseError } from "firebase/app"; // Import FirebaseError type
+import { FirebaseError } from "firebase/app";
+// FIRESTORE DATABASE
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../configurations/firebaseConfig";
+// LIBRARY COMPONENTS
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUp() {
   // STATES
@@ -16,38 +23,28 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
-  // From Google Cloud: Client ID for Web
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: '601466500645-48tht9945jgrcpg1epp7auqsegkqc8dh.apps.googleusercontent.com',
-    redirectUri: AuthSession.makeRedirectUri()
-  });
-
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { id_token } = response.params;
-      const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential)
-        .then(() => {
-          Alert.alert("Success", "Signed up with Google!", [
-            { text: "Continue", onPress: () => router.replace("/login") },
-          ]);
-        })
-        .catch((error) => {
-          Alert.alert("Google Sign-In Error", error.message);
-        });
-    }
-  }, [response]);
-
   // HANDLES
-  const handlePressBackButton = () => {
-    router.replace('/login'); // Navigate to the Login page
+  // HANDLE: Redirect back to login page
+  const pressBackButton = () => {
+    router.replace('/');
   }
 
-  const handlePressSignUpButton = async () => {
+  // HANDLE: Account Sign Up
+  const pressSignUpButton = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      // Add user to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        email: email,
+        uid: user.uid,
+        courses: [],
+        createdAt: new Date().toISOString()
+      });
       Alert.alert("Success", "You have signed up!", [
-        { text: "Continue", onPress: () => router.replace('/login') },
+        { text: "Continue", onPress: () => router.replace('/') },
       ]);
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -71,8 +68,8 @@ export default function SignUp() {
     }
   };
 
-  // Google Sign-In handler
-  const handlePressSignUpWithButton = async () => {
+  // HANDLE: Google Sign-In
+  const pressSignUpWithButton = async () => {
     try {
       const result = await promptAsync(); // Trigger Google Sign-In
       if (result?.type === 'success') {
@@ -80,7 +77,7 @@ export default function SignUp() {
         const credential = GoogleAuthProvider.credential(id_token);
         await signInWithCredential(auth, credential);
         Alert.alert("Success", "Signed up with Google!", [
-          { text: "Continue", onPress: () => router.replace("/login") },
+          { text: "Continue", onPress: () => router.replace("/") },
         ]);
       } else {
         Alert.alert("Google Sign-In Canceled");
@@ -94,62 +91,100 @@ export default function SignUp() {
     }
   };
 
+  // Google Sign-in Setup via Google Auth Provider
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: '601466500645-48tht9945jgrcpg1epp7auqsegkqc8dh.apps.googleusercontent.com',
+    redirectUri: AuthSession.makeRedirectUri()
+  });
+
+  // LISTEN: Successfull Google Sign-In
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential)
+        .then(() => {
+          Alert.alert("Success", "Signed up with Google!", [
+            { text: "Continue", onPress: () => router.replace("/") },
+          ]);
+        })
+        .catch((error) => {
+          Alert.alert("Google Sign-In Error", error.message);
+        });
+    }
+  }, [response]);
+
   return (
     <View style={globalStyles.screen}>
       {/* HEADER */}
-      <Text style={globalStyles.title}>WeLearn</Text>
-      <Text style={globalStyles.subtitle}>SIGN UP</Text>
+      <Image
+      source={require("../../assets/images/banner-WeLearn.png")}
+      style={globalStyles.banner}
+      resizeMode="contain"
+      />
+      {/* PERSONALIZATION: Change StatusBar color */}
+      <StatusBar backgroundColor="#1773EA" style="light" />
 
-        <View style={signUpStyles.formContainer}>
-        <ScrollView style={signUpStyles.form} scrollEnabled={false}>
-          {/* 1. NAME */}
-          <Text style={globalStyles.label}>Name</Text>
+      {/* TITLE */}
+      <View style={globalStyles.titleContainer}>
+        <Text style={globalStyles.title}>SIGN UP</Text>
+      </View>
+
+      {/* BACK BUTTON */}
+      <TouchableOpacity
+        style={signUpStyles.backButton}
+        onPress={pressBackButton}
+      >
+        <Text style={signUpStyles.backButtonLabel}>‹</Text>
+      </TouchableOpacity>
+
+      {/* INPUT FORM */}
+      <View style={signUpStyles.formContainer}>
+        {/* 1. NAME */}
+        <Text style={signUpStyles.label}>Name</Text>
+        <View style={signUpStyles.inputContainer}>
+          <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
           <TextInput
             placeholder="Juan de la Cruz"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={signUpStyles.credentialsInputField}
+            style={signUpStyles.inputField}
             value={name}
             onChangeText={setName} // Update the name state when the user types
           />
-          {/* 2. EMAIL */}
-          <Text style={globalStyles.label}>Email</Text>
+        </View>
+
+        {/* 2. EMAIL */}
+        <Text style={signUpStyles.label}>Email</Text>
+        <View style={signUpStyles.inputContainer}>
+          <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
           <TextInput
             placeholder="example@email.com"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={signUpStyles.credentialsInputField}
+            style={signUpStyles.inputField}
             value={email}
-            onChangeText={setEmail} // Update the email state when the user types
+            onChangeText={setEmail} // Update the name state when the user types
           />
-          {/* 3. PASSWORD */}
-          <Text style={globalStyles.label}>Password</Text>
+        </View>
+
+        {/* 3. PASSWORD */}
+        <Text style={signUpStyles.label}>Password</Text>
+        <View style={signUpStyles.inputContainer}>
+          <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
           <TextInput
-            placeholder="Enter password"
+            placeholder="********"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={signUpStyles.inputField}
-            secureTextEntry={true} // Hide password input
             value={password}
-            onChangeText={setPassword} // Update the password state when the user types
+            onChangeText={setPassword} // Update the name state when the user types
           />
-          <Text style={signUpStyles.credentialsValidation}>
-            • At least 1 uppercase{"\n"}
-            • At least 1 lowercase{"\n"}
-            • At least 6 characters
-          </Text>
-        </ScrollView>
+  
+        </View>
 
         <View style={signUpStyles.buttonContainer}>
-          {/* BACK BUTTON */}
-          <TouchableOpacity
-            style={globalStyles.backButton}
-            onPress={handlePressBackButton}
-          >
-            <Text style={signUpStyles.backButtonLabel}>BACK</Text>
-          </TouchableOpacity>
-          
           {/* CONTINUE BUTTON */}
           <TouchableOpacity
             style={globalStyles.continueButton}
-            onPress={handlePressSignUpButton}
+            onPress={pressSignUpButton}
           >
             <Text style={signUpStyles.continueButtonLabel}>SIGN UP</Text>
           </TouchableOpacity>
@@ -162,7 +197,7 @@ export default function SignUp() {
         {/* SIGNUP BUTTONS */}
         <TouchableOpacity
           style={signUpStyles.signUpWithButton}
-          onPress={handlePressSignUpWithButton}
+          onPress={pressSignUpWithButton}
         >
         <Image
           source={require("../../assets/images/icon-google.webp")}
