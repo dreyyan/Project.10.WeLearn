@@ -6,7 +6,7 @@ import { router } from "expo-router";
 import { globalStyles, signUpStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIREBASE AUTHENTICAITON
-import { createUserWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithCredential, GoogleAuthProvider, signOut } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { auth } from "../../configurations/firebaseConfig";
 // EXPO GOOGLE AUTH SESSION
@@ -32,6 +32,9 @@ export default function SignUp() {
 
   const pressSignUpButton = async () => {
     try {
+      // Ensure the user is signed out before attempting to sign up again
+      await signOut(auth);
+
       // Create the user's account using the provided email and password
       // Returns 'userCredential' object if successful
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -48,15 +51,14 @@ export default function SignUp() {
       // Create student profile subdocument [ INFORMATION ]
       await setDoc(doc(db, "users", user.uid, "profile", "studentProfile"), {
         name: name,
+        type: "",
+        gender: "",
         ID: "",
-        course: "",
         department: "",
-        email: email,
-        courses: [],
+        course: "",
         enrolledSubjects: [""],
         isEnrolled: false,
         completedInformation: false,
-        type: ""
       });
 
     // Check if 'completedInformation' is false and redirect accordingly
@@ -71,7 +73,7 @@ export default function SignUp() {
         Alert.alert("Setup Required", "Please complete your profile setup.", [
           {
             text: "Continue",
-            onPress: () => router.replace('/setupInformation'),
+            onPress: () => router.replace('/SetupInformation'),
           },
         ]);
       } else {

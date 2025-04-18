@@ -14,6 +14,8 @@ import { FirebaseError } from "firebase/app";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+// CONTEXT
+import UserProvider from '../../context/userContext';
 
 export default function Login() {
   // STATES
@@ -44,13 +46,13 @@ export default function Login() {
           Alert.alert("Setup Required", "Please complete your profile setup.", [
             {
               text: "Continue",
-              onPress: () => router.replace('/setupInformation'),
+              onPress: () => router.replace('/SetupInformation'),
             },
           ]);
         } else {
           // If profile is complete, redirect to the dashboard
           Alert.alert("Success", "You are logged in!", [
-            { text: "Continue", onPress: () => router.replace('/') },
+            { text: "Continue", onPress: () => router.replace('/Dashboard') },
           ]);
         }
       } else {
@@ -81,7 +83,7 @@ export default function Login() {
     }
   };
 
-    // LISTEN: Check if the user is logged in on app start
+    // LISTEN: Stay on latest screen
     useEffect(() => {
       // Setup listener for Firebase Authentication
       // Triggers everytime the user's login state changes
@@ -99,14 +101,14 @@ export default function Login() {
               const userProfileData = userProfile.data();
               if (userProfileData.completedInformation === false) {
               // If user has incomplete profile, redirect to setup information
-                router.replace('/setupInformation');
+                router.replace('/SetupInformation');
               } else {
                 // If user has complete profile, redirect to dashboard
                 router.replace('/');
               }
             } else {
               // If document doesn't exist, redirect to setup information
-              router.replace('/setupInformation');
+              router.replace('/SetupInformation');
             }
           });
         } else {
@@ -119,60 +121,62 @@ export default function Login() {
     }, []);
   
   return (
-    <View style={globalStyles.screen}>
-      {/* HEADER */}
-      <Image
-      source={require("../../assets/images/banner-WeLearn.png")}
-      style={globalStyles.banner}
-      resizeMode="contain"
-      />
-      {/* PERSONALIZATION: Status bar color */}
-      <StatusBar backgroundColor="#1773EA" style="light" />
+    <UserProvider>
+        <View style={globalStyles.screen}>
+        {/* HEADER */}
+        <Image
+        source={require("../../assets/images/banner-WeLearn.png")}
+        style={globalStyles.banner}
+        resizeMode="contain"
+        />
+        {/* PERSONALIZATION: Status bar color */}
+        <StatusBar backgroundColor="#1773EA" style="light" />
 
-      {/* TITLE */}
-      <View style={loginStyles.titleContainer}>
-        <Text style={loginStyles.title}>Welcome to WeLearn!</Text>
-        <Text style={loginStyles.subtitle}>"Learn together, grow together."'</Text>
-      </View>
-
-      {/* INPUT FORM */}
-      <View style={loginStyles.formContainer}>
-
-        {/* INPUT => USERNAME/EMAIL */}
-        <View style={loginStyles.inputContainer}>
-          <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
-          <TextInput
-            placeholder="Username or Email"
-            placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={loginStyles.inputField}
-            value={email}
-            onChangeText={setEmail}
-          />
+        {/* TITLE */}
+        <View style={loginStyles.titleContainer}>
+          <Text style={loginStyles.title}>Welcome to WeLearn!</Text>
+          <Text style={loginStyles.subtitle}>"Learn together, grow together."'</Text>
         </View>
 
-        {/* INPUT => PASSWORD */}
-        <View style={loginStyles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color={colors.primary} style={globalStyles.icon} />
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={loginStyles.inputField}
-            secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
-          />
+        {/* INPUT FORM */}
+        <View style={loginStyles.formContainer}>
+
+          {/* INPUT => USERNAME/EMAIL */}
+          <View style={loginStyles.inputContainer}>
+            <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
+            <TextInput
+              placeholder="Username or Email"
+              placeholderTextColor="rgba(0, 0, 0, 0.2)"
+              style={loginStyles.inputField}
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+
+          {/* INPUT => PASSWORD */}
+          <View style={loginStyles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={20} color={colors.primary} style={globalStyles.icon} />
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor="rgba(0, 0, 0, 0.2)"
+              style={loginStyles.inputField}
+              secureTextEntry={true}
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
+
+            {/* LOGIN BUTTON */}
+            <TouchableOpacity
+              style={loginStyles.loginButton}
+              onPress={pressLoginButton}
+            ><Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
+            </TouchableOpacity>
+
+          {/* LINK => CREATE ACCOUNT */}
+          <Link href="/SignUp" style={loginStyles.createAccountLink}>Create an account</Link>
         </View>
-
-          {/* LOGIN BUTTON */}
-          <TouchableOpacity
-            style={loginStyles.loginButton}
-            onPress={pressLoginButton}
-          ><Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
-          </TouchableOpacity>
-
-        {/* LINK => CREATE ACCOUNT */}
-        <Link href="/signUp" style={loginStyles.createAccountLink}>Create an account</Link>
       </View>
-    </View>
+    </UserProvider>
   );
 }

@@ -213,10 +213,71 @@ export const setupInformationStyles = StyleSheet.create({
         marginLeft: 10,
         lineHeight: 22,
     },
-    // formContainer: {
-    //     height: 300,
-    //     borderWidth: 1
-    // },
+    summaryContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+
+        height: 200,
+        width: 400,
+
+        marginTop: 80,
+        paddingLeft: 10,
+    },
+    firstColumnLabel: {
+        display: "flex",
+        alignItems: "flex-end",
+
+    },
+    secondColumnLabel: {
+        display: "flex",
+        alignItems: "flex-start",
+
+        width: 260
+    },
+    firstColumnText: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+
+        color: colors.secondary,
+    },
+    secondColumnText: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+
+        color: colors.primary,
+    },
+    backButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "center",
+
+        borderRadius: 20,
+
+        marginRight: 30,
+        paddingTop: 2,
+        paddingBottom: 6,
+        paddingHorizontal: 16,
+
+        position: "absolute",
+        top: 630,
+        left: 12,
+        zIndex: 1,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    backButtonLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 24,
+
+        color: "white"
+    },
 })
 
 export const loginStyles = StyleSheet.create({
@@ -602,25 +663,27 @@ export const dashboardStyles = StyleSheet.create({
     },
     studentInformationFirstColumn: {
         alignItems: "flex-end",
-
+        
+        paddingLeft: "4%",
         paddingRight: "2%",
     },
     studentInformationSecondColumn: {
-        alignItems: "flex-start"
+        flex: 1,
+        alignItems: "flex-start",
     },
     studentInformationFirstColumnLabel: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 20,
+        fontSize: 18,
+        lineHeight: 22,
 
-        color: colors.secondary
+        color: colors.secondary,
     },
     studentInformationSecondColumnLabel: {
         fontFamily: 'Lklavika-Medium',
         fontSize: 18,
+        lineHeight: 22,
 
         color: colors.secondary,
-
-        paddingTop: "1.1%",
     },
     welcomeMessage: {
         fontFamily: 'Lklavika-Medium',

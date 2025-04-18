@@ -20,10 +20,12 @@ export default function dashboard() {
     // TypeScript type, specify structure and type of data for 'StudentInfo'
     type StudentInfo = {
       name: string;
-      studentId: string;
+      type: string;
+      gender: string;
+      ID: string;
       department: string;
       course: string;
-      status: string;
+      isEnrolled: boolean;
     };
 
     // STATES
@@ -37,15 +39,15 @@ export default function dashboard() {
     }
 
     const goToCourses = () => {
-        router.replace('/courses');
+        router.replace('/Courses');
     }
 
     const goToSettings = () => {
-        router.replace('/settings');
+        router.replace('/Settings');
     }
 
-    const goToPrivacyAndSettings = () => {
-        router.replace('/privacyAndSettings');
+    const goToPrivacyAndSupport = () => {
+        router.replace('/PrivacyAndSupport');
     }
 
     const goToLogOut = () => {
@@ -57,45 +59,41 @@ export default function dashboard() {
     };
 
     const handleCopy = async () => {
-      if (studentInfo?.studentId) {
-        await Clipboard.setStringAsync(studentInfo.studentId);
-        Alert.alert("Copied!", `Student ID ${studentInfo.studentId} copied to clipboard.`);
+      if (studentInfo?.ID) {
+        await Clipboard.setStringAsync(studentInfo.ID);
       }
     };
     
-    // Fetch user data from Firestore
-    useEffect(() => {
-      // Setup listener for Firebase Authentication
-      // Triggers everytime the user's login state changes
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        // If user is logged in, get a reference to their Firestore document using their UID
-        if (user) {
-          const docRef = doc(db, 'users', user.uid);
-          try {
-            // Attempt to fetch the user data from Firestore
-            const docSnap = await getDoc(docRef);
+  // Fetch user data from Firestore
+  useEffect(() => {
+    // Setup listener for Firebase Authentication
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docRef = doc(db, 'users', user.uid, 'profile', 'studentProfile');
+        try {
+          // Attempt to fetch the user profile data from Firestore
+          const docSnap = await getDoc(docRef);
 
-            // If the document exists, store the data in the state
-            if (docSnap.exists()) {
-              setStudentInfo(docSnap.data() as StudentInfo); // Cast the data as StudentInfo type
-            } else { // ERROR: Non-existing document
-              Alert.alert('Error', 'User data not found');
-            }
-          } catch (error) {
-            // If an error occurs while fetching the data, log the error and show an alert
-            console.error('Error fetching user data:', error);
-            Alert.alert('Error', 'An error occurred while fetching data');
-          } finally {
-            setLoading(false); // Stop the loading state whether success or fail
+          // If the document exists, store the data in the state
+          if (docSnap.exists()) {
+            setStudentInfo(docSnap.data() as StudentInfo); // Cast the data as StudentInfo type
+          } else { // ERROR: Non-existing document
+            Alert.alert('Error', 'User profile data not found');
           }
-        } else { // ERROR: No user is logged in
-          Alert.alert('Error', 'No user is logged in');
-          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          Alert.alert('Error', 'An error occurred while fetching data');
+        } finally {
+          setLoading(false); // Stop the loading state whether success or fail
         }
-      });
-      // Clean up the listener when the component unmounts or changes
-      return () => unsubscribe(); // Unsubscribe from the auth state listener
-    }, []); // Empty dependency array means 'Effect' runs once when the component mounts
+      } else {
+        Alert.alert('Error', 'No user is logged in');
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe(); // Unsubscribe from the auth state listener
+  }, []); // Empty dependency array means 'Effect' runs once when the component mounts
 
 
   return (
@@ -136,6 +134,8 @@ export default function dashboard() {
           {/* FIRST COLUMN */}
           <View style={dashboardStyles.studentInformationFirstColumn}>
               <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Full Name: </Text>
+              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Type: </Text>
+              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Gender: </Text>
               <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Student ID: </Text>
               <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Department: </Text>
               <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Course: </Text>
@@ -144,9 +144,11 @@ export default function dashboard() {
           {/* SECOND COLUMN */}
           <View style={dashboardStyles.studentInformationSecondColumn}>
               <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.name}</Text>
+              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.type}</Text>
+              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.gender}</Text>
               {/* COPY FEATURE */}
               <View style={dashboardStyles.idRow}>
-                  <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.studentId}</Text>
+                  <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.ID}</Text>
                   <TouchableOpacity
                   style={dashboardStyles.copyContainer}
                   onPress={handleCopy}
@@ -154,7 +156,7 @@ export default function dashboard() {
               </View>
               <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.department}</Text>
               <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.course}</Text>
-              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.status}</Text>
+              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.isEnrolled ? "Yes" : "No"}</Text>
           </View>
         </View>
 
@@ -208,7 +210,7 @@ export default function dashboard() {
                         <Text style={burgerMenuStyles.menuItemText}>Settings</Text>
                       </TouchableOpacity>
 
-                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToPrivacyAndSettings}>
+                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToPrivacyAndSupport}>
                         <Text style={burgerMenuStyles.menuItemText}>Privacy & Support</Text>
                       </TouchableOpacity>
 

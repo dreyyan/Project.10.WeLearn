@@ -33,7 +33,7 @@ export default function RootLayout() {
         }}
       />
       <Tabs.Screen
-        name="signUp"
+        name="SignUp"
         options={{
           tabBarLabel: "Sign Up"
         }}
