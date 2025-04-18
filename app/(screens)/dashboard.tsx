@@ -1,9 +1,11 @@
+// REACT NATIVE
 import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback } from "react-native";
-import { dashboardStyles, burgerMenuStyles, globalStyles } from "../../styles/styles"
-import { colors } from "@/styles/colors";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
-// FIRESTORE DATABASE
+// STYLES
+import { dashboardStyles, burgerMenuStyles, globalStyles } from "../../styles/styles"
+import { colors } from "@/styles/colors";
+// FIRESTORE DATABASE & FIREBASE AUTHENTICATION
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../../configurations/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
@@ -15,6 +17,7 @@ import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
 
 export default function dashboard() {
+    // TypeScript type, specify structure and type of data for 'StudentInfo'
     type StudentInfo = {
       name: string;
       studentId: string;
@@ -62,30 +65,37 @@ export default function dashboard() {
     
     // Fetch user data from Firestore
     useEffect(() => {
+      // Setup listener for Firebase Authentication
+      // Triggers everytime the user's login state changes
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        // If user is logged in, get a reference to their Firestore document using their UID
         if (user) {
           const docRef = doc(db, 'users', user.uid);
           try {
+            // Attempt to fetch the user data from Firestore
             const docSnap = await getDoc(docRef);
+
+            // If the document exists, store the data in the state
             if (docSnap.exists()) {
-              setStudentInfo(docSnap.data() as StudentInfo);
-            } else {
+              setStudentInfo(docSnap.data() as StudentInfo); // Cast the data as StudentInfo type
+            } else { // ERROR: Non-existing document
               Alert.alert('Error', 'User data not found');
             }
           } catch (error) {
+            // If an error occurs while fetching the data, log the error and show an alert
             console.error('Error fetching user data:', error);
             Alert.alert('Error', 'An error occurred while fetching data');
           } finally {
-            setLoading(false);
+            setLoading(false); // Stop the loading state whether success or fail
           }
-        } else {
+        } else { // ERROR: No user is logged in
           Alert.alert('Error', 'No user is logged in');
           setLoading(false);
         }
       });
-    
-      return () => unsubscribe(); // Cleanup listener
-    }, []);
+      // Clean up the listener when the component unmounts or changes
+      return () => unsubscribe(); // Unsubscribe from the auth state listener
+    }, []); // Empty dependency array means 'Effect' runs once when the component mounts
 
 
   return (
@@ -107,13 +117,14 @@ export default function dashboard() {
         />
       </View>
 
-      {/* PERSONALIZATION: Change StatusBar color */}
+      {/* PERSONALIZATION: Status bar color */}
       <StatusBar backgroundColor="#1773EA" style="light" />
-        
+        {/* TITLE */}
         <View style={dashboardStyles.subtitleContainer}>
             <Text style={dashboardStyles.subtitle}>DASHBOARD</Text>
         </View>
 
+        {/* STUDENT PICTURE */}
         <Image
         source={require("../../assets/images/profile-placeholder.jpg")}
         style={dashboardStyles.studentPicture}
@@ -170,42 +181,42 @@ export default function dashboard() {
         >
             <TouchableWithoutFeedback onPress={() => setIsMenuVisible(false)}>
                 <View style={burgerMenuStyles.modalOverlay}>
-                    <TouchableWithoutFeedback>
-                        <View style={burgerMenuStyles.menuContainer}>
-                            {/* STUDENT PICTURE /W NAME & SECTION */}
-                            <View style={burgerMenuStyles.profile}>
-                            <Text style={burgerMenuStyles.profileTitle}>MENU</Text>
-                                <Image
-                                source={require("../../assets/images/profile-placeholder.jpg")}
-                                style={burgerMenuStyles.studentPicture}
-                                resizeMode="cover"
-                                />
-                                <Text style={burgerMenuStyles.studentName}>Adrian Dominic L. Tan</Text>
-                                <Text style={burgerMenuStyles.studentSection}>BSCS 1-A</Text>
-                            </View>
+                  <TouchableWithoutFeedback>
+                    <View style={burgerMenuStyles.menuContainer}>
+                      {/* STUDENT PICTURE /W NAME & SECTION */}
+                      <View style={burgerMenuStyles.profile}>
+                      <Text style={burgerMenuStyles.profileTitle}>MENU</Text>
+                        <Image
+                        source={require("../../assets/images/profile-placeholder.jpg")}
+                        style={burgerMenuStyles.studentPicture}
+                        resizeMode="cover"
+                        />
+                        <Text style={burgerMenuStyles.studentName}>Adrian Dominic L. Tan</Text>
+                        <Text style={burgerMenuStyles.studentSection}>BSCS 1-A</Text>
+                      </View>
 
-                            {/* NAVIGATION */}
-                            <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToStudentProfile}>
-                                <Text style={burgerMenuStyles.menuItemText}>Student Profile</Text>
-                            </TouchableOpacity>
+                      {/* NAVIGATION */}
+                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToStudentProfile}>
+                        <Text style={burgerMenuStyles.menuItemText}>Student Profile</Text>
+                      </TouchableOpacity>
 
-                            <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToCourses}>
-                                <Text style={burgerMenuStyles.menuItemText}>Courses</Text>
-                            </TouchableOpacity>
+                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToCourses}>
+                        <Text style={burgerMenuStyles.menuItemText}>Courses</Text>
+                      </TouchableOpacity>
 
-                            <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToSettings}>
-                                <Text style={burgerMenuStyles.menuItemText}>Settings</Text>
-                            </TouchableOpacity>
+                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToSettings}>
+                        <Text style={burgerMenuStyles.menuItemText}>Settings</Text>
+                      </TouchableOpacity>
 
-                            <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToPrivacyAndSettings}>
-                                <Text style={burgerMenuStyles.menuItemText}>Privacy & Support</Text>
-                            </TouchableOpacity>
+                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToPrivacyAndSettings}>
+                        <Text style={burgerMenuStyles.menuItemText}>Privacy & Support</Text>
+                      </TouchableOpacity>
 
-                            <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToLogOut}>
-                                <Text style={burgerMenuStyles.menuItemText}>Log Out</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableWithoutFeedback>
+                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToLogOut}>
+                        <Text style={burgerMenuStyles.menuItemText}>Log Out</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableWithoutFeedback>
                 </View>
             </TouchableWithoutFeedback>
         </Modal>

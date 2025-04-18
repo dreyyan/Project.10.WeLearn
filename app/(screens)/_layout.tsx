@@ -2,7 +2,6 @@ import { Tabs } from "expo-router";
 import CustomTabBar from "../../components/customTabBar"
 import { useFonts } from "expo-font";
 import { View, ActivityIndicator } from "react-native";
-import "../../styles/globals.css";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({

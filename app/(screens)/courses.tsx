@@ -1,9 +1,12 @@
-import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback } from "react-native";
-import { dashboardStyles, burgerMenuStyles } from "../../styles/styles"
-import { Ionicons } from '@expo/vector-icons';
-import { Modal } from "react-native";
+// REACT NATIVE
+import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback, Modal } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
+// STYLES
+import { dashboardStyles, burgerMenuStyles } from "../../styles/styles"
+import { colors } from "@/styles/colors";
+// LIBRARY COMPONENTS
+import { Ionicons } from '@expo/vector-icons';
 
 export default function courses() {
   // STATES

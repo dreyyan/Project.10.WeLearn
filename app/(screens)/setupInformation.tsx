@@ -1,9 +1,11 @@
+// REACT NATIVE
 import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
+// STYLES
 import { globalStyles, setupInformationStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
-// FIREBASE
+// FIREBASE AUTHENTICATION
 import { auth } from "../../configurations/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 // LIBRARY COMPONENTS
@@ -48,11 +50,11 @@ export default function SetupInformation() {
   }
 
   const pressNextButton = () => {
+    // Dynamic navigation based on # of screens
     if (currentStep < 10) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Navigate to the next screen or complete the setup
-      router.replace("/dashboard"); // Example of redirection
+      router.replace("/dashboard"); // Navigate to the next screen or complete the setup
     }
   }
 
@@ -64,10 +66,10 @@ export default function SetupInformation() {
       style={globalStyles.banner}
       resizeMode="contain"
       />
-      {/* PERSONALIZATION: Change StatusBar color */}
+      {/* PERSONALIZATION: Status bar color */}
       <StatusBar backgroundColor="#1773EA" style="light" />
 
-      {/* SCREEN 1: Let's setup your information */}
+      {/* SCREEN 1: Let's setup your information! */}
       {currentStep === 1 && (
       <View style={setupInformationStyles.titleContainer}>
         <Text style={setupInformationStyles.title}>Let's setup your information!</Text>
@@ -126,7 +128,7 @@ export default function SetupInformation() {
       </View>
       )}
 
-      {/* SCREEN 3: ID */}
+      {/* SCREEN 3: I.D. */}
       {currentStep === 3 && (
       <View style={setupInformationStyles.titleContainer}>
         <Text style={setupInformationStyles.title}>Enter your Student/Teacher I.D.</Text>

@@ -1,13 +1,15 @@
+// REACT NATIVE
 import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
-import { Link, router } from "expo-router";
 import { useState, useEffect } from "react";
+import { Link, router } from "expo-router";
+// STYLES
 import { globalStyles, loginStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIREBASE
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../configurations/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { getDoc, setDoc, doc } from "firebase/firestore";  // Import Firestore functions
+import { getDoc, setDoc, doc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
@@ -20,89 +22,100 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(true);
 
   // HANDLES
-  const handlePressSignUpButton = () => {
-    router.replace('/signUp'); // Navigate to the Login page
-  }
-
   const pressLoginButton = async () => {
     try {
-      // Sign in the user with email and password
+      // Log in the user with provided email and password
+      // Returns 'userCredential' object if successful
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // Extracts actual user info from 'userCredential'
       const user = userCredential.user;
   
-      // Check if the user profile exists in Firestore
+      // Attempt to fetch the student profile from Firestore at the specified path
       const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+      // Check if the document exists in the database
       if (userProfileDoc.exists()) {
+        // If existing document, retrieve document data and log for debugging
         const userProfileData = userProfileDoc.data();
-        console.log("Fetched Profile Data:", userProfileData); // Log the fetched profile data
+        console.log("Fetched Profile Data:", userProfileData); // Logging
   
-        // If the profile is incomplete, redirect to setupInformation
+        // Check if the user's profile is incomplete
         if (userProfileData.completedInformation === false) {
+          // If incomplete, redirect to setup information screen
           Alert.alert("Setup Required", "Please complete your profile setup.", [
             {
               text: "Continue",
-              onPress: () => router.replace('/setupInformation'), // Redirect to setup information
+              onPress: () => router.replace('/setupInformation'),
             },
           ]);
         } else {
           // If profile is complete, redirect to the dashboard
           Alert.alert("Success", "You are logged in!", [
-            { text: "Continue", onPress: () => router.replace('/') }, // Redirect to the dashboard
+            { text: "Continue", onPress: () => router.replace('/') },
           ]);
         }
       } else {
-        // Handle the case if profile document does not exist
+        // ERROR: Non-existing profile document
         Alert.alert("Error", "An error occurred while fetching your profile information.");
       }
     } catch (error) {
-      console.error("Login Error: ", error); // Log the error to console for debugging
-  
+      // If profile does not exist, log the error
+      console.error("Login Error: ", error);
       if (error instanceof FirebaseError) {
-        // Check for specific error codes and provide user-friendly messages
         switch (error.code) {
-          case 'auth/invalid-email':
+          case 'auth/invalid-email': // ERROR: Invalid Email
             Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
             break;
-          case 'auth/user-not-found':
+          case 'auth/user-not-found': // ERROR: Non-existing User
             Alert.alert("User Not Found", "No user found with this email. Please check and try again.");
             break;
-          case 'auth/wrong-password':
+          case 'auth/wrong-password': // ERROR: Wrong password
             Alert.alert("Incorrect Password", "The password you entered is incorrect. Please try again.");
             break;
-          default:
+          default: // Error fallback for unknown Firebase errors
             Alert.alert("Login Error", "An unknown error occurred. Please try again later.");
         }
       } else {
+        // Error fallback for unknown Firebase errors
         Alert.alert("Login Error", "An unexpected error occurred. Please try again later.");
       }
     }
   };
 
-    // Check if the user is logged in on app start
+    // LISTEN: Check if the user is logged in on app start
     useEffect(() => {
+      // Setup listener for Firebase Authentication
+      // Triggers everytime the user's login state changes
       const unsubscribe = onAuthStateChanged(auth, (user) => {
-        setIsLoading(false); // Stop loading
+        setIsLoading(false); // Stop loading once Firebase returns a result
+        // If user is logged in, check their profile and decide where to send it
         if (user) {
           // Check user profile and redirect accordingly
+          // Create a promise to fetch the Firestore document at the specified path
           const userProfileDoc = getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+          // Get the actual document result
           userProfileDoc.then((userProfile) => {
             if (userProfile.exists()) {
+              // If document exists, extract actual data
               const userProfileData = userProfile.data();
               if (userProfileData.completedInformation === false) {
+              // If user has incomplete profile, redirect to setup information
                 router.replace('/setupInformation');
               } else {
+                // If user has complete profile, redirect to dashboard
                 router.replace('/');
               }
             } else {
-              router.replace('/setupInformation'); // No profile, go to setup
+              // If document doesn't exist, redirect to setup information
+              router.replace('/setupInformation');
             }
           });
         } else {
-          setIsLoading(false); // If no user, stop loading and stay on login screen
+          // If no user, stop loading and stay on login screen
+          setIsLoading(false);
         }
       });
   
-      return unsubscribe; // Cleanup on unmount
+      return unsubscribe; // Cleanup on unmount, stops listening for auth changes to prevent memory leaks
     }, []);
   
   return (
@@ -113,7 +126,7 @@ export default function Login() {
       style={globalStyles.banner}
       resizeMode="contain"
       />
-      {/* PERSONALIZATION: Change StatusBar color */}
+      {/* PERSONALIZATION: Status bar color */}
       <StatusBar backgroundColor="#1773EA" style="light" />
 
       {/* TITLE */}
