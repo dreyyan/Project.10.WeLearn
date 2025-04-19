@@ -15,15 +15,15 @@ export default function settings() {
   }
 
   const goToCourses = () => {
-      router.replace('/courses');
+      router.replace('/Courses');
   }
 
   const goToSettings = () => {
-      router.replace('/settings');
+      router.replace('/Settings');
   }
 
   const goToPrivacyAndSettings = () => {
-      router.replace('/privacyAndSettings');
+      router.replace('/PrivacyAndSupport');
   }
 
   const goToLogOut = () => {

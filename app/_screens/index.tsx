@@ -15,7 +15,7 @@ import { FirebaseError } from "firebase/app";
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 // CONTEXT
-import UserProvider from '../../context/userContext';
+import UserProvider from '../../context/UserContext';
 
 export default function Login() {
   // STATES
@@ -57,7 +57,7 @@ export default function Login() {
         }
       } else {
         // ERROR: Non-existing profile document
-        Alert.alert("Error", "An error occurred while fetching your profile information.");
+        Alert.alert("New User", "Please complete your profile setup.");
       }
     } catch (error) {
       // If profile does not exist, log the error

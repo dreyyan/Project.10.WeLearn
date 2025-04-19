@@ -18,9 +18,9 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function SetupInformation() {
   // STATES
-  const [name, setName] = useState("N/A");                                  // Name [ from the database ]
-  const [type, setType] = useState("Student");                              // Student or Teacher
-  const [ID, setID] = useState("");                                         // Student or Teacher I.D.
+  const [name, setName] = useState("N/A");
+  const [type, setType] = useState("Student");
+  const [ID, setID] = useState("");
 
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -54,8 +54,8 @@ export default function SetupInformation() {
   ]);
 
   // DROPDOWN: Courses
-  const [courseOpen, setCourseOpen] = useState(false);
   const [course, setCourse] = useState(null);
+  const [courseOpen, setCourseOpen] = useState(false);
   const [courseItems, setCourseItems] = useState<{ label: string, value: string }[]>([]);
   const coursesByDepartment: { [key: string]: string[] } = {
     CAS:["BA English Language Studies", "BA Foreign Languages", "BA Political Science", "BS Applied Mathematics", "BS Biology", "BS Chemistry"],
@@ -144,6 +144,8 @@ export default function SetupInformation() {
   };
 
   const pressNextButton = () => {
+    if (isNextDisabled()) return; // If button is disabled, do nothing
+
     // Dynamic navigation based on # of screens
     if (currentStep < 8) {
       setCurrentStep(currentStep + 1);
@@ -315,23 +317,24 @@ export default function SetupInformation() {
       {currentStep === 7 && (
       <View style={setupInformationStyles.titleContainer}>
         <Text style={setupInformationStyles.title}>Personal Information</Text>
-        <View style={setupInformationStyles.summaryContainer}>
-          <View style={setupInformationStyles.firstColumnLabel}>
-            <Text style={setupInformationStyles.firstColumnText}>Name: </Text>
-            <Text style={setupInformationStyles.firstColumnText}>Gender: </Text>
-            <Text style={setupInformationStyles.firstColumnText}>Type: </Text>
-            <Text style={setupInformationStyles.firstColumnText}>I.D.: </Text>
-            <Text style={setupInformationStyles.firstColumnText}>Department: </Text>
-            <Text style={setupInformationStyles.firstColumnText}>Course: </Text>
-          </View>
-          <View style={setupInformationStyles.secondColumnLabel}>
-            <Text style={setupInformationStyles.secondColumnText}>{name}</Text>
-            <Text style={setupInformationStyles.secondColumnText}>{gender}</Text>
-            <Text style={setupInformationStyles.secondColumnText}>{type} </Text>
-            <Text style={setupInformationStyles.secondColumnText}>{ID}</Text>
-            <Text style={setupInformationStyles.secondColumnText}>{department}</Text>
-            <Text style={setupInformationStyles.secondColumnText}>{course}</Text>
-          </View>
+        <View style={setupInformationStyles.cardContainer}>
+        <Image
+            source={require("../../assets/images/card-banner.png")}
+            style={setupInformationStyles.summaryBanner}
+            />
+            <Image
+            source={require("../../assets/images/id-placeholder.png")}
+            style={setupInformationStyles.summaryImage}
+            resizeMode="contain"
+            />
+            <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>
+            <Text style={setupInformationStyles.summaryName}>{name}</Text>
+            <Text style={setupInformationStyles.summaryGenderLabel}>Gender:</Text>
+            <Text style={setupInformationStyles.summaryGender}>{gender}</Text>
+            <Text style={setupInformationStyles.summaryType}>{type} </Text>
+            <Text style={setupInformationStyles.summaryID}>{ID}</Text>
+            <Text style={setupInformationStyles.summaryDepartment}>{department}</Text>
+            <Text style={setupInformationStyles.summaryCourse}>{course}</Text>
         </View>
       </View>
       )}

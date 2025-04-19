@@ -36,6 +36,15 @@ export const globalStyles = StyleSheet.create({
     // },
 })
 
+export const enrollmentFormStyles = StyleSheet.create({
+    screen: {
+        backgroundColor: colors.accent,
+
+        flex: 1,
+        alignItems: 'center',
+    },
+})
+
 export const setupInformationStyles = StyleSheet.create({
     titleContainer: {
         backgroundColor: colors.accent,
@@ -142,6 +151,37 @@ export const setupInformationStyles = StyleSheet.create({
 
         color: "white",
     },
+    backButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "center",
+
+        borderRadius: 20,
+
+        marginRight: 30,
+        paddingTop: 2,
+        paddingBottom: 6,
+        paddingHorizontal: 16,
+
+        position: "absolute",
+        top: 630,
+        left: 12,
+        zIndex: 1,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    backButtonLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 24,
+
+        color: "white"
+    },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -199,7 +239,7 @@ export const setupInformationStyles = StyleSheet.create({
         fontFamily: 'Lklavika-Medium',
         fontSize: 20,
 
-        color: colors.primary,
+        color: colors.gray,
 
         marginLeft: 10,
     },
@@ -211,73 +251,132 @@ export const setupInformationStyles = StyleSheet.create({
 
         marginTop: 2,
         marginLeft: 10,
-        lineHeight: 22,
+        lineHeight: 18,
     },
-    summaryContainer: {
+    cardContainer: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
 
-        height: 200,
-        width: 400,
+        backgroundColor: colors.white,
+        borderColor: colors.secondary,
+        borderWidth: 2,
+        borderRadius: 10,
 
-        marginTop: 80,
-        paddingLeft: 10,
-    },
-    firstColumnLabel: {
-        display: "flex",
-        alignItems: "flex-end",
+        height: 240,
+        width: 360,
 
+        marginTop: 20,
+        paddingLeft: 60,
+        paddingTop: 20
     },
-    secondColumnLabel: {
-        display: "flex",
-        alignItems: "flex-start",
+    summaryBanner: {
+        width: 356,
+        height: 50,
 
-        width: 260
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: 2,
     },
-    firstColumnText: {
+    summaryImage: {
+        height: 80,
+
+        position: "absolute",
+        top: 70,
+        left: 116,
+        zIndex: 1,
+    },
+    summaryNameLabel: {
         fontFamily: 'Lklavika-Medium',
+        fontSize: 14,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 64,
+        left: 16,
+        zIndex: 1,
+    },
+    summaryName: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 16,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 80,
+        left: 16,
+        zIndex: 1,
+    },
+    summaryGenderLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 14,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 110,
+        left: 16,
+        zIndex: 1,
+    },
+    summaryGender: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 14,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 126,
+        left: 16,
+        zIndex: 1,
+    },
+    summaryType: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 10,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 164,
+        left: 275,
+        zIndex: 1,
+    },
+    summaryID: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 12,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 150,
+        left: 256,
+        zIndex: 1,
+    },
+    summaryDepartment: {
+        fontFamily: 'Lklavika-Bold',
         fontSize: 18,
 
         color: colors.secondary,
-    },
-    secondColumnText: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 18,
-
-        color: colors.primary,
-    },
-    backButton: {
-        backgroundColor: colors.primary,
-
-        alignSelf: "center",
-
-        borderRadius: 20,
-
-        marginRight: 30,
-        paddingTop: 2,
-        paddingBottom: 6,
-        paddingHorizontal: 16,
 
         position: "absolute",
-        top: 630,
-        left: 12,
+        top: 184,
+        left: 14,
         zIndex: 1,
-
-        // iOS Shadow
-        shadowColor: colors.secondary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
     },
-    backButtonLabel: {
+    summaryCourse: {
         fontFamily: 'Lklavika-Medium',
-        fontSize: 24,
+        fontSize: 14,
 
-        color: "white"
-    },
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 204,
+        left: 14,
+        zIndex: 1,
+    }
 })
 
 export const loginStyles = StyleSheet.create({
@@ -639,6 +738,26 @@ export const dashboardStyles = StyleSheet.create({
 
         color: colors.white,
     },
+    editInformationButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "flex-end",
+
+        marginBottom: 4,
+        marginRight: 34,
+        paddingVertical: 10,
+        paddingLeft: 12,
+        paddingRight: 10,
+        borderRadius: 8,
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
     studentInformationContainer: {
         display: "flex",
         flexDirection: "row",
@@ -650,7 +769,7 @@ export const dashboardStyles = StyleSheet.create({
 
         borderRadius: 20,
 
-        marginVertical: "6%",
+        marginVertical: "2%",
         paddingLeft: "4%",
 
         // iOS Shadow
@@ -664,7 +783,7 @@ export const dashboardStyles = StyleSheet.create({
     studentInformationFirstColumn: {
         alignItems: "flex-end",
         
-        paddingLeft: "4%",
+        paddingLeft: "2%",
         paddingRight: "2%",
     },
     studentInformationSecondColumn: {
@@ -741,30 +860,6 @@ export const dashboardStyles = StyleSheet.create({
 
         color: "white"
     },
-    editInformationButton: {
-        backgroundColor: colors.primary,
-
-        alignSelf: "center",
-
-        marginBottom: "4%",
-        paddingVertical: 10,
-        paddingHorizontal: 18,
-        borderRadius: 8,
-
-        // iOS Shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
-    },
-    editInformationButtonLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 20,
-
-        color: "white"
-    },
     idRow: {
         flexDirection: "row",
         alignItems: "center",
@@ -772,8 +867,8 @@ export const dashboardStyles = StyleSheet.create({
     copyContainer: {
         color: colors.primary,
 
-        marginLeft: "4%",
-        marginTop: "4%"
+        marginLeft: "2%",
+        marginTop: "1%"
     }
 })
 
