@@ -15,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from "@expo/vector-icons";
 import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
+// COMPONENTS
+import BurgerMenu from "@/components/BurgerMenu";
 
 export default function dashboard() {
     // TypeScript type, specify structure and type of data for 'StudentInfo'
@@ -126,13 +128,6 @@ export default function dashboard() {
             <Text style={dashboardStyles.subtitle}>DASHBOARD</Text>
         </View>
 
-        {/* STUDENT PICTURE */}
-        <Image
-        source={require("../../assets/images/profile-placeholder.jpg")}
-        style={dashboardStyles.studentPicture}
-        resizeMode="cover"
-        />
-
         {/* EDIT INFORMATION BUTTON */}
         <TouchableOpacity
         style={dashboardStyles.editInformationButton}
@@ -146,11 +141,13 @@ export default function dashboard() {
             source={require("../../assets/images/card-banner.png")}
             style={setupInformationStyles.summaryBanner}
             />
-            <Image
-            source={require("../../assets/images/id-placeholder.png")}
-            style={setupInformationStyles.summaryImage}
-            resizeMode="contain"
-            />
+            <View style={setupInformationStyles.cardImageContainer}>
+              <Image
+              source={require("../../assets/images/profile-placeholder.jpg")}
+              style={setupInformationStyles.cardImage}
+              resizeMode="cover"
+              />
+            </View>
             <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>
             <Text style={setupInformationStyles.summaryName}>{studentInfo?.name}</Text>
             <Text style={setupInformationStyles.summaryGenderLabel}>Gender:</Text>
@@ -161,65 +158,26 @@ export default function dashboard() {
             <Text style={setupInformationStyles.summaryCourse}>{studentInfo?.course}</Text>
         </View>
 
-        {/* VIEW SCHEDULE BUTTON */}
-        {/* <TouchableOpacity
-        style={dashboardStyles.editInformationButton}
-        // onPress={}
-        ><Text style={dashboardStyles.editInformationButtonLabel}>View Schedule</Text>
-        </TouchableOpacity> */}
+        {/* STATUS AREA */}
+        <View style={dashboardStyles.statusContainer}>
+        <View style={dashboardStyles.statusLabelContainer}>
+          <Text style={dashboardStyles.statusLabel}>STATUS</Text>
+        </View>
+        <Text style={dashboardStyles.statusText}>{studentInfo?.isEnrolled ? "Enrolled" : "Not yet enrolled"}</Text>
+        <Text style={dashboardStyles.statusComment}>{studentInfo?.isEnrolled ? "Congratulations! You are enrolled." : "Please complete the enrollment form."}</Text>
+        {/* ENROLLMENT FORM BUTTON */}
+        <TouchableOpacity
+        style={dashboardStyles.enrollmentFormButton}
+        onPress={goToEnrollmentForm}
+        ><Text style={dashboardStyles.enrollmentFormButtonLabel}>Go to Enrollment Form</Text>
+        </TouchableOpacity>
+        </View>
 
         {/* MENU BURGER BUTTON */}
-        <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isMenuVisible}
-        onRequestClose={() => setIsMenuVisible(false)}
-        >
-            <TouchableWithoutFeedback onPress={() => setIsMenuVisible(false)}>
-                <View style={burgerMenuStyles.modalOverlay}>
-                  <TouchableWithoutFeedback>
-                    <View style={burgerMenuStyles.menuContainer}>
-                      {/* STUDENT PICTURE /W NAME & SECTION */}
-                      <View style={burgerMenuStyles.profile}>
-                      <Text style={burgerMenuStyles.profileTitle}>MENU</Text>
-                        <Image
-                        source={require("../../assets/images/profile-placeholder.jpg")}
-                        style={burgerMenuStyles.studentPicture}
-                        resizeMode="cover"
-                        />
-                        <Text style={burgerMenuStyles.studentName}>Adrian Dominic L. Tan</Text>
-                        <Text style={burgerMenuStyles.studentSection}>BSCS 1-A</Text>
-                      </View>
-
-                      {/* NAVIGATION */}
-                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToDashboard}>
-                        <Text style={burgerMenuStyles.menuItemText}>Dashboard</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToEnrollmentForm}>
-                        <Text style={burgerMenuStyles.menuItemText}>Enrollment Form</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToCourses}>
-                        <Text style={burgerMenuStyles.menuItemText}>Courses</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToSettings}>
-                        <Text style={burgerMenuStyles.menuItemText}>Settings</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToPrivacyAndSupport}>
-                        <Text style={burgerMenuStyles.menuItemText}>Privacy & Support</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToLogOut}>
-                        <Text style={burgerMenuStyles.menuItemText}>Log Out</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </TouchableWithoutFeedback>
-                </View>
-            </TouchableWithoutFeedback>
-        </Modal>
+        <BurgerMenu
+        isVisible={isMenuVisible}
+        setIsVisible={setIsMenuVisible}
+        />
     </View>
   );
 }

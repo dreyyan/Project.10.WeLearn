@@ -19,8 +19,8 @@ import UserProvider from '../../context/UserContext';
 
 export default function Login() {
   // STATES
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("ADT07299270@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [isLoading, setIsLoading] = useState(true);
 
   // HANDLES
@@ -50,10 +50,11 @@ export default function Login() {
             },
           ]);
         } else {
+          router.replace('/Dashboard')
           // If profile is complete, redirect to the dashboard
-          Alert.alert("Success", "You are logged in!", [
-            { text: "Continue", onPress: () => router.replace('/Dashboard') },
-          ]);
+          // Alert.alert("Success", "You are logged in!", [
+          //   { text: "Continue", onPress: () => router.replace('/Dashboard') },
+          // ]);
         }
       } else {
         // ERROR: Non-existing profile document
@@ -89,6 +90,7 @@ export default function Login() {
       // Triggers everytime the user's login state changes
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         setIsLoading(false); // Stop loading once Firebase returns a result
+
         // If user is logged in, check their profile and decide where to send it
         if (user) {
           // Check user profile and redirect accordingly

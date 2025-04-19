@@ -3,7 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithout
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES
-import { dashboardStyles, burgerMenuStyles, globalStyles } from "../../styles/styles"
+import { dashboardStyles, burgerMenuStyles, globalStyles, enrollmentFormStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
 import { doc, getDoc } from "firebase/firestore";
@@ -15,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from "@expo/vector-icons";
 import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
+// COMPONENTS
+import BurgerMenu from "@/components/BurgerMenu";
 
 export default function EnrollmentForm() {
     // TypeScript type, specify structure and type of data for 'StudentInfo'
@@ -125,35 +127,40 @@ export default function EnrollmentForm() {
             <Text style={dashboardStyles.subtitle}>Enrollment Form</Text>
         </View>
 
-        <View style={dashboardStyles.studentInformationContainer}>
+        <View style={enrollmentFormStyles.studentInformationContainer}>
           {/* FIRST COLUMN */}
-          <View style={dashboardStyles.studentInformationFirstColumn}>
-              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Full Name: </Text>
-              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Type: </Text>
-              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Gender: </Text>
-              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Student ID: </Text>
-              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Department: </Text>
-              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Course: </Text>
-              <Text style={dashboardStyles.studentInformationFirstColumnLabel}>Status: </Text>
+          <View style={enrollmentFormStyles.studentInformationFirstColumn}>
+              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Full Name: </Text>
+              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Type: </Text>
+              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Gender: </Text>
+              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Student ID: </Text>
+              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Department: </Text>
+              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Course: </Text>
+              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Status: </Text>
           </View>
           {/* SECOND COLUMN */}
-          <View style={dashboardStyles.studentInformationSecondColumn}>
-              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.name}</Text>
-              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.type}</Text>
-              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.gender}</Text>
+          <View style={enrollmentFormStyles.studentInformationSecondColumn}>
+              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.name}</Text>
+              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.type}</Text>
+              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.gender}</Text>
               {/* COPY FEATURE */}
-              <View style={dashboardStyles.idRow}>
-                  <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.ID}</Text>
+              <View style={enrollmentFormStyles.idRow}>
+                  <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.ID}</Text>
                   <TouchableOpacity
-                  style={dashboardStyles.copyContainer}
+                  style={enrollmentFormStyles.copyContainer}
                   onPress={handleCopy}
                   ><Feather name="copy" size={16} color="#1773EA" /></TouchableOpacity>
               </View>
-              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.department}</Text>
-              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.course}</Text>
-              <Text style={dashboardStyles.studentInformationSecondColumnLabel}>{studentInfo?.isEnrolled ? "Enrolled" : "Not yet enrolled"}</Text>
+              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.department}</Text>
+              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.course}</Text>
+              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.isEnrolled ? "Enrolled" : "Not yet enrolled"}</Text>
           </View>
         </View>
+        {/* MENU BURGER BUTTON */}
+        <BurgerMenu
+        isVisible={isMenuVisible}
+        setIsVisible={setIsMenuVisible}
+        />
     </View>
   );
 }

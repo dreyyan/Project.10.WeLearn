@@ -43,6 +43,278 @@ export const enrollmentFormStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
+    studentInformationContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: colors.accent,
+
+        width: "84%",
+        height: "24%",
+
+        borderRadius: 20,
+
+        marginVertical: "2%",
+        paddingLeft: "4%",
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    studentInformationFirstColumn: {
+        alignItems: "flex-end",
+        
+        paddingLeft: "2%",
+        paddingRight: "2%",
+    },
+    studentInformationSecondColumn: {
+        flex: 1,
+        alignItems: "flex-start",
+    },
+    studentInformationFirstColumnLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 18,
+        lineHeight: 22,
+
+        color: colors.secondary,
+    },
+    studentInformationSecondColumnLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+        lineHeight: 22,
+
+        color: colors.secondary,
+    },
+    idRow: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    copyContainer: {
+        color: colors.primary,
+
+        marginLeft: "2%",
+        marginTop: "1%"
+    }
+})
+
+export const dashboardStyles = StyleSheet.create({
+    screen: {
+        backgroundColor: colors.accent,
+
+        flex: 1,
+        alignItems: 'center',
+    },
+    titleContainer: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        alignItems: 'center',
+
+        width: "100%",
+        height: "10%",
+    },
+    subtitleContainer: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        width: "84%",
+        height: "10%",
+
+        marginTop: "8%",
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    title: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 40,
+
+        color: "white"
+    },
+    subtitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 50,
+
+        color: colors.white,
+    },
+    editInformationButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "flex-end",
+
+        marginTop: 20,
+        marginBottom: 2,
+        marginRight: 34,
+        paddingVertical: 10,
+        paddingLeft: 12,
+        paddingRight: 10,
+        borderRadius: 8,
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    welcomeMessage: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 34,
+
+        color: colors.text,
+
+        marginTop: "6%",
+        marginBottom: "4%"
+    },
+    studentInformationTitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
+        textAlign: "center",
+
+        color: colors.text,
+
+
+        marginTop: "6%",
+        marginBottom: "4%"
+    },
+    studentPicture: {
+        alignSelf: 'center',
+
+        width: 180,
+        height: 180,
+
+        borderRadius: 90,
+
+        marginTop: "8%",
+        marginBottom: "4%",
+    },
+    methodButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "center",
+
+        borderRadius: 8,
+
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        marginVertical: "2%",
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    methodButtonLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 20,
+
+        color: "white"
+    },
+    statusContainer: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+
+        backgroundColor: colors.white,
+        borderColor: colors.secondary,
+        borderWidth: 4,
+        borderRadius: 4,
+
+        height: 180,
+        width: 360,
+
+        marginTop: 40,
+        paddingTop: 4,
+        paddingHorizontal: 10
+    },
+    statusLabelContainer: {
+        backgroundColor: colors.secondary,
+        borderColor: colors.secondary,
+        borderWidth: 1,
+        borderRadius: 2,
+
+        height: 36,
+        width: 110,
+
+        alignSelf: "center",
+
+        marginBottom: 6,
+        paddingTop: 2,
+        paddingBottom: 4
+    },
+    statusLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 20,
+        
+        color: colors.white,
+
+        alignSelf: "center"
+    },
+    statusText: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+        
+        color: colors.secondary,
+
+        alignSelf: "center",
+        textAlign: "center"
+    },
+    statusComment: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 16,
+        
+        color: colors.secondary,
+
+        alignSelf: "center",
+        textAlign: "center"
+    },
+    enrollmentFormButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "center",
+
+        borderWidth: 2,
+        borderRadius: 8,
+        borderColor: colors.secondary,
+
+        marginTop: 10,
+        marginBottom: 6,
+        paddingVertical: 6,
+        paddingLeft: 12,
+        paddingRight: 10,
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    enrollmentFormButtonLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 16,
+
+        color: colors.white,
+    }
 })
 
 export const setupInformationStyles = StyleSheet.create({
@@ -281,13 +553,18 @@ export const setupInformationStyles = StyleSheet.create({
         left: 0,
         zIndex: 2,
     },
-    summaryImage: {
+    cardImageContainer: {
+        width: 80,
         height: 80,
 
         position: "absolute",
         top: 70,
-        left: 116,
+        left: 255,
         zIndex: 1,
+    },
+    cardImage: {
+        width: "100%",
+        height: "100%"
     },
     summaryNameLabel: {
         fontFamily: 'Lklavika-Medium',
@@ -688,190 +965,6 @@ export const signUpStyles = StyleSheet.create({
     },
 })
 
-export const dashboardStyles = StyleSheet.create({
-    screen: {
-        backgroundColor: colors.accent,
-
-        flex: 1,
-        alignItems: 'center',
-    },
-    titleContainer: {
-        backgroundColor: colors.primary,
-
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: 'center',
-
-        width: "100%",
-        height: "10%",
-    },
-    subtitleContainer: {
-        backgroundColor: colors.primary,
-
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-
-        width: "84%",
-        height: "10%",
-
-        marginTop: "8%",
-
-        // iOS Shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
-    },
-    title: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 40,
-
-        color: "white"
-    },
-    subtitle: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 50,
-
-        color: colors.white,
-    },
-    editInformationButton: {
-        backgroundColor: colors.primary,
-
-        alignSelf: "flex-end",
-
-        marginBottom: 4,
-        marginRight: 34,
-        paddingVertical: 10,
-        paddingLeft: 12,
-        paddingRight: 10,
-        borderRadius: 8,
-
-        // iOS Shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
-    },
-    studentInformationContainer: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: colors.accent,
-
-        width: "84%",
-        height: "24%",
-
-        borderRadius: 20,
-
-        marginVertical: "2%",
-        paddingLeft: "4%",
-
-        // iOS Shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
-    },
-    studentInformationFirstColumn: {
-        alignItems: "flex-end",
-        
-        paddingLeft: "2%",
-        paddingRight: "2%",
-    },
-    studentInformationSecondColumn: {
-        flex: 1,
-        alignItems: "flex-start",
-    },
-    studentInformationFirstColumnLabel: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 18,
-        lineHeight: 22,
-
-        color: colors.secondary,
-    },
-    studentInformationSecondColumnLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 18,
-        lineHeight: 22,
-
-        color: colors.secondary,
-    },
-    welcomeMessage: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 34,
-
-        color: colors.text,
-
-        marginTop: "6%",
-        marginBottom: "4%"
-    },
-    studentInformationTitle: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 24,
-        textAlign: "center",
-
-        color: colors.text,
-
-
-        marginTop: "6%",
-        marginBottom: "4%"
-    },
-    studentPicture: {
-        alignSelf: 'center',
-
-        width: 180,
-        height: 180,
-
-        borderRadius: 90,
-
-        marginTop: "8%",
-        marginBottom: "4%",
-    },
-    methodButton: {
-        backgroundColor: colors.primary,
-
-        alignSelf: "center",
-
-        borderRadius: 8,
-
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: "2%",
-
-        // iOS Shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
-    },
-    methodButtonLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 20,
-
-        color: "white"
-    },
-    idRow: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    copyContainer: {
-        color: colors.primary,
-
-        marginLeft: "2%",
-        marginTop: "1%"
-    }
-})
-
 export const burgerMenuStyles = StyleSheet.create({
     modalOverlay: {
         backgroundColor: "rgba(0,0,0,0.5)",
@@ -955,9 +1048,15 @@ export const burgerMenuStyles = StyleSheet.create({
 
         color: colors.white,
       },
-      studentSection: {
+      studentDepartment: {
         fontFamily: 'Lklavika-Medium',
         fontSize: 20,
+
+        color: colors.white,
+      },
+      studentCourse: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
 
         color: colors.white,
       },
