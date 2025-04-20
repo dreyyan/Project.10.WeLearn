@@ -59,7 +59,7 @@ export const enrollmentFormStyles = StyleSheet.create({
 
         paddingBottom: 2,
         marginTop: 34,
-        marginBottom: 30,
+        marginBottom: 20,
         // iOS Shadow
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -74,27 +74,17 @@ export const enrollmentFormStyles = StyleSheet.create({
 
         color: colors.white,
     },
-    sectionTitle: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 20,
-
-        color: colors.secondary,
-
-        alignSelf: "flex-start",
-
-        marginLeft: 34,
-    },
     formContainer: {
         display: "flex",
         flexDirection: "column",
         backgroundColor: colors.accent,
 
+
         width: 368,
-        height: 1000,
 
         borderRadius: 20,
 
-        marginTop: 12,
+        marginTop: 0,
         paddingLeft: 20,
         paddingTop: 4,
         // iOS Shadow
@@ -104,6 +94,17 @@ export const enrollmentFormStyles = StyleSheet.create({
         shadowRadius: 6,
         // Android Shadow
         elevation: 8
+    },
+    sectionTitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 20,
+
+        color: colors.secondary,
+
+        alignSelf: "flex-start",
+
+        marginTop: 10,
+        marginLeft: 6,
     },
     sectionLabel: {
         fontFamily: 'Lklavika-Bold',
@@ -116,7 +117,7 @@ export const enrollmentFormStyles = StyleSheet.create({
         position: "absolute",
         top: 2,
         left: 2,
-        zIndex: 1000,
+        zIndex: 1,
 
         marginLeft: 6,
     },
@@ -126,8 +127,8 @@ export const enrollmentFormStyles = StyleSheet.create({
 
         backgroundColor: '#fff',
 
-        marginTop: 18,
-        marginBottom: 16,
+        marginTop: 20,
+        marginBottom: 12,
         paddingTop: 6,
         paddingBottom: 0,
 
@@ -174,9 +175,9 @@ export const enrollmentFormStyles = StyleSheet.create({
         borderColor: colors.primary,
         borderWidth: 2,
 
-        width: 220,
-        height: 10,
+        height: 40,
         marginTop: 10,
+        marginBottom: 8,
     },
     dropdownContainer: {
         borderColor: colors.primary,
@@ -186,6 +187,7 @@ export const enrollmentFormStyles = StyleSheet.create({
 
         marginTop: 8,
         paddingVertical: 4,
+        zIndex: 1000
     },
     dropdownText: {
         fontFamily: 'Lklavika-Bold',
@@ -208,6 +210,68 @@ export const enrollmentFormStyles = StyleSheet.create({
         marginTop: 2,
         marginLeft: 10,
         lineHeight: 18,
+    },
+    buttonContainer: {
+        display: "flex",
+        flexDirection: "row",
+    },
+    nextButton: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+
+        width: 200,
+        height: 56,
+
+        borderRadius: 30,
+
+        marginTop: 26,
+        marginBottom: 30,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    nextButtonLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
+
+        color: "white",
+    },
+    backButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "center",
+
+        borderRadius: 20,
+
+        marginRight: 30,
+        paddingTop: 2,
+        paddingBottom: 6,
+        paddingHorizontal: 16,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    backButtonLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 24,
+
+        color: "white"
     },
 })
 
@@ -802,8 +866,9 @@ export const loginStyles = StyleSheet.create({
 
     },
     formContainer: {
-        height: 300
-    },
+        flex: 1,
+        padding: 20,
+      },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
