@@ -273,6 +273,93 @@ export const enrollmentFormStyles = StyleSheet.create({
 
         color: "white"
     },
+    bottomMargin: {
+        backgroundColor: colors.primary,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+
+        marginTop: 20,
+        marginLeft: -20
+    },
+    uploadFileButton: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+
+        width: 180,
+        height: 60,
+
+        borderRadius: 30,
+
+        marginTop: 20,
+        marginLeft: -20,
+        paddingVertical: 12,
+        paddingHorizontal: 4,
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    uploadButtonLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 20,
+
+        color: "white",
+    },
+    uploadedFilesContainer: {
+        display: "flex",
+        flexDirection: "column",
+
+        backgroundColor: colors.white,
+        borderColor: colors.secondary,
+        borderRadius: 10,
+        borderWidth: 2,
+        height: 170,
+        width: 330,
+
+        marginTop: 20,
+    },
+    fileLine: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+
+        borderWidth: 1,
+        height: 40
+    },
+    fileText: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 16,
+
+        color: colors.secondary,
+
+        marginLeft: 16,
+
+    },
+    removeButton: {
+        backgroundColor: "#ea1717",
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 28,
+        height: 28,
+        borderRadius: 4,
+        marginLeft: 20
+    },
+    removeText: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 16,
+        fontWeight: "bold",
+        color: colors.white,
+    },
 })
 
 export const dashboardStyles = StyleSheet.create({

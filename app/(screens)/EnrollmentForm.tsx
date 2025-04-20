@@ -12,14 +12,11 @@ import { onAuthStateChanged } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { Feather } from "@expo/vector-icons";
-import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import { Platform } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DropDownPicker from 'react-native-dropdown-picker';
-import { ScrollView } from "react-native";
+import * as DocumentPicker from 'expo-document-picker';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 
@@ -41,6 +38,10 @@ export default function EnrollmentForm() {
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
     const [currentStep, setCurrentStep] = useState(1);
+    const [selectedFiles, setSelectedFiles] = useState<
+    { name: string; uri: string; type: string }[]
+  >([]);
+  
 
     // PERSONAL INFORMATION
     const [name, setName] = useState(studentInfo?.name);
@@ -101,7 +102,7 @@ export default function EnrollmentForm() {
     ]);
     const [householdMembers, setHouseholdMembers] = useState("");
     // Annual Gross Income
-    const [annualGrossIncome, setAnnualGrossIncome] = useState("");
+    const [annualGrossIncome, setAnnualGrossIncome] = useState("Below ₱131,484.00");
     const [annualGrossIncomeOpen, setAnnualGrossIncomeOpen] = useState(false);
     const [annualGrossIncomeItems, setAnnualGrossIncomeItems] = useState([
       { label: 'Below ₱131,484.00', value: 'Below ₱131,484.00' },
@@ -115,7 +116,7 @@ export default function EnrollmentForm() {
 
     // EDUCATION INFORMATION
     // Student Type
-    const [studentType, setStudentType] = useState("");
+    const [studentType, setStudentType] = useState("Local");
     const [studentTypeOpen, setStudentTypeOpen] = useState(false);
     const [studentTypeItems, setStudentTypeItems] = useState([
       { label: 'Local', value: 'Local' },
@@ -123,7 +124,7 @@ export default function EnrollmentForm() {
       { label: 'Foreign Dual Citizenship', value: 'Foreign Dual Citizenship' },
     ]);
     // Admission Status
-    const [admissionStatus, setAdmissionStatus] = useState("");
+    const [admissionStatus, setAdmissionStatus] = useState("New");
     const [admissionStatusOpen, setAdmissionStatusOpen] = useState(false);
     const [admissionStatusItems, setAdmissionStatusItems] = useState([
       { label: 'New', value: 'New' },
@@ -137,27 +138,47 @@ export default function EnrollmentForm() {
       { label: 'Shiftee', value: 'Shiftee' },
     ]);
     // Education Level
-    const [educationLevel, setEducationLevel] = useState("");
+    const [educationLevel, setEducationLevel] = useState("Primary Education");
     const [educationLevelOpen, setEducationLevelOpen] = useState(false);
     const [educationLevelItems, setEducationLevelItems] = useState([
+      { label: 'Primary Education', value: 'Primary Education' },
       { label: 'Secondary Education', value: 'Secondary Education' },
       { label: 'Tertiary Education', value: 'Tertiary Education' },
       { label: 'Postgraduate Education', value: 'Postgraduate Education' },
       { label: 'Alternative Learning System(ALS)', value: 'Alternative Learning System(ALS)' },
     ]);
     // Year Level
-    const [yearLevel, setYearLevel] = useState("");
+    const [yearLevel, setYearLevel] = useState("First Year");
     const [yearLevelOpen, setYearLevelOpen] = useState(false);
     const [yearLevelItems, setYearLevelItems] = useState([
-      { label: 'First Year', value: '' },
-      { label: 'Second Year', value: '' },
-      { label: 'Third Year', value: '' },
-      { label: 'Fourth Year', value: '' },
+      { label: 'First Year', value: 'First Year' },
+      { label: 'Second Year', value: 'Second Year' },
+      { label: 'Third Year', value: 'Third Year' },
+      { label: 'Fourth Year', value: 'Fourth Year' },
     ]);
     const [LRN, setLRN] = useState("");
-    
     // ADDRESS INFORMATION
-    const [region, setRegion] = useState("");
+    const [region, setRegion] = useState("Region I");
+    const [regionOpen, setRegionOpen] = useState(false);
+    const [regionItems, setRegionItems] = useState([
+      { label: 'Region I', value: 'Region I' },
+      { label: 'Region II', value: 'Region II' },
+      { label: 'Region III', value: 'Region III' },
+      { label: 'Region IV-A', value: 'Region IV-A' },
+      { label: 'MIMAROPA', value: 'MIMAROPA' },
+      { label: 'Region V', value: 'Region V' },
+      { label: 'NCR', value: 'NCR' },
+      { label: 'CAR', value: 'CAR' },
+      { label: 'Region VI', value: 'Region VI' },
+      { label: 'Region VII', value: 'Region VII' },
+      { label: 'Region VIII', value: 'Region VIII' },
+      { label: 'Region IX', value: 'Region IX' },
+      { label: 'Region X', value: 'Region X' },
+      { label: 'Region XI', value: 'Region XI' },
+      { label: 'Region XII', value: 'Region XII' },
+      { label: 'CARAGA', value: 'CARAGA' },
+      { label: 'BARMM', value: 'BARMM' },
+    ])
     const [province, setProvince] = useState("");
     const [municipalityCity, setMunicipalityCity] = useState("");
     const [barangay, setBarangay] = useState("");
@@ -173,6 +194,60 @@ export default function EnrollmentForm() {
         mode: 'date',
         is24Hour: true,
       });
+    };
+
+    const uploadFile = async () => {
+      if (selectedFiles.length >= 3) {
+        Alert.alert('Upload Limit Reached', 'You can only upload a maximum of 3 files.');
+        return;
+      }
+  
+      const result = await DocumentPicker.getDocumentAsync({
+        type: '*/*',
+        multiple: true,
+      });
+  
+      if (result.assets && result.assets.length > 0) {
+        const newFiles = result.assets.map((file) => ({
+          name: file.name,
+          uri: file.uri,
+          type: file.mimeType || 'application/octet-stream',
+        }));
+  
+        // Combine old + new, max 3
+        const updatedFiles = [...selectedFiles, ...newFiles].slice(0, 3);
+        setSelectedFiles(updatedFiles);
+  
+        // Optional: upload immediately
+        const formData = new FormData();
+        updatedFiles.forEach((file) => {
+          formData.append('files', {
+            uri: file.uri,
+            name: file.name,
+            type: file.type,
+          } as any);
+        });
+  
+        try {
+          const response = await fetch('https://your-server.com/upload', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+  
+          const data = await response.text();
+          console.log('Upload response:', data);
+        } catch (error) {
+          console.error('Upload error:', error);
+        }
+      }
+    };
+    
+    const removeFile = (index: number) => {
+      const updatedFiles = selectedFiles.filter((_, i) => i !== index);
+      setSelectedFiles(updatedFiles);
     };
 
     // HANDLES: ROUTING
@@ -226,7 +301,7 @@ export default function EnrollmentForm() {
       if (isNextDisabled()) return; // If button is disabled, do nothing
   
       // Dynamic navigation based on # of screens
-      if (currentStep < 8) {
+      if (currentStep < 6) {
         setCurrentStep(currentStep + 1);
       } else {
         router.replace("/Dashboard"); // Navigate to the next screen or complete the setup
@@ -305,7 +380,7 @@ export default function EnrollmentForm() {
             onChangeText={setName}
           />
         </View>
-        {/* BIRTHDAY */}
+        {/* DATE OF BIRTH */}
         <View style={[enrollmentFormStyles.inputContainer, { width: 100, height: 50 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Date of Birth</Text>
           <TouchableOpacity onPress={showDatePicker}>
@@ -357,7 +432,7 @@ export default function EnrollmentForm() {
           />
         </View>
         {/* CIVIL STATUS */}
-        <View style={[enrollmentFormStyles.checkboxContainer, { width: 200, height: 80, position: "absolute", top: 124, left: 140 }]}>
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 200, height: 80, position: "absolute", top: 127, left: 140 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Civil Status</Text>
           <DropDownPicker
             open={civilStatusOpen}
@@ -366,7 +441,6 @@ export default function EnrollmentForm() {
             setOpen={setCivilStatusOpen}
             setValue={setCivilStatus}
             setItems={setCivilStatusItems}
-            placeholder="Civil status"
             style={enrollmentFormStyles.dropdownMenu}
             dropDownContainerStyle={enrollmentFormStyles.dropdownContainer}
             textStyle={enrollmentFormStyles.dropdownText}
@@ -458,7 +532,6 @@ export default function EnrollmentForm() {
             setOpen={setReligionOpen}
             setValue={setReligion}
             setItems={setReligionItems}
-            placeholder="Civil status"
             style={[enrollmentFormStyles.dropdownMenu, { width: 280 }]}
             dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 280 }]}
             textStyle={enrollmentFormStyles.dropdownText}
@@ -478,7 +551,6 @@ export default function EnrollmentForm() {
             setOpen={setDisabilityOpen}
             setValue={setDisability}
             setItems={setDisabilityItems}
-            placeholder="Civil status"
             style={[enrollmentFormStyles.dropdownMenu, { width: 250 }]}
             dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 250 }]}
             textStyle={enrollmentFormStyles.dropdownText}
@@ -498,7 +570,6 @@ export default function EnrollmentForm() {
             setOpen={setAnnualGrossIncomeOpen}
             setValue={setAnnualGrossIncome}
             setItems={setAnnualGrossIncomeItems}
-            placeholder="Annual gross income"
             style={[enrollmentFormStyles.dropdownMenu, { width: 280 }]}
             dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 280 }]}
             textStyle={enrollmentFormStyles.dropdownText}
@@ -509,21 +580,209 @@ export default function EnrollmentForm() {
           />
         </View>
         {/* BOTTOM MARGIN */}
-        <View style={{height: 248}}/>
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 228 }]}/>
       </View>
       )}
 
-      {/* SCREEN 3: EDUCATION INFORMATION */}
+      {/* SCREEN 3: ADDRESS INFORMATION */}
       {currentStep === 3 && (
       <View style={enrollmentFormStyles.formContainer}>
-        <Text style={enrollmentFormStyles.sectionTitle}>II. Education Information</Text>
-        {/* STUDENT TYPE */}
-        {/* ADMISSION STATUS */}
-        {/* EDUCATION LEVEL */}
-        {/* YEAR LEVEL */}
-        {/* LRN */}
+        <Text style={enrollmentFormStyles.sectionTitle}>II. Address Information</Text>
+        {/* REGION */}
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Region</Text>
+          <DropDownPicker
+            open={regionOpen}
+            value={region}
+            items={regionItems}
+            setOpen={setRegionOpen}
+            setValue={setRegion}
+            setItems={setRegionItems}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 150 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 150 }]}
+            textStyle={enrollmentFormStyles.dropdownText}
+            labelStyle={enrollmentFormStyles.dropdownLabel}
+            placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
+            listItemLabelStyle={enrollmentFormStyles.dropdownLabel}
+            zIndex={999}
+          />
+        </View>        
+        {/* PROVINCE */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 150, height: 50 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Province</Text>
+          <TextInput
+            placeholder="Iloilo"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 150, height: 50 }]}
+            value={mobileNumber}
+            keyboardType="numeric" // Set to numeric keypad
+            onChangeText={setProvince}
+          />
+        </View>
+        {/* MUNICIPALITY/CITY */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 150, height: 50, position: "absolute", top: 124, left: 192 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Municipality/City</Text>
+          <TextInput
+            placeholder="Iloilo City"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 150, height: 50 }]}
+            value={mobileNumber}
+            keyboardType="numeric" // Set to numeric keypad
+            onChangeText={setMunicipalityCity}
+          />
+        </View>
+        {/* BARANGAY */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 170, height: 50 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Barangay</Text>
+          <TextInput
+            placeholder="Brgy. Magsaysay"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 170, height: 50 }]}
+            value={mobileNumber}
+            onChangeText={setBarangay}
+          />
+        </View>
+        {/* ZIP CODE */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 130, height: 50, position: "absolute", top: 206, left: 212 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>ZIP Code</Text>
+          <TextInput
+            placeholder="5000"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 130, height: 50 }]}
+            value={mobileNumber}
+            keyboardType="numeric" // Set to numeric keypad
+            onChangeText={(text) => { // Removes non-numeric characters
+              const numericText = text.replace(/[^0-9]/g, '');
+              setZIPCode(numericText);
+            }}
+          />
+        </View>
         {/* BOTTOM MARGIN */}
-        <View style={{height: 18}}/>
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 224 }]}/>
+      </View>
+      )}
+
+      {/* SCREEN 4: EDUCATION INFORMATION */}
+      {currentStep === 4 && (
+      <View style={enrollmentFormStyles.formContainer}>
+        <Text style={enrollmentFormStyles.sectionTitle}>III. Education Information</Text>
+        {/* STUDENT TYPE */}
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Student Type</Text>
+          <DropDownPicker
+            open={studentTypeOpen}
+            value={studentType}
+            items={studentTypeItems}
+            setOpen={setStudentTypeOpen}
+            setValue={setStudentType}
+            setItems={setStudentTypeItems}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 250 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 250 }]}
+            textStyle={enrollmentFormStyles.dropdownText}
+            labelStyle={enrollmentFormStyles.dropdownLabel}
+            placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
+            listItemLabelStyle={enrollmentFormStyles.dropdownLabel}
+            zIndex={999}
+          />
+        </View>
+        {/* ADMISSION STATUS */}
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Admission Status</Text>
+          <DropDownPicker
+            open={admissionStatusOpen}
+            value={admissionStatus}
+            items={admissionStatusItems}
+            setOpen={setAdmissionStatusOpen}
+            setValue={setAdmissionStatus}
+            setItems={setAdmissionStatusItems}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 170 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 170 }]}
+            textStyle={enrollmentFormStyles.dropdownText}
+            labelStyle={enrollmentFormStyles.dropdownLabel}
+            placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
+            listItemLabelStyle={enrollmentFormStyles.dropdownLabel}
+            zIndex={999}
+          />
+        </View>
+        {/* EDUCATION LEVEL */}
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Education Level</Text>
+          <DropDownPicker
+            open={educationLevelOpen}
+            value={educationLevel}
+            items={educationLevelItems}
+            setOpen={setEducationLevelOpen}
+            setValue={setEducationLevel}
+            setItems={setEducationLevelItems}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 300 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 300 }]}
+            textStyle={enrollmentFormStyles.dropdownText}
+            labelStyle={enrollmentFormStyles.dropdownLabel}
+            placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
+            listItemLabelStyle={enrollmentFormStyles.dropdownLabel}
+            zIndex={999}
+          />
+        </View>
+        {/* YEAR LEVEL */}
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Year Level</Text>
+          <DropDownPicker
+            open={yearLevelOpen}
+            value={yearLevel}
+            items={yearLevelItems}
+            setOpen={setYearLevelOpen}
+            setValue={setYearLevel}
+            setItems={setYearLevelItems}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 140 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 140 }]}
+            textStyle={enrollmentFormStyles.dropdownText}
+            labelStyle={enrollmentFormStyles.dropdownLabel}
+            placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
+            listItemLabelStyle={enrollmentFormStyles.dropdownLabel}
+            zIndex={999}
+          />
+        </View>   
+        {/* LRN */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 130, height: 50, position: "absolute", top: 123, left: 210 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>LRN</Text>
+          <TextInput
+            placeholder="000000000000"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 130, height: 50 }]}
+            value={mobileNumber}
+            keyboardType="numeric" // Set to numeric keypad
+            onChangeText={(text) => { // Removes non-numeric characters
+              const numericText = text.replace(/[^0-9]/g, '');
+              setMobileNumber(numericText);
+            }}
+          />
+        </View>
+        {/* BOTTOM MARGIN */}
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 148 }]}/>
+      </View>
+      )}
+
+      {/* SCREEN 5: UPLOAD DOCUMENTS/ID & CERTIFICATION */}
+      {currentStep === 5 && (
+      <View style={enrollmentFormStyles.formContainer}>
+        <Text style={enrollmentFormStyles.sectionTitle}>IV. Upload Documents/ID and Certification</Text>
+        {/* UPLOAD */}
+        <TouchableOpacity style={enrollmentFormStyles.uploadFileButton} onPress={uploadFile}>
+        <Text style={enrollmentFormStyles.uploadButtonLabel}>Upload Files</Text>
+        </TouchableOpacity>
+        {/* UPLOADED FILE */}
+        <View style={enrollmentFormStyles.uploadedFilesContainer}>
+        {selectedFiles.map((file, index) => (
+          <View style={enrollmentFormStyles.fileLine}>
+            <Text style={enrollmentFormStyles.fileText} key={index}>📄 {file.name}</Text>
+            <TouchableOpacity style={enrollmentFormStyles.removeButton} onPress={() => removeFile(index)}>
+            <Text style={enrollmentFormStyles.removeText}>X</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+        </View>
+        {/* BOTTOM MARGIN */}
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 176 }]}/>
       </View>
       )}
 
@@ -545,7 +804,7 @@ export default function EnrollmentForm() {
         style={[
         enrollmentFormStyles.nextButton,
         isNextDisabled() && { backgroundColor: "#ccc" }
-        ]}><Text style={enrollmentFormStyles.nextButtonLabel}>{currentStep < 8 ? "Next" : "Finish"}</Text>
+        ]}><Text style={enrollmentFormStyles.nextButtonLabel}>{currentStep < 6 ? "Next" : "ENROLL"}</Text>
         </TouchableOpacity>
       </View>
       {/* MENU BURGER BUTTON */}
