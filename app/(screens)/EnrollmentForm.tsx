@@ -15,6 +15,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from "@expo/vector-icons";
 import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { Platform } from 'react-native';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import DropDownPicker from 'react-native-dropdown-picker';
+import { ScrollView } from "react-native";
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 
@@ -28,6 +33,7 @@ export default function EnrollmentForm() {
         department: string;
         course: string;
         isEnrolled: boolean;
+        email: string;
         };
 
     // STATES
@@ -35,40 +41,90 @@ export default function EnrollmentForm() {
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
 
-        // HANDLES
-        const goToDashboard = () => {
-          setIsMenuVisible(false);
-        }
-    
-        const goToEnrollmentForm = () => {
-          router.replace('/EnrollmentForm');
-        }
-    
-        const goToCourses = () => {
-            router.replace('/Courses');
-        }
-    
-        const goToSettings = () => {
-            router.replace('/Settings');
-        }
-    
-        const goToPrivacyAndSupport = () => {
-            router.replace('/PrivacyAndSupport');
-        }
-    
-        const goToLogOut = () => {
-            router.replace('/');
-        }
-    
-        const handleBurgerMenu = () => {
-            setIsMenuVisible(true);
-        };
+    // PERSONAL INFORMATION
+    const [name, setName] = useState(studentInfo?.name);
+    const [birthday, setBirthday] = useState<Date | null>(null);
+    const [gender, setGender] = useState(studentInfo?.gender);
 
-        const handleCopy = async () => {
-          if (studentInfo?.ID) {
-          await Clipboard.setStringAsync(studentInfo.ID);
-          }
-        }
+      // DROPDOWN: Gender
+      const [civilStatus, setCivilStatus] = useState("Single");
+      const [civilStatusOpen, setCivilStatusOpen] = useState(false);
+      const [civilStatusItems, setCivilStatusItems] = useState([
+        { label: 'Single', value: 'Single' },
+        { label: 'Married', value: 'Married' },
+        { label: 'Legally Separated', value: 'Legally Separated' },
+        { label: 'Widowed', value: 'Widowed' },
+      ]);
+
+    const [emailAddress, setEmailAddress] = useState(studentInfo?.email);
+    const [birthPlace, setBirthPlace] = useState("");
+    const [nationality, setNationality] = useState("");
+    const [religion, setReligion] = useState("");
+    const [mobileNumber, setMobileNumber] = useState("");
+    const [disability, setDisability] = useState("");
+    const [householdMembers, setHouseholdMembers] = useState("");
+    const [annualGrossIncome, setAnnualGrossIncome] = useState("");
+
+    // EDUCATION INFORMATION
+    const [admissionStatus, setAdmissionStatus] = useState("");
+    const [educationLevel, setEducationLevel] = useState("");
+    const [yearLevel, setYearLevel] = useState("");
+    const [LRN, setLRN] = useState("");
+    const [studentType, setStudentType] = useState("");
+    
+    // ADDRESS INFORMATION
+    const [region, setRegion] = useState("");
+    const [province, setProvince] = useState("");
+    const [municipalityCity, setMunicipalityCity] = useState("");
+    const [barangay, setBarangay] = useState("");
+    const [ZIPCode, setZIPCode] = useState("");
+
+    // HANDLES: FORM
+    const showDatePicker = () => {
+      DateTimePickerAndroid.open({
+        value: birthday || new Date(),
+        onChange: (_, selectedDate) => {
+          if (selectedDate) setBirthday(selectedDate);
+        },
+        mode: 'date',
+        is24Hour: true,
+      });
+    };
+
+    // HANDLES: ROUTING
+    const goToDashboard = () => {
+      setIsMenuVisible(false);
+    }
+
+    const goToEnrollmentForm = () => {
+      router.replace('/EnrollmentForm');
+    }
+
+    const goToCourses = () => {
+        router.replace('/Courses');
+    }
+
+    const goToSettings = () => {
+        router.replace('/Settings');
+    }
+
+    const goToPrivacyAndSupport = () => {
+        router.replace('/PrivacyAndSupport');
+    }
+
+    const goToLogOut = () => {
+        router.replace('/');
+    }
+
+    const handleBurgerMenu = () => {
+        setIsMenuVisible(true);
+    };
+
+    const handleCopy = async () => {
+      if (studentInfo?.ID) {
+      await Clipboard.setStringAsync(studentInfo.ID);
+      }
+    }
 
   // Fetch user data from Firestore
   useEffect(() => {
@@ -122,45 +178,113 @@ export default function EnrollmentForm() {
 
       {/* PERSONALIZATION: Status bar color */}
       <StatusBar backgroundColor="#1773EA" style="light" />
-        {/* TITLE */}
-        <View style={dashboardStyles.subtitleContainer}>
-            <Text style={dashboardStyles.subtitle}>Enrollment Form</Text>
-        </View>
+      {/* TITLE */}
+      <View style={enrollmentFormStyles.subtitleContainer}>
+          <Text style={enrollmentFormStyles.subtitle}>ENROLLMENT FORM</Text>
+      </View>
 
-        <View style={enrollmentFormStyles.studentInformationContainer}>
-          {/* FIRST COLUMN */}
-          <View style={enrollmentFormStyles.studentInformationFirstColumn}>
-              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Full Name: </Text>
-              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Type: </Text>
-              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Gender: </Text>
-              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Student ID: </Text>
-              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Department: </Text>
-              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Course: </Text>
-              <Text style={enrollmentFormStyles.studentInformationFirstColumnLabel}>Status: </Text>
-          </View>
-          {/* SECOND COLUMN */}
-          <View style={enrollmentFormStyles.studentInformationSecondColumn}>
-              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.name}</Text>
-              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.type}</Text>
-              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.gender}</Text>
-              {/* COPY FEATURE */}
-              <View style={enrollmentFormStyles.idRow}>
-                  <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.ID}</Text>
-                  <TouchableOpacity
-                  style={enrollmentFormStyles.copyContainer}
-                  onPress={handleCopy}
-                  ><Feather name="copy" size={16} color="#1773EA" /></TouchableOpacity>
-              </View>
-              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.department}</Text>
-              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.course}</Text>
-              <Text style={enrollmentFormStyles.studentInformationSecondColumnLabel}>{studentInfo?.isEnrolled ? "Enrolled" : "Not yet enrolled"}</Text>
-          </View>
+      {/* I. PERSONAL INFORMATION */}
+      <Text style={enrollmentFormStyles.sectionTitle}>I. Personal Information</Text>
+      <ScrollView style={enrollmentFormStyles.formContainer}>
+        {/* NAME */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 324, height: 50 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Full Name</Text>
+          <TextInput
+            placeholder="Juan de la Cruz"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 324, height: 50 }]}
+            value={name}
+            onChangeText={setName}
+          />
         </View>
-        {/* MENU BURGER BUTTON */}
-        <BurgerMenu
-        isVisible={isMenuVisible}
-        setIsVisible={setIsMenuVisible}
+        {/* DATE OF BIRTH */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 100, height: 50 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Date of Birth</Text>
+          <TouchableOpacity onPress={showDatePicker}>
+            <TextInput
+              placeholder={new Date().toLocaleDateString()} // Current date
+              placeholderTextColor="rgba(0, 0, 0, 0.2)"
+              style={[enrollmentFormStyles.inputField, { width: 100, height: 50 }]}
+              value={birthday ? birthday.toLocaleDateString() : ''}
+              editable={false} // prevents typing manually
+              pointerEvents="none"
+            />
+          </TouchableOpacity>
+        </View>
+        {/* GENDER */}
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 324, height: 60 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Gender</Text>
+          <BouncyCheckbox
+          style={enrollmentFormStyles.checkbox}
+          useBuiltInState={false}
+          isChecked={gender === "M"}
+          onPress={() => setGender("M")}
+          fillColor={colors.primary}
+          unFillColor={colors.accent}
+          innerIconStyle={{ borderWidth: 2 }}
+          textStyle={[enrollmentFormStyles.checkboxText, { fontSize: 14 } ]}
+          text="Male"
+          />
+          <BouncyCheckbox
+          style={enrollmentFormStyles.checkbox}
+          useBuiltInState={false}
+          isChecked={gender === "F"}
+          onPress={() => setGender("F")}
+          fillColor={colors.primary}
+          unFillColor={colors.accent}
+          innerIconStyle={{ borderWidth: 2 }}
+          textStyle={[enrollmentFormStyles.checkboxText, { fontSize: 14 } ]}
+          text="Female"
+          />
+          <BouncyCheckbox
+          style={enrollmentFormStyles.checkbox}
+          useBuiltInState={false}
+          isChecked={gender === "Prefer not to say"}
+          onPress={() => setGender("Prefer not to say")}
+          fillColor={colors.primary}
+          unFillColor={colors.accent}
+          innerIconStyle={{ borderWidth: 2 }}
+          textStyle={[enrollmentFormStyles.checkboxText, { fontSize: 12 } ]}
+          text="Prefer not to say"
+          />
+        </View>
+        {/* CIVIL STATUS */}
+        <View style={[enrollmentFormStyles.checkboxContainer, { width: 220, height: 80 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Civil Status</Text>
+        <DropDownPicker
+          open={civilStatusOpen}
+          value={civilStatus}
+          items={civilStatusItems}
+          setOpen={setCivilStatusOpen}
+          setValue={setCivilStatus}
+          setItems={setCivilStatusItems}
+          placeholder="Civil status"
+          style={enrollmentFormStyles.dropdownMenu}
+          dropDownContainerStyle={enrollmentFormStyles.dropdownContainer}
+          textStyle={enrollmentFormStyles.dropdownText}
+          labelStyle={enrollmentFormStyles.dropdownLabel}
+          placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
+          listItemLabelStyle={enrollmentFormStyles.dropdownLabel}
+          zIndex={999}
         />
+        </View>
+        {/* EMAIL ADDRESS */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 280, height: 50 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>Email Address</Text>
+          <TextInput
+            placeholder="example@gmail.com"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 280, height: 50 }]}
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+          />
+        </View>
+      </ScrollView>
+      {/* MENU BURGER BUTTON */}
+      <BurgerMenu
+      isVisible={isMenuVisible}
+      setIsVisible={setIsMenuVisible}
+      />
     </View>
   );
 }

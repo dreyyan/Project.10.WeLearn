@@ -50,7 +50,7 @@ export default function Login() {
             },
           ]);
         } else {
-          router.replace('/Dashboard')
+          router.replace('/EnrollmentForm')
           // If profile is complete, redirect to the dashboard
           // Alert.alert("Success", "You are logged in!", [
           //   { text: "Continue", onPress: () => router.replace('/Dashboard') },

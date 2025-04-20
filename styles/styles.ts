@@ -23,10 +23,10 @@ export const globalStyles = StyleSheet.create({
         marginTop: "3%",
         marginBottom: "0.5%"
     },
-    // checkbox: {
-    //     fontFamily: "Lklavika-Medium",
-    //     color: "white"
-    // },
+    checkbox: {
+        fontFamily: "Lklavika-Medium",
+        color: "white"
+    },
     // sliderValue: {
     //     fontFamily: 'Lklavika-Medium',
     //     fontSize: 20,
@@ -43,20 +43,23 @@ export const enrollmentFormStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    studentInformationContainer: {
+    subtitleContainer: {
+        backgroundColor: colors.primary,
+
         display: "flex",
-        flexDirection: "row",
+        justifyContent: "center",
         alignItems: "center",
-        backgroundColor: colors.accent,
 
-        width: "84%",
-        height: "24%",
+        width: 360,
+        height: 56,
 
-        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 8,
 
-        marginVertical: "2%",
-        paddingLeft: "4%",
-
+        paddingBottom: 2,
+        marginTop: 34,
+        marginBottom: 30,
         // iOS Shadow
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -65,40 +68,147 @@ export const enrollmentFormStyles = StyleSheet.create({
         // Android Shadow
         elevation: 8
     },
-    studentInformationFirstColumn: {
-        alignItems: "flex-end",
-        
-        paddingLeft: "2%",
-        paddingRight: "2%",
-    },
-    studentInformationSecondColumn: {
-        flex: 1,
-        alignItems: "flex-start",
-    },
-    studentInformationFirstColumnLabel: {
+    subtitle: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 18,
-        lineHeight: 22,
+        fontSize: 32,
+
+        color: colors.white,
+    },
+    sectionTitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 20,
 
         color: colors.secondary,
+
+        alignSelf: "flex-start",
+
+        marginLeft: 34,
     },
-    studentInformationSecondColumnLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 18,
-        lineHeight: 22,
+    formContainer: {
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: colors.accent,
+
+        width: 368,
+        height: 1000,
+
+        borderRadius: 20,
+
+        marginTop: 12,
+        paddingLeft: 20,
+        paddingTop: 4,
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    sectionLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 12,
 
         color: colors.secondary,
+
+        alignSelf: "flex-start",
+
+        position: "absolute",
+        top: 2,
+        left: 2,
+        zIndex: 1000,
+
+        marginLeft: 6,
     },
-    idRow: {
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+
+        backgroundColor: '#fff',
+
+        marginTop: 18,
+        marginBottom: 16,
+        paddingTop: 6,
+        paddingBottom: 0,
+
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 14,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    inputField: {
+        fontFamily: 'Lklavika',
+
+        backgroundColor: "white",
+
+        borderRadius: 14,
+
+        paddingTop: 20,
+        paddingLeft: 14,
+        marginVertical: 2
+    },
+    checkboxContainer: {
+        display: "flex",
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-end",
     },
-    copyContainer: {
-        color: colors.primary,
+    checkbox: {
+        width: 110,
+        height: 40,
+    },
+    checkboxText: {
+        fontFamily: 'Lklavika-Bold',
 
-        marginLeft: "2%",
-        marginTop: "1%"
-    }
+        color: colors.secondary,
+        textDecorationLine: "none"
+    },
+    dropdownMenu: {
+        backgroundColor: colors.white,
+        borderColor: colors.primary,
+        borderWidth: 2,
+
+        width: 220,
+        height: 10,
+        marginTop: 10,
+    },
+    dropdownContainer: {
+        borderColor: colors.primary,
+
+        borderWidth: 2,
+        borderRadius: 8,
+
+        marginTop: 8,
+        paddingVertical: 4,
+    },
+    dropdownText: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 14,
+    },
+    dropdownPlaceholder: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 14,
+
+        color: colors.gray,
+
+        marginLeft: 10,
+    },
+    dropdownLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 14,
+
+        color: colors.secondary,
+
+        marginTop: 2,
+        marginLeft: 10,
+        lineHeight: 18,
+    },
 })
 
 export const dashboardStyles = StyleSheet.create({
@@ -130,6 +240,7 @@ export const dashboardStyles = StyleSheet.create({
         height: "10%",
 
         marginTop: "8%",
+        marginBottom: "6%",
 
         // iOS Shadow
         shadowColor: '#000',
@@ -139,17 +250,20 @@ export const dashboardStyles = StyleSheet.create({
         // Android Shadow
         elevation: 8
     },
-    title: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 40,
-
-        color: "white"
-    },
     subtitle: {
         fontFamily: 'Lklavika-Bold',
         fontSize: 50,
 
         color: colors.white,
+    },
+    barcodeContainer: {
+        height: 36,
+        width: 260,
+
+        position: "absolute",
+        top: 273,
+        left: 110,
+        zIndex: 1000,
     },
     editInformationButton: {
         backgroundColor: colors.primary,
@@ -161,7 +275,7 @@ export const dashboardStyles = StyleSheet.create({
         marginRight: 34,
         paddingVertical: 10,
         paddingLeft: 12,
-        paddingRight: 10,
+        paddingRight: 9,
         borderRadius: 8,
 
         // iOS Shadow
@@ -235,41 +349,41 @@ export const dashboardStyles = StyleSheet.create({
 
         backgroundColor: colors.white,
         borderColor: colors.secondary,
-        borderWidth: 4,
+        borderWidth: 2,
         borderRadius: 4,
 
-        height: 180,
+        height: 200,
         width: 360,
 
         marginTop: 40,
-        paddingTop: 4,
-        paddingHorizontal: 10
     },
     statusLabelContainer: {
         backgroundColor: colors.secondary,
+
+        height: 58,
+        width: 358,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
         borderColor: colors.secondary,
         borderWidth: 1,
         borderRadius: 2,
 
-        height: 36,
-        width: 110,
-
-        alignSelf: "center",
-
-        marginBottom: 6,
-        paddingTop: 2,
+        marginBottom: 20,
         paddingBottom: 4
     },
     statusLabel: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 20,
+        fontSize: 26,
         
         color: colors.white,
 
         alignSelf: "center"
     },
     statusText: {
-        fontFamily: 'Lklavika-Medium',
+        fontFamily: 'Lklavika-Bold',
         fontSize: 18,
         
         color: colors.secondary,
@@ -295,8 +409,8 @@ export const dashboardStyles = StyleSheet.create({
         borderRadius: 8,
         borderColor: colors.secondary,
 
-        marginTop: 10,
-        marginBottom: 6,
+        marginTop: 8,
+        marginBottom: 12,
         paddingVertical: 6,
         paddingLeft: 12,
         paddingRight: 10,
