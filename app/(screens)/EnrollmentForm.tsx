@@ -39,9 +39,8 @@ export default function EnrollmentForm() {
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedFiles, setSelectedFiles] = useState<
-    { name: string; uri: string; type: string }[]
-  >([]);
-  
+    { name: string; uri: string; type: string }[]>([]);
+    const [certified, setCertified] = useState(false);
 
     // PERSONAL INFORMATION
     const [name, setName] = useState(studentInfo?.name);
@@ -197,8 +196,8 @@ export default function EnrollmentForm() {
     };
 
     const uploadFile = async () => {
-      if (selectedFiles.length >= 3) {
-        Alert.alert('Upload Limit Reached', 'You can only upload a maximum of 3 files.');
+      if (selectedFiles.length >= 4) {
+        Alert.alert('Upload Limit Reached', 'You can only upload a maximum of 4 files.');
         return;
       }
   
@@ -214,8 +213,8 @@ export default function EnrollmentForm() {
           type: file.mimeType || 'application/octet-stream',
         }));
   
-        // Combine old + new, max 3
-        const updatedFiles = [...selectedFiles, ...newFiles].slice(0, 3);
+        // Combine old + new, max 4
+        const updatedFiles = [...selectedFiles, ...newFiles].slice(0, 4);
         setSelectedFiles(updatedFiles);
   
         // Optional: upload immediately
@@ -290,10 +289,7 @@ export default function EnrollmentForm() {
     };
   
     const isNextDisabled = () => {
-      // if (currentStep === 3) return !gender;
-      // if (currentStep === 4) return ID.trim() === "";
-      // if (currentStep === 5) return !department;
-      // if (currentStep === 6) return !course;
+      if (currentStep === 6) return !certified;
       return false;
     };
 
@@ -785,6 +781,36 @@ export default function EnrollmentForm() {
         <View style={[enrollmentFormStyles.bottomMargin, { height: 176 }]}/>
       </View>
       )}
+
+      {/* SCREEN 6: APPLICANT CERTIFICATION */}
+      {currentStep === 6 && (
+      <View style={enrollmentFormStyles.formContainer}>
+        <Text style={enrollmentFormStyles.sectionTitle}>V. Applicant Certification</Text>
+        {/* CERTIFICATION */}
+        <View style={enrollmentFormStyles.applicantCertificationContainer}>
+          <Text style={enrollmentFormStyles.applicantCertificationLabel}>
+          I hereby certify that I have read and fully understood all instructions regarding my application for admissions at West Visayas State University and that the information supplied in this application and the documentation supporting it are correct and complete.{`\n`}
+          </Text>
+          <Text style={enrollmentFormStyles.applicantCertificationLabel}>
+          I understand that incomplete or inaccurate information could be prejudicial to my admission. If accepted as a student of the West Visayas State University, I agree to abide by its policies and regulations.
+          </Text>
+        </View>
+        <BouncyCheckbox
+        style={enrollmentFormStyles.applicantCertificationCheckbox}
+        useBuiltInState={false}
+        isChecked={certified}
+        onPress={() => setCertified(!certified)}
+        fillColor={colors.primary}
+        unFillColor={colors.accent}
+        innerIconStyle={{ borderWidth: 2 }}
+        textStyle={[enrollmentFormStyles.applicantCertificationCheckboxText, { fontSize: 16 }]}
+        text="I Agree"
+        />
+        {/* BOTTOM MARGIN */}
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 212.5 }]}/>
+      </View>
+      )}
+
 
       {/* NAVIGATION BUTTONS */}
       <View style={enrollmentFormStyles.buttonContainer}>

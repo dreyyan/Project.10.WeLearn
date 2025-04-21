@@ -322,11 +322,11 @@ export default function SetupInformation() {
             source={require("../../assets/images/card-banner.png")}
             style={setupInformationStyles.summaryBanner}
             />
-            <Image
+            {/* <Image
             source={require("../../assets/images/id-placeholder.png")}
-            style={setupInformationStyles.summaryImage}
+            style={setupInformationStyles.summaryID}
             resizeMode="contain"
-            />
+            /> */}
             <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>
             <Text style={setupInformationStyles.summaryName}>{name}</Text>
             <Text style={setupInformationStyles.summaryGenderLabel}>Gender:</Text>

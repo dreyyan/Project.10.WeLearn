@@ -230,8 +230,7 @@ export const enrollmentFormStyles = StyleSheet.create({
 
         marginTop: 26,
         marginBottom: 30,
-        paddingVertical: 12,
-        paddingHorizontal: 20,
+
 
         // iOS Shadow
         shadowColor: '#000',
@@ -243,7 +242,7 @@ export const enrollmentFormStyles = StyleSheet.create({
     },
     nextButtonLabel: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 24,
+        fontSize: 28,
 
         color: "white",
     },
@@ -329,9 +328,9 @@ export const enrollmentFormStyles = StyleSheet.create({
     fileLine: {
         display: "flex",
         flexDirection: "row",
+        justifyContent: "space-between",
         alignItems: "center",
 
-        borderWidth: 1,
         height: 40
     },
     fileText: {
@@ -349,16 +348,42 @@ export const enrollmentFormStyles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        alignSelf: "flex-end",
         width: 28,
         height: 28,
         borderRadius: 4,
-        marginLeft: 20
+        marginRight: 10,
+        marginBottom: 4
     },
     removeText: {
         fontFamily: 'Lklavika-Bold',
         fontSize: 16,
         fontWeight: "bold",
         color: colors.white,
+    },
+    applicantCertificationContainer: {
+        display: "flex",
+
+        marginRight: 20,
+    },
+    applicantCertificationLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 14,
+
+        color: colors.secondary,
+        textAlign: "justify"
+    },
+    applicantCertificationCheckbox: {
+        width: 400,
+        height: 40,
+    },
+    applicantCertificationCheckboxText: {
+        fontFamily: 'Lklavika-Bold',
+
+        color: colors.secondary,
+        textDecorationLine: "none",
+
+        marginLeft: -6
     },
 })
 
@@ -503,16 +528,16 @@ export const dashboardStyles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 4,
 
-        height: 200,
+        height: 190,
         width: 360,
 
         marginTop: 40,
     },
     statusLabelContainer: {
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.primary,
 
         height: 58,
-        width: 358,
+        width: 360,
 
         display: "flex",
         justifyContent: "center",
@@ -523,11 +548,12 @@ export const dashboardStyles = StyleSheet.create({
         borderRadius: 2,
 
         marginBottom: 20,
+        marginLeft: -2,
         paddingBottom: 4
     },
     statusLabel: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 26,
+        fontSize: 30,
         
         color: colors.white,
 
