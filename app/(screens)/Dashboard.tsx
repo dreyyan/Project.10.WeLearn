@@ -30,7 +30,7 @@ export default function dashboard() {
       ID: string;
       department: string;
       course: string;
-      isEnrolled: boolean;
+      isEnrolled: false;
     };
 
     // STATES
@@ -38,9 +38,13 @@ export default function dashboard() {
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
 
+    const [name, setName] = useState("N/A");
+    const [type, setType] = useState("Student");
+    const [ID, setID] = useState("");
+
     // HANDLES
     const goToDashboard = () => {
-      setIsMenuVisible(false);
+      router.replace('/Dashboard');
     }
 
     const goToEnrollmentForm = () => {
@@ -66,6 +70,14 @@ export default function dashboard() {
     const handleBurgerMenu = () => {
         setIsMenuVisible(true);
     };
+
+    const goToQRCode = () => {
+      router.replace('/QR');
+    }
+
+    const goToEditInformation = () => {
+      router.replace('/EditInformation');
+    }
 
     const handleCopy = async () => {
       if (studentInfo?.ID) {
@@ -132,16 +144,25 @@ export default function dashboard() {
         </View>
 
         {/* STUDENT BARCODE */}
-        <View style={dashboardStyles.barcodeContainer}>
+        {/* <View style={dashboardStyles.barcodeContainer}>
           <Barcode value={studentInfo?.ID ?? ''} format="CODE128" />
-        </View>
-        
+        </View> */}
+
+        <View style={dashboardStyles.buttonContainer}>
+        {/* QR CODE BUTTON */}
+        <TouchableOpacity
+        style={dashboardStyles.QRCodeButton}
+        onPress={goToQRCode}
+        ><Ionicons name="qr-code" size={20} color="#fff" />
+        </TouchableOpacity>
+
         {/* EDIT INFORMATION BUTTON */}
         <TouchableOpacity
         style={dashboardStyles.editInformationButton}
-        // onPress={}
+        onPress={goToEditInformation}
         ><Ionicons name="create-outline" size={20} color="#fff" />
         </TouchableOpacity>
+        </View>
 
         {/* STUDENT INFORMATION CARD */}
         <View style={setupInformationStyles.cardContainer}>
@@ -171,7 +192,7 @@ export default function dashboard() {
         <View style={dashboardStyles.statusLabelContainer}>
           <Text style={dashboardStyles.statusLabel}>STATUS</Text>
         </View>
-        <Text style={dashboardStyles.statusText}>{studentInfo?.isEnrolled ? "Enrolled" : "Not yet enrolled"}</Text>
+        <Text style={dashboardStyles.statusText}>{studentInfo?.isEnrolled ? "Enrolled" : "Not Enrolled"}</Text>
         <Text style={dashboardStyles.statusComment}>{studentInfo?.isEnrolled ? "Congratulations! You are enrolled." : "Please complete the enrollment form."}</Text>
         {/* ENROLLMENT FORM BUTTON */}
         <TouchableOpacity

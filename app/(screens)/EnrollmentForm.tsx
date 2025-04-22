@@ -21,7 +21,6 @@ import * as DocumentPicker from 'expo-document-picker';
 import BurgerMenu from "@/components/BurgerMenu";
 
 export default function EnrollmentForm() {
-    // TypeScript type, specify structure and type of data for 'StudentInfo'
     type StudentInfo = {
         name: string;
         type: string;
@@ -38,8 +37,7 @@ export default function EnrollmentForm() {
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
     const [currentStep, setCurrentStep] = useState(1);
-    const [selectedFiles, setSelectedFiles] = useState<
-    { name: string; uri: string; type: string }[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<{ name: string; uri: string; type: string }[]>([]);
     const [certified, setCertified] = useState(false);
 
     // PERSONAL INFORMATION
@@ -279,12 +277,6 @@ export default function EnrollmentForm() {
         setIsMenuVisible(true);
     };
 
-    const handleCopy = async () => {
-      if (studentInfo?.ID) {
-      await Clipboard.setStringAsync(studentInfo.ID);
-      }
-    }
-
     const isNextDisabled = () => {
       if (currentStep === 1) {
         return (!name || !dateOfBirth || !civilStatus || !gender);
@@ -368,6 +360,7 @@ export default function EnrollmentForm() {
         // Upload enrollment form to the database
         submitForm();
         router.replace("/Dashboard"); // Return to dashboard
+        setCurrentStep(1);
       }
     }
 
@@ -928,7 +921,6 @@ export default function EnrollmentForm() {
         {/* NEXT BUTTON */}
         <TouchableOpacity
         onPress={pressNextButton}
-        // disabled={currentStep === 5 && !department || currentStep === 6 && !course}
         style={[
         enrollmentFormStyles.nextButton,
         isNextDisabled() && { backgroundColor: "#ccc" }
