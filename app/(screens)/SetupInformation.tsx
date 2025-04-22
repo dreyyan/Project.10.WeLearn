@@ -110,7 +110,7 @@ export default function SetupInformation() {
 
   const isNextDisabled = () => {
     if (currentStep === 3) return !gender;
-    if (currentStep === 4) return ID.trim() === "";
+    if (currentStep === 4) return !(ID.length === 9);
     if (currentStep === 5) return !department;
     if (currentStep === 6) return !course;
     return false;
@@ -256,7 +256,7 @@ export default function SetupInformation() {
         <View style={setupInformationStyles.inputContainer}>
           <Ionicons name="card-outline" size={20} color={colors.primary} style={globalStyles.icon} />
           <TextInput
-            placeholder="117590000000"
+            placeholder="2024M0000"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={setupInformationStyles.inputField}
             value={ID}
@@ -322,11 +322,11 @@ export default function SetupInformation() {
             source={require("../../assets/images/card-banner.png")}
             style={setupInformationStyles.summaryBanner}
             />
-            {/* <Image
+            <Image
             source={require("../../assets/images/id-placeholder.png")}
-            style={setupInformationStyles.summaryID}
+            style={setupInformationStyles.summaryImage}
             resizeMode="contain"
-            /> */}
+            />
             <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>
             <Text style={setupInformationStyles.summaryName}>{name}</Text>
             <Text style={setupInformationStyles.summaryGenderLabel}>Gender:</Text>

@@ -916,7 +916,7 @@ export const setupInformationStyles = StyleSheet.create({
 
         position: "absolute",
         top: 164,
-        left: 275,
+        left: 279,
         zIndex: 1,
     },
     summaryID: {
@@ -927,7 +927,7 @@ export const setupInformationStyles = StyleSheet.create({
 
         position: "absolute",
         top: 150,
-        left: 256,
+        left: 266,
         zIndex: 1,
     },
     summaryDepartment: {
@@ -950,6 +950,13 @@ export const setupInformationStyles = StyleSheet.create({
         position: "absolute",
         top: 204,
         left: 14,
+        zIndex: 1,
+    },
+    summaryImage: {
+        width: 80,
+        position: "absolute",
+        top: -70,
+        left: 260,
         zIndex: 1,
     }
 })

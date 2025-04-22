@@ -6,7 +6,7 @@ import { router } from "expo-router";
 import { dashboardStyles, burgerMenuStyles, globalStyles, enrollmentFormStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db, auth } from "../../configurations/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 // LIBRARY COMPONENTS
@@ -47,7 +47,7 @@ export default function EnrollmentForm() {
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
     const [gender, setGender] = useState("");
     // Civil Status
-    const [civilStatus, setCivilStatus] = useState("Single");
+    const [civilStatus, setCivilStatus] = useState("");
     const [civilStatusOpen, setCivilStatusOpen] = useState(false);
     const [civilStatusItems, setCivilStatusItems] = useState([
       { label: 'Single', value: 'Single' },
@@ -59,7 +59,7 @@ export default function EnrollmentForm() {
     const [birthPlace, setBirthPlace] = useState("");
     const [nationality, setNationality] = useState("");
     // Religion
-    const [religion, setReligion] = useState("Roman Catholic");
+    const [religion, setReligion] = useState("");
     const [religionOpen, setReligionOpen] = useState(false);
     const [religionItems, setReligionItems] = useState([
       { label: 'Roman Catholic', value: 'Roman Catholic' },
@@ -90,7 +90,7 @@ export default function EnrollmentForm() {
     ]);
     const [mobileNumber, setMobileNumber] = useState("");
     // Disability
-    const [disability, setDisability] = useState("None");
+    const [disability, setDisability] = useState("");
     const [disabilityOpen, setDisabilityOpen] = useState(false);
     const [disabilityItems, setDisabilityItems] = useState([
       { label: 'None', value: 'None' },
@@ -101,7 +101,7 @@ export default function EnrollmentForm() {
     ]);
     const [householdMembers, setHouseholdMembers] = useState("");
     // Annual Gross Income
-    const [annualGrossIncome, setAnnualGrossIncome] = useState("Below ₱131,484.00");
+    const [annualGrossIncome, setAnnualGrossIncome] = useState("");
     const [annualGrossIncomeOpen, setAnnualGrossIncomeOpen] = useState(false);
     const [annualGrossIncomeItems, setAnnualGrossIncomeItems] = useState([
       { label: 'Below ₱131,484.00', value: 'Below ₱131,484.00' },
@@ -115,7 +115,7 @@ export default function EnrollmentForm() {
 
     // EDUCATION INFORMATION
     // Student Type
-    const [studentType, setStudentType] = useState("Local");
+    const [studentType, setStudentType] = useState("");
     const [studentTypeOpen, setStudentTypeOpen] = useState(false);
     const [studentTypeItems, setStudentTypeItems] = useState([
       { label: 'Local', value: 'Local' },
@@ -123,7 +123,7 @@ export default function EnrollmentForm() {
       { label: 'Foreign Dual Citizenship', value: 'Foreign Dual Citizenship' },
     ]);
     // Admission Status
-    const [admissionStatus, setAdmissionStatus] = useState("New");
+    const [admissionStatus, setAdmissionStatus] = useState("");
     const [admissionStatusOpen, setAdmissionStatusOpen] = useState(false);
     const [admissionStatusItems, setAdmissionStatusItems] = useState([
       { label: 'New', value: 'New' },
@@ -137,7 +137,7 @@ export default function EnrollmentForm() {
       { label: 'Shiftee', value: 'Shiftee' },
     ]);
     // Education Level
-    const [educationLevel, setEducationLevel] = useState("Primary Education");
+    const [educationLevel, setEducationLevel] = useState("");
     const [educationLevelOpen, setEducationLevelOpen] = useState(false);
     const [educationLevelItems, setEducationLevelItems] = useState([
       { label: 'Primary Education', value: 'Primary Education' },
@@ -147,7 +147,7 @@ export default function EnrollmentForm() {
       { label: 'Alternative Learning System(ALS)', value: 'Alternative Learning System(ALS)' },
     ]);
     // Year Level
-    const [yearLevel, setYearLevel] = useState("First Year");
+    const [yearLevel, setYearLevel] = useState("");
     const [yearLevelOpen, setYearLevelOpen] = useState(false);
     const [yearLevelItems, setYearLevelItems] = useState([
       { label: 'First Year', value: 'First Year' },
@@ -158,7 +158,7 @@ export default function EnrollmentForm() {
     const [LRN, setLRN] = useState("");
     const [ID, setID] = useState("");
     // ADDRESS INFORMATION
-    const [region, setRegion] = useState("Region I");
+    const [region, setRegion] = useState("");
     const [regionOpen, setRegionOpen] = useState(false);
     const [regionItems, setRegionItems] = useState([
       { label: 'Region I', value: 'Region I' },
@@ -286,10 +286,74 @@ export default function EnrollmentForm() {
     }
 
     const isNextDisabled = () => {
-      if (currentStep === 6) return !certified;
+      if (currentStep === 1) {
+        return (!name || !dateOfBirth || !civilStatus || !gender);
+      } else if (currentStep === 2) {
+        return (!emailAddress || !nationality || !birthPlace || !((mobileNumber.length === 11) &&  mobileNumber.slice(0, 2) === "09") || !householdMembers);
+      } else if (currentStep === 3) {
+        return (!religion || !disability || !annualGrossIncome);
+      } else if (currentStep === 4) {
+        return (!region || !province || !municipalityCity || !barangay || !(ZIPCode.length === 4));
+      } else if (currentStep === 5) {
+        return (!studentType || !admissionStatus || !educationLevel || !yearLevel || !(ID.length === 9) || !(LRN.length === 12));
+      } else if (currentStep === 6) {
+        return ((selectedFiles.length === 0));
+      } else if (currentStep === 7) return !certified;
       return false;
     };
-    ``
+
+    const submitForm = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert("Error", "No user is logged in");
+        return;
+      }
+    
+      const docRef = doc(db, 'users', user.uid, 'profile', 'enrollmentForm');
+    
+      try {
+        await setDoc(docRef, {
+          name,
+          dateOfBirth,
+          civilStatus,
+          gender,
+    
+          emailAddress,
+          nationality,
+          birthPlace,
+          mobileNumber,
+          householdMembers,
+    
+          religion,
+          disability,
+          annualGrossIncome,
+    
+          region,
+          province,
+          municipalityCity,
+          barangay,
+          ZIPCode,
+    
+          studentType,
+          admissionStatus,
+          educationLevel,
+          yearLevel,
+          ID,
+          LRN,
+    
+          selectedFiles, // only if this is a string[] or File[] with URLs
+
+          submittedAt: new Date() // optional: timestamp
+        });
+    
+        Alert.alert("Success", "Form submitted successfully!");
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        Alert.alert("Error", "Failed to submit form");
+      }
+    };
+    
+
     const pressBackButton = () => {
       if (currentStep > 1) setCurrentStep(currentStep - 1);
     };
@@ -298,10 +362,12 @@ export default function EnrollmentForm() {
       if (isNextDisabled()) return; // If button is disabled, do nothing
   
       // Dynamic navigation based on # of screens
-      if (currentStep < 6) {
+      if (currentStep < 7) {
         setCurrentStep(currentStep + 1);
       } else {
-        router.replace("/Dashboard"); // Navigate to the next screen or complete the setup
+        // Upload enrollment form to the database
+        submitForm();
+        router.replace("/Dashboard"); // Return to dashboard
       }
     }
 
@@ -322,7 +388,7 @@ export default function EnrollmentForm() {
             setName(data.name);
             setGender(data.gender);
             setID(data.ID);
-            setEmailAddress(data.email);
+            setEmailAddress(user.email || "");
           } else { // ERROR: Non-existing document
             Alert.alert('Error', 'User profile data not found');
           }
@@ -340,12 +406,6 @@ export default function EnrollmentForm() {
 
     return () => unsubscribe(); // Unsubscribe from the auth state listener
   }, []); // Empty dependency array means 'Effect' runs once when the component mounts
-
-  useEffect(() => {
-    if (studentInfo?.name) {
-
-    }
-  }, [studentInfo]);
 
   return (
     <View style={[globalStyles.screen, { flex: 1 }]}>
@@ -409,7 +469,7 @@ export default function EnrollmentForm() {
           style={enrollmentFormStyles.checkbox}
           useBuiltInState={false}
           isChecked={gender === "Male"}
-          onPress={() => setGender("M")}
+          onPress={() => setGender("Male")}
           fillColor={colors.primary}
           unFillColor={colors.accent}
           innerIconStyle={{ borderWidth: 2 }}
@@ -420,7 +480,7 @@ export default function EnrollmentForm() {
           style={enrollmentFormStyles.checkbox}
           useBuiltInState={false}
           isChecked={gender === "Female"}
-          onPress={() => setGender("F")}
+          onPress={() => setGender("Female")}
           fillColor={colors.primary}
           unFillColor={colors.accent}
           innerIconStyle={{ borderWidth: 2 }}
@@ -443,6 +503,7 @@ export default function EnrollmentForm() {
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 200, height: 80, position: "absolute", top: 127, left: 140 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Civil Status</Text>
           <DropDownPicker
+            placeholder="Select civil status..."
             open={civilStatusOpen}
             value={civilStatus}
             items={civilStatusItems}
@@ -458,6 +519,15 @@ export default function EnrollmentForm() {
             zIndex={999}
           />
         </View>
+        {/* BOTTOM MARGIN */}
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 244 }]}/>
+      </View>
+      )}
+
+    {/* SCREEN 2: PERSONAL INFORMATION */}
+    {currentStep === 2 && (
+      <View style={enrollmentFormStyles.formContainer}>
+        <Text style={enrollmentFormStyles.sectionTitle}>I. Personal Information</Text>
         {/* EMAIL ADDRESS */}
         <View style={[enrollmentFormStyles.inputContainer, { width: 320, height: 50 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Email Address</Text>
@@ -470,7 +540,7 @@ export default function EnrollmentForm() {
           />
         </View>
         {/* BIRTHPLACE */}
-        <View style={[enrollmentFormStyles.inputContainer, { width: 190, height: 50, position: "absolute", top: 350, left: 150 }]}>
+        <View style={[enrollmentFormStyles.inputContainer, { width: 190, height: 50, position: "absolute", top: 126, left: 150 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Birthplace</Text>
           <TextInput
             placeholder="Iloilo, Iloilo City"
@@ -507,7 +577,7 @@ export default function EnrollmentForm() {
           />
         </View>
         {/* # of HOUSEHOLD MEMBERS */}
-        <View style={[enrollmentFormStyles.inputContainer, { width: 170, height: 50, position: "absolute", top: 432, left: 170 }]}>
+        <View style={[enrollmentFormStyles.inputContainer, { width: 170, height: 50, position: "absolute", top: 208, left: 170 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}># of Household Members</Text>
           <TextInput
             placeholder="3"
@@ -522,18 +592,19 @@ export default function EnrollmentForm() {
           />
         </View>
         {/* BOTTOM MARGIN */}
-        <View style={{height: 18}}/>
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 222 }]}/>
       </View>
       )}
 
       {/* SCREEN 2: PERSONAL INFORMATION */}
-      {currentStep === 2 && (
+      {currentStep === 3 && (
       <View style={enrollmentFormStyles.formContainer}>
         <Text style={enrollmentFormStyles.sectionTitle}>I. Personal Information</Text>
         {/* RELIGION */}
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 240, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Religion</Text>
           <DropDownPicker
+            placeholder="Select religion..."
             open={religionOpen}
             value={religion}
             items={religionItems}
@@ -553,6 +624,7 @@ export default function EnrollmentForm() {
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 220, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Disability</Text>
           <DropDownPicker
+            placeholder="Select disability..."
             open={disabilityOpen}
             value={disability}
             items={disabilityItems}
@@ -572,6 +644,7 @@ export default function EnrollmentForm() {
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Annual Gross Income</Text>
           <DropDownPicker
+            placeholder="Select annual gross income..."
             open={annualGrossIncomeOpen}
             value={annualGrossIncome}
             items={annualGrossIncomeItems}
@@ -592,14 +665,15 @@ export default function EnrollmentForm() {
       </View>
       )}
 
-      {/* SCREEN 3: ADDRESS INFORMATION */}
-      {currentStep === 3 && (
+      {/* SCREEN 4: ADDRESS INFORMATION */}
+      {currentStep === 4 && (
       <View style={enrollmentFormStyles.formContainer}>
         <Text style={enrollmentFormStyles.sectionTitle}>II. Address Information</Text>
         {/* REGION */}
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Region</Text>
           <DropDownPicker
+            placeholder="Select region..."
             open={regionOpen}
             value={region}
             items={regionItems}
@@ -622,8 +696,7 @@ export default function EnrollmentForm() {
             placeholder="Iloilo"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={[enrollmentFormStyles.inputField, { width: 150, height: 50 }]}
-            value={mobileNumber}
-            keyboardType="numeric" // Set to numeric keypad
+            value={province}
             onChangeText={setProvince}
           />
         </View>
@@ -634,8 +707,7 @@ export default function EnrollmentForm() {
             placeholder="Iloilo City"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={[enrollmentFormStyles.inputField, { width: 146, height: 50 }]}
-            value={mobileNumber}
-            keyboardType="numeric" // Set to numeric keypad
+            value={municipalityCity}
             onChangeText={setMunicipalityCity}
           />
         </View>
@@ -646,7 +718,7 @@ export default function EnrollmentForm() {
             placeholder="Brgy. Magsaysay"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={[enrollmentFormStyles.inputField, { width: 170, height: 50 }]}
-            value={mobileNumber}
+            value={barangay}
             onChangeText={setBarangay}
           />
         </View>
@@ -657,7 +729,7 @@ export default function EnrollmentForm() {
             placeholder="5000"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={[enrollmentFormStyles.inputField, { width: 126, height: 50 }]}
-            value={mobileNumber}
+            value={ZIPCode}
             keyboardType="numeric" // Set to numeric keypad
             onChangeText={(text) => { // Removes non-numeric characters
               const numericText = text.replace(/[^0-9]/g, '');
@@ -670,14 +742,15 @@ export default function EnrollmentForm() {
       </View>
       )}
 
-      {/* SCREEN 4: EDUCATION INFORMATION */}
-      {currentStep === 4 && (
+      {/* SCREEN 5: EDUCATION INFORMATION */}
+      {currentStep === 5 && (
       <View style={enrollmentFormStyles.formContainer}>
         <Text style={enrollmentFormStyles.sectionTitle}>III. Education Information</Text>
         {/* STUDENT TYPE */}
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Student Type</Text>
           <DropDownPicker
+            placeholder="Select student type..."
             open={studentTypeOpen}
             value={studentType}
             items={studentTypeItems}
@@ -697,6 +770,7 @@ export default function EnrollmentForm() {
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Admission Status</Text>
           <DropDownPicker
+            placeholder="Select status..."
             open={admissionStatusOpen}
             value={admissionStatus}
             items={admissionStatusItems}
@@ -716,6 +790,7 @@ export default function EnrollmentForm() {
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Education Level</Text>
           <DropDownPicker
+            placeholder="Select education level..."
             open={educationLevelOpen}
             value={educationLevel}
             items={educationLevelItems}
@@ -735,6 +810,7 @@ export default function EnrollmentForm() {
         <View style={[enrollmentFormStyles.checkboxContainer, { width: 270, height: 80 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Year Level</Text>
           <DropDownPicker
+            placeholder="Select year..."
             open={yearLevelOpen}
             value={yearLevel}
             items={yearLevelItems}
@@ -758,11 +834,7 @@ export default function EnrollmentForm() {
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={[enrollmentFormStyles.inputField, { width: 116, height: 50 }]}
             value={ID}
-            keyboardType="numeric" // Set to numeric keypad
-            onChangeText={(text) => { // Removes non-numeric characters
-              const numericText = text.replace(/[^0-9]/g, '');
-              setID(numericText);
-            }}
+            onChangeText={setID}
           />
         </View>
         {/* LRN */}
@@ -772,11 +844,11 @@ export default function EnrollmentForm() {
             placeholder="000000000000"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={[enrollmentFormStyles.inputField, { width: 136, height: 50 }]}
-            value={mobileNumber}
+            value={LRN}
             keyboardType="numeric" // Set to numeric keypad
             onChangeText={(text) => { // Removes non-numeric characters
               const numericText = text.replace(/[^0-9]/g, '');
-              setMobileNumber(numericText);
+              setLRN(numericText);
             }}
           />
         </View>
@@ -785,8 +857,8 @@ export default function EnrollmentForm() {
       </View>
       )}
 
-      {/* SCREEN 5: UPLOAD DOCUMENTS/ID & CERTIFICATION */}
-      {currentStep === 5 && (
+      {/* SCREEN 6: UPLOAD DOCUMENTS/ID & CERTIFICATION */}
+      {currentStep === 6 && (
       <View style={enrollmentFormStyles.formContainer}>
         <Text style={enrollmentFormStyles.sectionTitle}>IV. Upload Documents/ID and Certification</Text>
         {/* UPLOAD */}
@@ -812,8 +884,8 @@ export default function EnrollmentForm() {
       </View>
       )}
 
-      {/* SCREEN 6: APPLICANT CERTIFICATION */}
-      {currentStep === 6 && (
+      {/* SCREEN 7: APPLICANT CERTIFICATION */}
+      {currentStep === 7 && (
       <View style={enrollmentFormStyles.formContainer}>
         <Text style={enrollmentFormStyles.sectionTitle}>V. Applicant Certification</Text>
         {/* CERTIFICATION */}
@@ -837,7 +909,7 @@ export default function EnrollmentForm() {
         text="I Agree"
         />
         {/* BOTTOM MARGIN */}
-        <View style={[enrollmentFormStyles.bottomMargin, { height: 212.5 }]}/>
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 212 }]}/>
       </View>
       )}
 
@@ -845,7 +917,7 @@ export default function EnrollmentForm() {
       {/* NAVIGATION BUTTONS */}
       <View style={enrollmentFormStyles.buttonContainer}>
         {/* BACK BUTTON */}
-        {currentStep >= 1 && (
+        {currentStep >= 2 && (
         <TouchableOpacity
           style={enrollmentFormStyles.backButton}
           onPress={pressBackButton}
@@ -860,7 +932,7 @@ export default function EnrollmentForm() {
         style={[
         enrollmentFormStyles.nextButton,
         isNextDisabled() && { backgroundColor: "#ccc" }
-        ]}><Text style={enrollmentFormStyles.nextButtonLabel}>{currentStep < 6 ? "Next" : "ENROLL"}</Text>
+        ]}><Text style={enrollmentFormStyles.nextButtonLabel}>{currentStep < 7 ? "Next" : "ENROLL"}</Text>
         </TouchableOpacity>
       </View>
       {/* MENU BURGER BUTTON */}
