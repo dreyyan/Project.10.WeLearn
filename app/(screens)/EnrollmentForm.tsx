@@ -43,9 +43,9 @@ export default function EnrollmentForm() {
     const [certified, setCertified] = useState(false);
 
     // PERSONAL INFORMATION
-    const [name, setName] = useState(studentInfo?.name);
+    const [name, setName] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
-    const [gender, setGender] = useState(studentInfo?.gender);
+    const [gender, setGender] = useState("");
     // Civil Status
     const [civilStatus, setCivilStatus] = useState("Single");
     const [civilStatusOpen, setCivilStatusOpen] = useState(false);
@@ -55,7 +55,7 @@ export default function EnrollmentForm() {
       { label: 'Legally Separated', value: 'Legally Separated' },
       { label: 'Widowed', value: 'Widowed' },
     ]);
-    const [emailAddress, setEmailAddress] = useState(studentInfo?.email);
+    const [emailAddress, setEmailAddress] = useState("");
     const [birthPlace, setBirthPlace] = useState("");
     const [nationality, setNationality] = useState("");
     // Religion
@@ -156,6 +156,7 @@ export default function EnrollmentForm() {
       { label: 'Fourth Year', value: 'Fourth Year' },
     ]);
     const [LRN, setLRN] = useState("");
+    const [ID, setID] = useState("");
     // ADDRESS INFORMATION
     const [region, setRegion] = useState("Region I");
     const [regionOpen, setRegionOpen] = useState(false);
@@ -284,13 +285,13 @@ export default function EnrollmentForm() {
       }
     }
 
-    const pressBackButton = () => {
-      if (currentStep > 1) setCurrentStep(currentStep - 1);
-    };
-  
     const isNextDisabled = () => {
       if (currentStep === 6) return !certified;
       return false;
+    };
+    ``
+    const pressBackButton = () => {
+      if (currentStep > 1) setCurrentStep(currentStep - 1);
     };
 
     const pressNextButton = () => {
@@ -316,7 +317,12 @@ export default function EnrollmentForm() {
 
           // If the document exists, store the data in the state
           if (docSnap.exists()) {
-            setStudentInfo(docSnap.data() as StudentInfo); // Cast the data as StudentInfo type
+            const data = docSnap.data() as StudentInfo;
+            setStudentInfo(data);
+            setName(data.name);
+            setGender(data.gender);
+            setID(data.ID);
+            setEmailAddress(data.email);
           } else { // ERROR: Non-existing document
             Alert.alert('Error', 'User profile data not found');
           }
@@ -334,6 +340,12 @@ export default function EnrollmentForm() {
 
     return () => unsubscribe(); // Unsubscribe from the auth state listener
   }, []); // Empty dependency array means 'Effect' runs once when the component mounts
+
+  useEffect(() => {
+    if (studentInfo?.name) {
+
+    }
+  }, [studentInfo]);
 
   return (
     <View style={[globalStyles.screen, { flex: 1 }]}>
@@ -366,12 +378,12 @@ export default function EnrollmentForm() {
       <View style={enrollmentFormStyles.formContainer}>
         <Text style={enrollmentFormStyles.sectionTitle}>I. Personal Information</Text>
         {/* NAME */}
-        <View style={[enrollmentFormStyles.inputContainer, { width: 324, height: 50 }]}>
+        <View style={[enrollmentFormStyles.inputContainer, { width: 320, height: 50 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Full Name</Text>
           <TextInput
             placeholder="Juan de la Cruz"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={[enrollmentFormStyles.inputField, { width: 324, height: 50 }]}
+            style={[enrollmentFormStyles.inputField, { width: 320, height: 50 }]}
             value={name}
             onChangeText={setName}
           />
@@ -396,7 +408,7 @@ export default function EnrollmentForm() {
           <BouncyCheckbox
           style={enrollmentFormStyles.checkbox}
           useBuiltInState={false}
-          isChecked={gender === "M"}
+          isChecked={gender === "Male"}
           onPress={() => setGender("M")}
           fillColor={colors.primary}
           unFillColor={colors.accent}
@@ -407,7 +419,7 @@ export default function EnrollmentForm() {
           <BouncyCheckbox
           style={enrollmentFormStyles.checkbox}
           useBuiltInState={false}
-          isChecked={gender === "F"}
+          isChecked={gender === "Female"}
           onPress={() => setGender("F")}
           fillColor={colors.primary}
           unFillColor={colors.accent}
@@ -528,8 +540,8 @@ export default function EnrollmentForm() {
             setOpen={setReligionOpen}
             setValue={setReligion}
             setItems={setReligionItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 280 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 280 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 320 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 320 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
@@ -547,8 +559,8 @@ export default function EnrollmentForm() {
             setOpen={setDisabilityOpen}
             setValue={setDisability}
             setItems={setDisabilityItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 250 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 250 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 320 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 320 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
@@ -566,8 +578,8 @@ export default function EnrollmentForm() {
             setOpen={setAnnualGrossIncomeOpen}
             setValue={setAnnualGrossIncome}
             setItems={setAnnualGrossIncomeItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 280 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 280 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 320 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 320 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
@@ -594,8 +606,8 @@ export default function EnrollmentForm() {
             setOpen={setRegionOpen}
             setValue={setRegion}
             setItems={setRegionItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 150 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 150 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 320 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 320 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
@@ -616,12 +628,12 @@ export default function EnrollmentForm() {
           />
         </View>
         {/* MUNICIPALITY/CITY */}
-        <View style={[enrollmentFormStyles.inputContainer, { width: 150, height: 50, position: "absolute", top: 124, left: 192 }]}>
+        <View style={[enrollmentFormStyles.inputContainer, { width: 146, height: 50, position: "absolute", top: 124, left: 192 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>Municipality/City</Text>
           <TextInput
             placeholder="Iloilo City"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={[enrollmentFormStyles.inputField, { width: 150, height: 50 }]}
+            style={[enrollmentFormStyles.inputField, { width: 146, height: 50 }]}
             value={mobileNumber}
             keyboardType="numeric" // Set to numeric keypad
             onChangeText={setMunicipalityCity}
@@ -639,12 +651,12 @@ export default function EnrollmentForm() {
           />
         </View>
         {/* ZIP CODE */}
-        <View style={[enrollmentFormStyles.inputContainer, { width: 130, height: 50, position: "absolute", top: 206, left: 212 }]}>
+        <View style={[enrollmentFormStyles.inputContainer, { width: 126, height: 50, position: "absolute", top: 206, left: 212 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>ZIP Code</Text>
           <TextInput
             placeholder="5000"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={[enrollmentFormStyles.inputField, { width: 130, height: 50 }]}
+            style={[enrollmentFormStyles.inputField, { width: 126, height: 50 }]}
             value={mobileNumber}
             keyboardType="numeric" // Set to numeric keypad
             onChangeText={(text) => { // Removes non-numeric characters
@@ -672,8 +684,8 @@ export default function EnrollmentForm() {
             setOpen={setStudentTypeOpen}
             setValue={setStudentType}
             setItems={setStudentTypeItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 250 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 250 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 320 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 320 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
@@ -691,8 +703,8 @@ export default function EnrollmentForm() {
             setOpen={setAdmissionStatusOpen}
             setValue={setAdmissionStatus}
             setItems={setAdmissionStatusItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 170 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 170 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 180 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 180 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
@@ -710,8 +722,8 @@ export default function EnrollmentForm() {
             setOpen={setEducationLevelOpen}
             setValue={setEducationLevel}
             setItems={setEducationLevelItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 300 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 300 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 320 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 320 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
@@ -729,22 +741,37 @@ export default function EnrollmentForm() {
             setOpen={setYearLevelOpen}
             setValue={setYearLevel}
             setItems={setYearLevelItems}
-            style={[enrollmentFormStyles.dropdownMenu, { width: 140 }]}
-            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 140 }]}
+            style={[enrollmentFormStyles.dropdownMenu, { width: 160 }]}
+            dropDownContainerStyle={[enrollmentFormStyles.dropdownContainer, { width: 160 }]}
             textStyle={enrollmentFormStyles.dropdownText}
             labelStyle={enrollmentFormStyles.dropdownLabel}
             placeholderStyle={enrollmentFormStyles.dropdownPlaceholder}
             listItemLabelStyle={enrollmentFormStyles.dropdownLabel}
             zIndex={999}
           />
-        </View>   
+        </View>
+        {/* ID */}
+        <View style={[enrollmentFormStyles.inputContainer, { width: 116, height: 50, position: "absolute", top: 127, left: 220 }]}>
+          <Text style={enrollmentFormStyles.sectionLabel}>I.D.</Text>
+          <TextInput
+            placeholder="2024M0000"
+            placeholderTextColor="rgba(0, 0, 0, 0.2)"
+            style={[enrollmentFormStyles.inputField, { width: 116, height: 50 }]}
+            value={ID}
+            keyboardType="numeric" // Set to numeric keypad
+            onChangeText={(text) => { // Removes non-numeric characters
+              const numericText = text.replace(/[^0-9]/g, '');
+              setID(numericText);
+            }}
+          />
+        </View>
         {/* LRN */}
-        <View style={[enrollmentFormStyles.inputContainer, { width: 130, height: 50, position: "absolute", top: 123, left: 210 }]}>
+        <View style={[enrollmentFormStyles.inputContainer, { width: 136, height: 50, position: "absolute", top: 287, left: 200 }]}>
           <Text style={enrollmentFormStyles.sectionLabel}>LRN</Text>
           <TextInput
             placeholder="000000000000"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={[enrollmentFormStyles.inputField, { width: 130, height: 50 }]}
+            style={[enrollmentFormStyles.inputField, { width: 136, height: 50 }]}
             value={mobileNumber}
             keyboardType="numeric" // Set to numeric keypad
             onChangeText={(text) => { // Removes non-numeric characters
@@ -777,8 +804,11 @@ export default function EnrollmentForm() {
           </View>
         ))}
         </View>
+        <Text style={enrollmentFormStyles.uploadedFilesValidation}>
+          *Limit: 4 files per upload*
+        </Text>
         {/* BOTTOM MARGIN */}
-        <View style={[enrollmentFormStyles.bottomMargin, { height: 176 }]}/>
+        <View style={[enrollmentFormStyles.bottomMargin, { height: 153 }]}/>
       </View>
       )}
 

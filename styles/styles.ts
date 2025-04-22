@@ -385,6 +385,13 @@ export const enrollmentFormStyles = StyleSheet.create({
 
         marginLeft: -6
     },
+    uploadedFilesValidation: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 14,
+
+        color: colors.secondary,
+        textAlign: "center"
+    }
 })
 
 export const dashboardStyles = StyleSheet.create({
