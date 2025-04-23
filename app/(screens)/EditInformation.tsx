@@ -78,6 +78,16 @@ export default function EditInformation() {
       ILS: ["Pre-Elementary", "Elementary", "Junior High School", "Senior High School"],
     };
 
+    // Update course items based on selected department
+    useEffect(() => {
+      if (department) {
+        const courses = coursesByDepartment[department] || [];
+        setCourseItems(courses.map(course => ({ label: course, value: course })));
+      } else {
+        setCourseItems([]);
+      }
+    }, [department]);
+
     // HANDLES
     const goToDashboard = () => {
         router.replace('/Dashboard');
@@ -179,16 +189,6 @@ export default function EditInformation() {
 
     return () => unsubscribe(); // Unsubscribe from the auth state listener
   }, []); // Empty dependency array means 'Effect' runs once when the component mounts
-
-  // Update course items based on selected department
-  useEffect(() => {
-    if (department) {
-      const courses = coursesByDepartment[department] || [];
-      setCourseItems(courses.map(course => ({ label: course, value: course })));
-    } else {
-      setCourseItems([]);
-    }
-  }, [department]);
 
   return (
     <View style={[globalStyles.screen, { flex: 1 }]}>

@@ -27,16 +27,28 @@ export const globalStyles = StyleSheet.create({
         fontFamily: "Lklavika-Medium",
         color: "white"
     },
-    // sliderValue: {
-    //     fontFamily: 'Lklavika-Medium',
-    //     fontSize: 20,
-    //     color: "white",
-
-    //     alignSelf: "center"
-    // },
 })
 
-export const QRCodeStyles = StyleSheet.create({
+export const privacyAndSupportStyles = StyleSheet.create({
+    titleContainer: {
+        backgroundColor: colors.accent,
+        
+        display: "flex",
+        height: 80,
+
+        borderRadius: 10,
+
+        marginTop: "20%",
+        marginBottom: "10%",
+        paddingHorizontal: "6%",
+    },
+    title: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+        textAlign: "center",
+
+        color: colors.primary,
+    },
     subtitleContainer: {
         backgroundColor: colors.primary,
 
@@ -68,6 +80,269 @@ export const QRCodeStyles = StyleSheet.create({
 
         color: colors.white,
     },
+})
+
+export const settingsStyles = StyleSheet.create({
+    titleContainer: {
+        backgroundColor: colors.accent,
+        
+        display: "flex",
+        height: 80,
+
+        borderRadius: 10,
+
+        marginTop: "20%",
+        marginBottom: "10%",
+        paddingHorizontal: "6%",
+    },
+    title: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+        textAlign: "center",
+
+        color: colors.primary,
+    },
+    subtitleContainer: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        width: 360,
+        height: 56,
+
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 8,
+
+        paddingBottom: 2,
+        marginTop: 34,
+        marginBottom: 20,
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    subtitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+
+        color: colors.white,
+    },
+})
+
+export const coursesStyles = StyleSheet.create({
+    titleContainer: {
+        backgroundColor: colors.accent,
+        
+        display: "flex",
+        height: 80,
+
+        borderRadius: 10,
+
+        marginTop: "20%",
+        marginBottom: "10%",
+        paddingHorizontal: "6%",
+    },
+    title: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+        textAlign: "center",
+
+        color: colors.primary,
+    },
+    subtitleContainer: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        width: 360,
+        height: 56,
+
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 8,
+
+        paddingBottom: 2,
+        marginTop: 34,
+        marginBottom: 20,
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    subtitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+
+        color: colors.white,
+    },
+})
+
+export const QRCodeStyles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: colors.primary,
+    },
+    subtitleContainer: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        width: 360,
+        height: 56,
+
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 8,
+
+        paddingBottom: 2,
+        marginTop: 34,
+        marginBottom: 20,
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    subtitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 32,
+
+        color: colors.white,
+    },
+    buttonContainer: {
+        display: "flex",
+        flexDirection: "row",
+    },
+    nextButton: {
+        backgroundColor: colors.primary,
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+
+        width: 200,
+        height: 56,
+
+        borderRadius: 30,
+
+        marginTop: 26,
+        marginBottom: 30,
+
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    nextButtonLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 28,
+
+        color: "white",
+    },
+    backButton: {
+        backgroundColor: colors.white,
+
+        alignSelf: "center",
+
+        borderRadius: 40,
+        borderWidth: 2,
+        borderColor: colors.secondary,
+
+        marginTop: 140,
+        paddingBottom: 6,
+        paddingHorizontal: 24,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
+    backButtonLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 40,
+
+        color: colors.secondary
+    },
+    QRCode: {
+        display: "flex",
+        justifyContent: "center",
+        backgroundColor: colors.white,
+        alignItems: "center",
+        marginTop: 80,
+
+        borderTopWidth: 4,
+        borderLeftWidth: 4,
+        borderRightWidth: 4,
+        borderRadius: 20,
+        borderColor: colors.secondary,
+
+        width: 340,
+        height: 340,
+    },
+    QRCodeFrame: {
+        width: 260,
+        height: 260,
+        position: "absolute",
+
+        top: 228,
+        left: 82,
+        zIndex: 1000,
+    },
+    QRName: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
+        width: "100%",
+        textAlign: "center",
+        color: colors.secondary
+    },
+    QRID: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 16,
+
+        color: colors.secondary
+    },
+    detailsContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colors.white,
+
+        width: 340,
+        borderBottomWidth: 4,
+        borderLeftWidth: 4,
+        borderRightWidth: 4,
+        borderColor: colors.secondary,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+
+        marginTop: -30,
+        paddingHorizontal: 0,
+        paddingBottom: 10
+    }
 })
 
 export const editInformationStyles = StyleSheet.create({
@@ -123,9 +398,9 @@ export const editInformationStyles = StyleSheet.create({
         width: 360,
         height: 56,
 
-        borderWidth: 2,
-        borderColor: colors.secondary,
-        borderRadius: 8,
+        // borderWidth: 2,
+        // borderColor: colors.secondary,
+        borderRadius: 0,
 
         paddingBottom: 2,
         marginTop: 34,
@@ -140,7 +415,7 @@ export const editInformationStyles = StyleSheet.create({
     },
     subtitle: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 32,
+        fontSize: 36,
 
         color: colors.white,
     },
@@ -895,9 +1170,7 @@ export const dashboardStyles = StyleSheet.create({
 
         alignSelf: "center",
 
-        borderWidth: 2,
         borderRadius: 8,
-        borderColor: colors.secondary,
 
         marginTop: 16,
         marginBottom: 6,
@@ -1135,8 +1408,9 @@ export const setupInformationStyles = StyleSheet.create({
         justifyContent: "center",
 
         backgroundColor: colors.white,
-        borderColor: colors.secondary,
-        borderWidth: 2,
+        borderColor: colors.primary,
+        borderWidth: 3,
+        borderTopWidth: 4,
         borderRadius: 10,
 
         height: 240,
@@ -1144,16 +1418,24 @@ export const setupInformationStyles = StyleSheet.create({
 
         marginTop: 20,
         paddingLeft: 60,
-        paddingTop: 20
+        paddingTop: 0,
+
+        // iOS Shadow
+        shadowColor: colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
     },
     summaryBanner: {
-        width: 356,
+        width: 355,
         height: 50,
 
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6,
         position: "absolute",
-        top: 0,
+        top: -1,
         left: 0,
         zIndex: 2,
     },
@@ -1348,6 +1630,8 @@ export const loginStyles = StyleSheet.create({
 
         marginTop: 20,
         paddingVertical: 12,
+        paddingTop: 6,
+        paddingBottom: 8,
         paddingHorizontal: 20,
 
         // iOS Shadow
@@ -1360,7 +1644,7 @@ export const loginStyles = StyleSheet.create({
     },
     loginButtonLabel: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 24,
+        fontSize: 28,
 
         color: "white"
     },

@@ -15,8 +15,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from "@expo/vector-icons";
 import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import Svg, { Path } from 'react-native-svg';
-import Barcode from 'react-native-barcode-svg';
 
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
@@ -142,11 +140,6 @@ export default function dashboard() {
         <View style={dashboardStyles.subtitleContainer}>
             <Text style={dashboardStyles.subtitle}>DASHBOARD</Text>
         </View>
-
-        {/* STUDENT BARCODE */}
-        {/* <View style={dashboardStyles.barcodeContainer}>
-          <Barcode value={studentInfo?.ID ?? ''} format="CODE128" />
-        </View> */}
 
         <View style={dashboardStyles.buttonContainer}>
         {/* QR CODE BUTTON */}

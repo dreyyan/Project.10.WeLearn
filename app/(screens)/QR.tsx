@@ -14,6 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import QRCode from 'react-native-qrcode-svg';
+import Barcode from 'react-native-barcode-svg';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 
@@ -101,30 +102,55 @@ export default function QR() {
   }, []); // Empty dependency array means 'Effect' runs once when the component mounts
 
     return (
-        <View style={[globalStyles.screen, { flex: 1 }]}>
-        {/* HEADER */}
-        <Image
-        source={require("../../assets/images/banner-WeLearn.png")}
-        style={globalStyles.banner}
-        resizeMode="contain"
-        />
-        {/* BURGER MENU ICON */}
-        <View style={burgerMenuStyles.burgerMenuContainer}>
-            <Ionicons
-            name="menu"
-            size={44}
-            color={colors.accent}
-            onPress={handleBurgerMenu}
-            style={burgerMenuStyles.burgerMenu}
-            />
-        </View>
+      <View style={[QRCodeStyles.screen, { flex: 1 }]}>
+      {/* HEADER */}
+      <Image
+      source={require("../../assets/images/banner-WeLearn.png")}
+      style={globalStyles.banner}
+      resizeMode="contain"
+      />
+      {/* BURGER MENU ICON */}
+      <View style={burgerMenuStyles.burgerMenuContainer}>
+          <Ionicons
+          name="menu"
+          size={44}
+          color={colors.accent}
+          onPress={handleBurgerMenu}
+          style={burgerMenuStyles.burgerMenu}
+          />
+      </View>
 
-        {/* PERSONALIZATION: Status bar color */}
-        <StatusBar backgroundColor="#1773EA" style="light" />
-        <QRCode
-        value="2024M1207"
-        size={200}
+      {/* PERSONALIZATION: Status bar color */}
+      <StatusBar backgroundColor="#1773EA" style="light" />
+
+      {/* QR Code */}
+      <Image
+        source={require("../../assets/images/frame-qr.png")}
+        style={QRCodeStyles.QRCodeFrame}
         />
-        </View>
+      <View style={QRCodeStyles.QRCode}>
+        <QRCode value="2024M1207" size={200}/>
+      </View>
+
+      <View style={QRCodeStyles.detailsContainer}>
+        <Text style={QRCodeStyles.QRName}>{name}</Text>
+        <Text style={QRCodeStyles.QRID}>{ID}</Text>
+      </View>
+      
+      {/* NAVIGATION BUTTONS */}
+      <View style={QRCodeStyles.buttonContainer}>
+        {/* BACK BUTTON */}
+        <TouchableOpacity
+          style={QRCodeStyles.backButton}
+          onPress={pressBackButton}
+        ><Text style={QRCodeStyles.backButtonLabel}>‹</Text>
+        </TouchableOpacity>
+      </View>
+      {/* MENU BURGER BUTTON */}
+      <BurgerMenu
+      isVisible={isMenuVisible}
+      setIsVisible={setIsMenuVisible}
+      />
+    </View>
     );
 }
