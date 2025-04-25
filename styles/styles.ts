@@ -241,11 +241,12 @@ export const departmentsStyles = StyleSheet.create({
         width: 100,
         height: 100,
 
-        marginVertical: 20,
+        marginTop: 20,
+        marginBottom: 10,
         alignSelf: "center"
     },
     container: {
-        width: "90%"
+        width: "90%",
     },
     departmentAcronym: {
         fontFamily: 'Lklavika-Bold',
@@ -289,7 +290,7 @@ export const departmentsStyles = StyleSheet.create({
     }
 })
 
-export const coursesStyles = StyleSheet.create({
+export const courseOverviewStyles = StyleSheet.create({
     titleContainer: {
         backgroundColor: colors.accent,
         
@@ -326,13 +327,6 @@ export const coursesStyles = StyleSheet.create({
         paddingBottom: 2,
         marginTop: 26,
         marginBottom: 26,
-        // iOS Shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
     },
     subtitle: {
         fontFamily: 'Lklavika-Bold',
@@ -386,6 +380,65 @@ export const coursesStyles = StyleSheet.create({
         marginLeft: 4,
         lineHeight: 22,
     },
+    courseOverviewContainer: {
+        height: 500,
+        width: 350,
+
+        paddingHorizontal: 10,
+        paddingTop: 20,
+      },
+      courseTitle: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 30,
+
+        color: colors.secondary,
+        textAlign: "center"
+      },
+      courseDepartment: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 26,
+
+        color: colors.secondary,
+        textAlign: "center"
+      },
+      subjectsHeading: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 26,
+
+        color: colors.secondary,
+        marginTop: 40,
+
+        textAlign: "center"
+      },
+      subjectsList: {
+        paddingLeft: 10,
+      },
+      subjectItem: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+
+        color: colors.secondary,
+      },
+      table: {
+      },
+      tableHeader: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderColor: colors.primary,
+        paddingVertical: 8,
+        marginTop: 10,
+      },
+      tableRow: {
+        flexDirection: 'row',
+        paddingVertical: 6,
+      },
+      tableCell: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+
+        color: colors.secondary,
+      },
+      
 })
 
 export const QRCodeStyles = StyleSheet.create({

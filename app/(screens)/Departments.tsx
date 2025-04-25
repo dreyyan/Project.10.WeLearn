@@ -3,7 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-nat
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES
-import { burgerMenuStyles, coursesStyles, departmentsStyles, globalStyles } from "../../styles/styles"
+import { burgerMenuStyles, departmentsStyles, globalStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -142,6 +142,81 @@ export default function Departments() {
     return () => unsubscribe(); // Unsubscribe from the auth state listener
   }, []); // Empty dependency array means 'Effect' runs once when the component mounts
 
+  const departmentData: {
+    [key: string]: {
+      image: any;
+      about: string;
+      dean: string;
+    };
+  } = {
+    CAS: {
+      image: require("../../assets/images/CAS.png"),
+      about:
+        "The College of Arts and Sciences focuses on providing a well-rounded education in the humanities, natural sciences, social sciences, and interdisciplinary studies. It nurtures students' critical thinking, creativity, and research skills.",
+      dean: "Dr. Alexander J. Balsomo",
+    },
+    CBM: {
+      image: require("../../assets/images/CBM.png"),
+      about:
+        "The College of Business and Management offers courses in business administration, management, marketing, finance, and entrepreneurship. It prepares students for leadership roles in the business world with practical knowledge and innovative strategies.",
+      dean: "Dr. Ma. Corazon M. Samorin",
+    },
+    COC: {
+      image: require("../../assets/images/COC.png"),
+      about:
+        "The College of Communication provides education in broadcasting, journalism, and development communication. It equips students with essential media skills and fosters critical thinking in communication studies.",
+      dean: "Prof. Rona Dhel C. Alingasa, MDC, LPT",
+    },
+    COD: {
+      image: require("../../assets/images/COD.png"),
+      about:
+        "The College of Dentistry is dedicated to training future dental professionals with the knowledge and skills necessary to provide high-quality dental care. The department emphasizes clinical practice, oral health research, and patient care.",
+      dean: "Dr. Liza Assumpta M. Jover",
+    },
+    COED: {
+      image: require("../../assets/images/COE.png"),
+      about:
+        "The College of Education provides programs that prepare students for careers in teaching, counseling, and other education-related fields. It focuses on building the knowledge and skills needed for shaping the future of students across various educational stages.",
+      dean: "Dr. Ricky M. Magno",
+    },
+    CICT: {
+      image: require("../../assets/images/CICT.png"),
+      about:
+        "The College of Information & Communications Technology specializes in educating students in the fields of information technology, computer science, software engineering, and telecommunications. The department focuses on developing technological solutions for modern challenges.",
+      dean: "Dr. Ma. Beth S. Concepcion",
+    },
+    COM: {
+      image: require("../../assets/images/COM.png"),
+      about:
+        "The College of Medicine is focused on producing skilled and compassionate healthcare professionals. It provides a comprehensive medical education with hands-on training in diagnostics, treatment, and patient care.",
+      dean: "Dr. Victor A. Amantillo Jr.",
+    },
+    CON: {
+      image: require("../../assets/images/CONursing.png"),
+      about:
+        "The College of Nursing trains students to become highly competent nurses who can provide care to individuals and communities. The department emphasizes clinical practice, patient advocacy, and healthcare delivery.",
+      dean: "Dr. Madonna S. Palmes",
+    },
+    PESCAR: {
+      image: require("../../assets/images/COP.png"),
+      about:
+        "The College of PESCAR offers education in physical education, sports, and recreation management. It aims to develop students' knowledge and skills for promoting physical fitness, leading athletic programs, and fostering well-being in communities.",
+      dean: "Dr. Porferio J. Barlas Jr.",
+    },
+    LAW: {
+      image: require("../../assets/images/COL.png"),
+      about:
+        "The College of Law offers a comprehensive legal education that prepares students to become competent and ethical legal professionals. It focuses on developing critical thinking, legal research skills, and a deep understanding of the law and its application.",
+      dean: "Atty. Pauline Grace Buñol-Alfuente, C.P.A.",
+    },
+    ILS: {
+      image: require("../../assets/images/ILS.jpg"),
+      about:
+        "The Integrated Laboratory School (ILS) provides quality education from the elementary level through to senior high school. It serves as a laboratory school that integrates innovative teaching strategies and modern learning approaches to develop the academic, social, and personal skills of its students.",
+      dean: "Prof. Mary June D. Pineda",
+    },
+  };  
+
   return (
     <View style={globalStyles.screen}>
       {/* HEADER */}
@@ -185,174 +260,12 @@ export default function Departments() {
         listItemLabelStyle={departmentsStyles.dropdownLabel}
         zIndex={999}
         />
-        {/* CAS */}
-        {department === "CAS" && (
-          <View style={departmentsStyles.container}>
-            <Image
-            source={require("../../assets/images/CAS.png")}
-            style={departmentsStyles.departmentImage}
-            resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The College of Arts and Sciences focuses on providing a well-rounded education in the humanities, natural sciences, social sciences, and interdisciplinary studies. It nurtures students' critical thinking, creativity, and research skills.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Dr. Alexander J. Balsomo
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.CAS.map((course, index) => (
-            <Text key={index} style={departmentsStyles.courseItem}>
-            {`  ~ `}{course}
-            </Text>
-            ))}
-          </View>
-        )}
-        {/* CBM */}
-        {department === "CBM" && (
-          <View style={departmentsStyles.container}>
-            <Image
-            source={require("../../assets/images/CBM.png")}
-            style={departmentsStyles.departmentImage}
-            resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The College of Business and Management offers courses in business administration, management, marketing, finance, and entrepreneurship. It prepares students for leadership roles in the business world with practical knowledge and innovative strategies.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Dr. Ma. Corazon M. Samorin
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.CBM.map((course, index) => (
-            <Text key={index} style={departmentsStyles.courseItem}>
-            {`  ~ `}{course}
-            </Text>
-            ))}
-          </View>
-        )}
-        {/* COC */}
-        {department === "COC" && (
-          <View style={departmentsStyles.container}>
-            <Image
-            source={require("../../assets/images/COC.png")}
-            style={departmentsStyles.departmentImage}
-            resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The College of Commerce provides education in various aspects of commerce, including accounting, economics, international trade, and business law. It aims to develop professionals skilled in managing and advancing businesses and organizations.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Prof. Rona Dhel C. Alingasa, MDC, LPT
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.COC.map((course, index) => (
-            <Text key={index} style={departmentsStyles.courseItem}>
-            {`  ~ `}{course}
-            </Text>
-            ))}
-          </View>
-        )}
-        {/* COD */}
-        {department === "COD" && (
-          <View style={departmentsStyles.container}>
-            <Image
-            source={require("../../assets/images/COD.png")}
-            style={departmentsStyles.departmentImage}
-            resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The College of Dentistry is dedicated to training future dental professionals with the knowledge and skills necessary to provide high-quality dental care. The department emphasizes clinical practice, oral health research, and patient care.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Dr. Liza Assumpta M. Jover
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.COD.map((course, index) => (
-            <Text key={index} style={departmentsStyles.courseItem}>
-            {`  ~ `}{course}
-            </Text>
-            ))}
-          </View>
-        )}
-        {/* COE */}
-        {department === "COE" && (
-          <View style={departmentsStyles.container}>
-            <Image
-              source={require("../../assets/images/COE.png")}
-              style={departmentsStyles.departmentImage}
-              resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The College of Education provides programs that prepare students for careers in teaching, counseling, and other education-related fields. It focuses on building the knowledge and skills needed for shaping the future of students across various educational stages.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Dr. Ricky M. Magno
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.COE.map((course, index) => (
-              <Text key={index} style={departmentsStyles.courseItem}>
-                {`  ~ `}{course}
-              </Text>
-            ))}
-          </View>
-        )}
-        {/* CICT */}
-        {department === "CICT" && (
-          <View style={departmentsStyles.container}>
-            <Image
-              source={require("../../assets/images/CICT.png")}
-              style={departmentsStyles.departmentImage}
-              resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-              The College of Information & Communications Technology specializes in educating students in the fields of information technology, computer science, software engineering, and telecommunications. The department focuses on developing technological solutions for modern challenges.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Dr. Ma. Beth S. Concepcion
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.CICT.map((course, index) => (
-              <Text key={index} style={departmentsStyles.courseItem}>
-                {`  ~ `}{course}
-              </Text>
-            ))}
-          </View>
-        )}
 
-        {/* COM */}
-        {department === "COM" && (
+        {/* DISPLAY DEPARTMENT DYNAMICALLY */}
+        {department && departmentData[department] && (
           <View style={departmentsStyles.container}>
             <Image
-              source={require("../../assets/images/COM.png")}
+              source={departmentData[department].image}
               style={departmentsStyles.departmentImage}
               resizeMode="cover"
             />
@@ -361,124 +274,14 @@ export default function Departments() {
             </Text>
             <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
             <Text style={departmentsStyles.sectionText}>
-              The College of Medicine is focused on producing skilled and compassionate healthcare professionals. It provides a comprehensive medical education with hands-on training in diagnostics, treatment, and patient care.
+              {departmentData[department].about}
             </Text>
             <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
             <Text style={departmentsStyles.sectionText}>
-            Dr. Victor A. Amantillo Jr.
+              {departmentData[department].dean}
             </Text>
             <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.COM.map((course, index) => (
-              <Text key={index} style={departmentsStyles.courseItem}>
-                {`  ~ `}{course}
-              </Text>
-            ))}
-          </View>
-        )}
-
-        {/* CON */}
-        {department === "CON" && (
-          <View style={departmentsStyles.container}>
-            {/* <Image
-              source={require("../../assets/images/CON.png")}
-              style={departmentsStyles.departmentImage}
-              resizeMode="cover"
-            /> */}
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-              The College of Nursing trains students to become highly competent nurses who can provide care to individuals and communities. The department emphasizes clinical practice, patient advocacy, and healthcare delivery.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Dr. Madonna S. Palmes
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.CON.map((course, index) => (
-              <Text key={index} style={departmentsStyles.courseItem}>
-                {`  ~ `}{course}
-              </Text>
-            ))}
-          </View>
-        )}
-
-        {/* COP */}
-        {department === "COP" && (
-          <View style={departmentsStyles.container}>
-            <Image
-              source={require("../../assets/images/COP.png")}
-              style={departmentsStyles.departmentImage}
-              resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The College of PESCAR offers education in physical education, sports, and recreation management. It aims to develop students' knowledge and skills for promoting physical fitness, leading athletic programs, and fostering well-being in communities.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Dr. Porferio J. Barlas Jr.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.COP.map((course, index) => (
-              <Text key={index} style={departmentsStyles.courseItem}>
-                {`  ~ `}{course}
-              </Text>
-            ))}
-          </View>
-        )}
-        {/* COL */}
-        {department === "COL" && (
-          <View style={departmentsStyles.container}>
-            <Image
-              source={require("../../assets/images/COL.png")}
-              style={departmentsStyles.departmentImage}
-              resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The College of Law offers a comprehensive legal education that prepares students to become competent and ethical legal professionals. It focuses on developing critical thinking, legal research skills, and a deep understanding of the law and its application.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Atty. Pauline Grace Buñol-Alfuente, C.P.A.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.COL.map((course, index) => (
-              <Text key={index} style={departmentsStyles.courseItem}>
-                {`  ~ `}{course}
-              </Text>
-            ))}
-          </View>
-        )}
-        {/* ILS */}
-        {department === "ILS" && (
-          <View style={departmentsStyles.container}>
-            <Image
-              source={require("../../assets/images/ILS.jpg")}
-              style={departmentsStyles.departmentImage}
-              resizeMode="cover"
-            />
-            <Text style={departmentsStyles.departmentAcronym}>
-              {department}
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>ABOUT US</Text>
-            <Text style={departmentsStyles.sectionText}>
-            The Integrated Laboratory School (ILS) provides quality education from the elementary level through to senior high school. It serves as a laboratory school that integrates innovative teaching strategies and modern learning approaches to develop the academic, social, and personal skills of its students.
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>DEAN</Text>
-            <Text style={departmentsStyles.sectionText}>
-            Prof. Mary June D. Pineda
-            </Text>
-            <Text style={departmentsStyles.sectionTitle}>COURSES OFFERED</Text>
-            {coursesByDepartment.ILS.map((course, index) => (
+            {coursesByDepartment[department]?.map((course, index) => (
               <Text key={index} style={departmentsStyles.courseItem}>
                 {`  ~ `}{course}
               </Text>

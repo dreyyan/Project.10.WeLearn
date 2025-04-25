@@ -63,7 +63,7 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
     const goToDashboard = () => router.replace('/Dashboard');
     const goToEnrollmentForm = () => router.replace('/EnrollmentForm');
     const goToDepartments = () => router.replace('/Departments');
-    const goToCourses = () => router.replace('/Courses');
+    const goToCourseOverview = () => router.replace('/CourseOverview');
     const goToPrivacyAndSupport = () => router.replace('/PrivacyAndSupport');
     const goToLogOut = () => router.replace('/');
 
@@ -104,8 +104,8 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
                     <Text style={burgerMenuStyles.menuItemText}>Departments</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToCourses}>
-                    <Text style={burgerMenuStyles.menuItemText}>Courses</Text>
+                    <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToCourseOverview}>
+                    <Text style={burgerMenuStyles.menuItemText}>Course Overview</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToPrivacyAndSupport}>
