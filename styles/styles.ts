@@ -1232,6 +1232,7 @@ export const dashboardStyles = StyleSheet.create({
 
         columnGap: 18,
         width: "80%",
+        marginTop: 20,
 
     },
     QRCodeButton: {
@@ -1260,10 +1261,11 @@ export const dashboardStyles = StyleSheet.create({
         alignItems: "center",
         alignSelf: "flex-end",
 
-        width: 40,
+        width: 42,
 
         marginRight: 34,
-        paddingVertical: 10,
+        paddingTop: 9,
+        paddingVertical: 11,
         paddingLeft: 12,
         paddingRight: 9,
         borderRadius: 8,
@@ -1341,9 +1343,9 @@ export const dashboardStyles = StyleSheet.create({
         borderColor: colors.secondary,
 
         height: 220,
-        width: "100%",
+        width: 320,
 
-        marginTop: 40,
+        marginTop: 20,
     },
     statusLabelContainer: {
         backgroundColor: colors.primary,
@@ -1635,13 +1637,13 @@ export const setupInformationStyles = StyleSheet.create({
         backgroundColor: colors.white,
         borderColor: colors.primary,
         borderWidth: 3,
-        borderTopWidth: 4,
+
         borderRadius: 10,
 
         height: 240,
-        width: 360,
+        width: 330,
 
-        marginTop: 20,
+        marginTop: 10,
         paddingLeft: 60,
         paddingTop: 0,
 
@@ -1654,77 +1656,28 @@ export const setupInformationStyles = StyleSheet.create({
         elevation: 8
     },
     summaryBanner: {
-        width: 355,
-        height: 50,
+        width: 325,
+        height: 46,
 
         borderTopLeftRadius: 6,
         borderTopRightRadius: 6,
         position: "absolute",
-        top: -1,
+        top: 0,
         left: 0,
-        zIndex: 2,
-    },
-    cardImageContainer: {
-        width: 80,
-        height: 80,
-
-        position: "absolute",
-        top: 70,
-        left: 255,
-        zIndex: 1,
     },
     cardImage: {
         width: 80,
         height: 80,
 
         position: "absolute",
-        top: 70,
-        left: 260,
+        top: 60,
+        left: 230,
         zIndex: 1,
-    },
-    summaryNameLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 14,
 
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 64,
-        left: 16,
-        zIndex: 1,
-    },
-    summaryName: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 18,
-
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 80,
-        left: 16,
-        zIndex: 1,
-    },
-    summaryGenderLabel: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 14,
-
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 110,
-        left: 16,
-        zIndex: 1,
-    },
-    summaryGender: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 16,
-
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 126,
-        left: 16,
-        zIndex: 1,
+        borderWidth: 2,
+        borderColor: colors.secondary,
+        borderRadius: 4,
+        borderTopRightRadius: 0
     },
     summaryType: {
         fontFamily: 'Lklavika-Bold',
@@ -1733,40 +1686,84 @@ export const setupInformationStyles = StyleSheet.create({
         color: colors.secondary,
 
         position: "absolute",
-        top: 164,
-        left: 280,
+        top: 150,
+        left: 246,
         zIndex: 1,
     },
     summaryID: {
         fontFamily: 'Lklavika-Bold',
         fontSize: 14,
 
+        color: colors.tertiary,
+
+        position: "absolute",
+        top: 138,
+        left: 238,
+        zIndex: 1,
+    },
+    summaryNameLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 14,
+
+        color: colors.tertiary,
+
+        position: "absolute",
+        top: 58,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryName: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+
         color: colors.secondary,
 
         position: "absolute",
-        top: 150,
-        left: 268,
+        top: 72,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryGenderLabel: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 14,
+
+        color: colors.tertiary,
+
+        position: "absolute",
+        top: 104,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryGender: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 18,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 118,
+        left: 14,
         zIndex: 1,
     },
     summaryDepartment: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 20,
+        fontSize: 22,
 
-        color: colors.secondary,
+        color: colors.tertiary,
 
         position: "absolute",
-        top: 184,
+        top: 180,
         left: 14,
         zIndex: 1,
     },
     summaryCourse: {
         fontFamily: 'Lklavika-Medium',
-        fontSize: 16,
+        fontSize: 18,
 
         color: colors.secondary,
 
         position: "absolute",
-        top: 204,
+        top: 200,
         left: 14,
         zIndex: 1,
     },
@@ -2177,17 +2174,12 @@ export const burgerMenuStyles = StyleSheet.create({
 
         color: colors.white,
       },
-      studentDepartment: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 22,
-
-        color: colors.white,
-      },
       studentCourse: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 20,
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 18,
 
         color: colors.white,
+        marginTop: -6,
       },
       menuItem: {
         marginBottom: 20,

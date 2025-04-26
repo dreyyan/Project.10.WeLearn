@@ -4,6 +4,7 @@ import React from 'react'
 export const colors = {
     primary: "#1773EA",
     secondary: "#115CBD",
+    tertiary: "#1e509c",
     support: "#EA8E17",
     accent: "#FFF",
 

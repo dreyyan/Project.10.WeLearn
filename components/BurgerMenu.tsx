@@ -59,13 +59,36 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
     return () => unsubscribe(); // Unsubscribe from the auth state listener
   }, []); // Empty dependency array means 'Effect' runs once when the component mounts
 
-    // NAVIGATION FUNCTIONS (same as before)
-    const goToDashboard = () => router.replace('/Dashboard');
-    const goToEnrollmentForm = () => router.replace('/EnrollmentForm');
-    const goToDepartments = () => router.replace('/Departments');
-    const goToCourseOverview = () => router.replace('/CourseOverview');
-    const goToPrivacyAndSupport = () => router.replace('/PrivacyAndSupport');
-    const goToLogOut = () => router.replace('/');
+    // Navigation Functions
+    const goToDashboard = () => {
+      router.replace('/(screens)/Dashboard');
+      setIsVisible(false);
+    };
+    
+    const goToEnrollmentForm = () => {
+      router.replace('/(screens)/EnrollmentForm');
+      setIsVisible(false);
+    };
+    
+    const goToDepartments = () => {
+      router.replace('/(screens)/Departments');
+      setIsVisible(false);
+    };
+    
+    const goToCourseOverview = () => {
+      router.replace('/(screens)/CourseOverview');
+      setIsVisible(false);
+    };
+    
+    const goToPrivacyAndSupport = () => {
+      router.replace('/(screens)/PrivacyAndSupport');
+      setIsVisible(false);
+    };
+    
+    const goToLogOut = () => {
+      router.replace('/');
+      setIsVisible(false);
+    };    
 
     return (
         <Modal
@@ -80,17 +103,16 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
                 <View style={burgerMenuStyles.menuContainer}>
                     {/* PROFILE INFO */}
                     <View style={burgerMenuStyles.profile}>
-                    <Text style={burgerMenuStyles.profileTitle}>WeLearn</Text>
                     <Image
                         source={require("../assets/images/profile-placeholder.jpg")}
                         style={burgerMenuStyles.studentPicture}
                         resizeMode="cover"
                     />
-                    <Text style={burgerMenuStyles.studentName}>Adrian Dominic L. Tan</Text>
+                    <Text style={burgerMenuStyles.studentName}>{studentInfo?.name}</Text>
                     <Text style={burgerMenuStyles.studentCourse}>{studentInfo?.course}</Text>
-                    <Text style={burgerMenuStyles.studentDepartment}>{studentInfo?.department}</Text>
                     </View>
 
+                    <View style={{backgroundColor: colors.secondary, alignSelf: "flex-end", marginTop: -20, marginBottom: 20, width: 180, height: 2}}/>
                     {/* MENU ITEMS */}
                     <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToDashboard}>
                     <Text style={burgerMenuStyles.menuItemText}>Dashboard</Text>
@@ -115,6 +137,7 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
                     <TouchableOpacity style={burgerMenuStyles.menuItem} onPress={goToLogOut}>
                     <Text style={burgerMenuStyles.menuItemText}>Log Out</Text>
                     </TouchableOpacity>
+                    <View style={{backgroundColor: colors.secondary, marginTop: 20, width: 180, height: 2}}/>
                 </View>
                 </TouchableWithoutFeedback>
             </View>

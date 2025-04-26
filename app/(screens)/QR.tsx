@@ -43,8 +43,8 @@ export default function QR() {
       router.replace('/EnrollmentForm');
     }
 
-    const goToCourses = () => {
-        router.replace('/Courses');
+    const goToCourseOverview = () => {
+        router.replace('/CourseOverview');
     }
 
     const goToSettings = () => {

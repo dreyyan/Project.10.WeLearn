@@ -49,8 +49,8 @@ export default function dashboard() {
       router.replace('/EnrollmentForm');
     }
 
-    const goToCourses = () => {
-        router.replace('/Courses');
+    const goToCourseOverview = () => {
+        router.replace('/CourseOverview');
     }
 
     const goToSettings = () => {
@@ -141,6 +141,27 @@ export default function dashboard() {
             <Text style={dashboardStyles.subtitle}>DASHBOARD</Text>
         </View>
 
+        {/* STUDENT INFORMATION CARD */}
+        <View style={setupInformationStyles.cardContainer}>
+          <Image
+          source={require("../../assets/images/card-banner.png")}
+          style={setupInformationStyles.summaryBanner}
+          />
+          <Image
+          source={require("../../assets/images/profile-placeholder.jpg")}
+          style={setupInformationStyles.cardImage}
+          resizeMode="cover"
+          />
+          <Text style={setupInformationStyles.summaryNameLabel}>NAME</Text>
+          <Text style={setupInformationStyles.summaryName}>{studentInfo?.name}</Text>
+          <Text style={setupInformationStyles.summaryGenderLabel}>GENDER</Text>
+          <Text style={setupInformationStyles.summaryGender}>{studentInfo?.gender}</Text>
+          <Text style={setupInformationStyles.summaryType}>{studentInfo?.type.toUpperCase()}</Text>
+          <Text style={setupInformationStyles.summaryID}>{studentInfo?.ID}</Text>
+          <Text style={setupInformationStyles.summaryDepartment}>{studentInfo?.department}</Text>
+          <Text style={setupInformationStyles.summaryCourse}>{studentInfo?.course}</Text>
+        </View>
+
         <View style={dashboardStyles.buttonContainer}>
         {/* QR CODE BUTTON */}
         <TouchableOpacity
@@ -156,28 +177,7 @@ export default function dashboard() {
         ><Ionicons name="create-outline" size={20} color="#fff" />
         </TouchableOpacity>
         </View>
-
-        {/* STUDENT INFORMATION CARD */}
-        <View style={setupInformationStyles.cardContainer}>
-        <Image
-            source={require("../../assets/images/card-banner.png")}
-            style={setupInformationStyles.summaryBanner}
-            />
-              <Image
-              source={require("../../assets/images/profile-placeholder.jpg")}
-              style={setupInformationStyles.cardImage}
-              resizeMode="cover"
-              />
-            <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>
-            <Text style={setupInformationStyles.summaryName}>{studentInfo?.name}</Text>
-            <Text style={setupInformationStyles.summaryGenderLabel}>Gender:</Text>
-            <Text style={setupInformationStyles.summaryGender}>{studentInfo?.gender}</Text>
-            <Text style={setupInformationStyles.summaryType}>{studentInfo?.type}</Text>
-            <Text style={setupInformationStyles.summaryID}>{studentInfo?.ID}</Text>
-            <Text style={setupInformationStyles.summaryDepartment}>{studentInfo?.department}</Text>
-            <Text style={setupInformationStyles.summaryCourse}>{studentInfo?.course}</Text>
-        </View>
-
+        
         {/* STATUS AREA */}
         <View style={dashboardStyles.statusContainer}>
         <View style={dashboardStyles.statusLabelContainer}>

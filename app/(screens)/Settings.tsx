@@ -3,7 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-nat
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES
-import { burgerMenuStyles, globalStyles, coursesStyles } from "../../styles/styles"
+import { burgerMenuStyles, globalStyles, courseOverviewStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -85,8 +85,8 @@ export default function Settings() {
       router.replace('/EnrollmentForm');
     }
 
-    const goToCourses = () => {
-        router.replace('/Courses');
+    const goToCourseOverview = () => {
+        router.replace('/CourseOverview');
     }
 
     const goToSettings = () => {
@@ -164,8 +164,8 @@ export default function Settings() {
       {/* PERSONALIZATION: Status bar color */}
       <StatusBar backgroundColor="#1773EA" style="light" />
         {/* TITLE */}
-        <View style={coursesStyles.subtitleContainer}>
-            <Text style={coursesStyles.subtitle}>SETTINGS</Text>
+        <View style={courseOverviewStyles.subtitleContainer}>
+            <Text style={courseOverviewStyles.subtitle}>SETTINGS</Text>
         </View>
 
         {/* MENU BURGER BUTTON */}
