@@ -13,6 +13,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Audio } from 'expo-av';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 
@@ -30,6 +31,48 @@ export default function EditInformation() {
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
     const [currentStep, setCurrentStep] = useState(1);
+    const [successSound, setSuccessSound] = useState<Audio.Sound | null>(null);
+    const [errorSound, setErrorSound] = useState<Audio.Sound | null>(null);
+  
+    // Preload both SFX
+    useEffect(() => {
+      async function loadSounds() {
+        const { sound: success } = await Audio.Sound.createAsync(
+          require('../../assets/SFX/sfx-success.wav')
+        );
+        const { sound: error } = await Audio.Sound.createAsync(
+          require('../../assets/SFX/sfx-error.wav')
+        );
+        setSuccessSound(success);
+        setErrorSound(error);
+      }
+
+      loadSounds();
+
+      // Cleanup on unmount
+      return () => {
+        if (successSound) {
+          successSound.unloadAsync();
+        }
+        if (errorSound) {
+          errorSound.unloadAsync();
+        }
+      };
+    }, []);
+
+    // Function to play the success sound
+    const playSuccessSound = async () => {
+      if (successSound) {
+        await successSound.replayAsync();
+      }
+    };
+
+    // Function to play the error sound
+    const playErrorSound = async () => {
+      if (errorSound) {
+        await errorSound.replayAsync();
+      }
+    };
 
     const [name, setName] = useState("");
     const [ID, setID] = useState("");
@@ -89,30 +132,6 @@ export default function EditInformation() {
     }, [department]);
 
     // HANDLES
-    const goToDashboard = () => {
-        router.replace('/Dashboard');
-      }
-
-    const goToEnrollmentForm = () => {
-      router.replace('/EnrollmentForm');
-    }
-
-    const goToCourseOverview = () => {
-        router.replace('/CourseOverview');
-    }
-
-    const goToSettings = () => {
-        router.replace('/Settings');
-    }
-
-    const goToPrivacyAndSupport = () => {
-        router.replace('/PrivacyAndSupport');
-    }
-
-    const goToLogOut = () => {
-        router.replace('/');
-    }
-
     const handleBurgerMenu = () => {
         setIsMenuVisible(true);
     };
@@ -145,9 +164,11 @@ export default function EditInformation() {
           course
         });
     
+        playSuccessSound();
         Alert.alert('Success', 'Information has been edited successfully!');
         router.replace("/Dashboard"); // Return to dashboard
       } catch (error) {
+        playErrorSound();
         console.error("Error updating profile:", error);
         Alert.alert("Error", "Failed to update profile");
       }

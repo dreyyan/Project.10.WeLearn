@@ -54,10 +54,6 @@ export default function dashboard() {
         router.replace('/CourseOverview');
     }
 
-    const goToSettings = () => {
-        router.replace('/Settings');
-    }
-
     const goToPrivacyAndSupport = () => {
         router.replace('/PrivacyAndSupport');
     }

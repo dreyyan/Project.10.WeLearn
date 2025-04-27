@@ -6,11 +6,10 @@ import { Link, router } from "expo-router";
 import { globalStyles, loginStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIREBASE
-import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../configurations/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { getDoc, setDoc, doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
+import { signInWithEmailAndPassword } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,35 +21,9 @@ export default function Login() {
   // STATES
   const [email, setEmail] = useState("ADT07299270@gmail.com");
   const [password, setPassword] = useState("123456");
-  const [isLoading, setIsLoading] = useState(true);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
-
-  // Preload SFX
-  useEffect(() => {
-    async function loadSound() {
-      const { sound } = await Audio.Sound.createAsync(
-        require('../../assets/SFX/sfx-button-press.wav')
-      );
-      setSound(sound);
-    }
-
-    loadSound();
-
-    // cleanup on unmount
-    return () => {
-      if (sound) {
-        sound.unloadAsync();
-      }
-    };
-  }, []);
-
-  async function playSound() {
-    if (sound) {
-      await sound.replayAsync();
-    }
-  }
   
-  // HANDLES
+  // HANDLES: Button
   const pressLoginButton = async () => {
     playSound();
     try {
@@ -74,15 +47,14 @@ export default function Login() {
           Alert.alert("Setup Required", "Please complete your profile setup.", [
             {
               text: "Continue",
-              onPress: () => router.replace('/SetupInformation'),
+              onPress: () => router.push('/SetupInformation'),
             },
           ]);
         } else {
-          router.replace('/Dashboard')
           // If profile is complete, redirect to the dashboard
-          // Alert.alert("Success", "You are logged in!", [
-          //   { text: "Continue", onPress: () => router.replace('/Dashboard') },
-          // ]);
+          Alert.alert("Success", "You are logged in!", [
+            { text: "Continue", onPress: () => router.push('/Dashboard') },
+          ]);
         }
       } else {
         // ERROR: Non-existing profile document
@@ -112,43 +84,68 @@ export default function Login() {
     }
   };
 
-  // LISTEN: Stay on latest screen
+  /* Sound Effects [SFX] */
+  // 1. Pre-load SFX
   useEffect(() => {
-    // Setup listener for Firebase Authentication
-    // Triggers everytime the user's login state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoading(false); // Stop loading once Firebase returns a result
+    async function loadSound() {
+      const { sound } = await Audio.Sound.createAsync(
+        require('../../assets/SFX/sfx-button-press.wav')
+      );
+      setSound(sound);
+    } loadSound();
 
-      // If user is logged in, check their profile and decide where to send it
-      if (user) {
-        // Check user profile and redirect accordingly
-        // Create a promise to fetch the Firestore document at the specified path
-        const userProfileDoc = getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
-        // Get the actual document result
-        userProfileDoc.then((userProfile) => {
-          if (userProfile.exists()) {
-            // If document exists, extract actual data
-            const userProfileData = userProfile.data();
-            if (userProfileData.completedInformation === false) {
-            // If user has incomplete profile, redirect to setup information
-              router.replace('/SetupInformation');
-            } else {
-              // If user has complete profile, redirect to dashboard
-              router.replace('/');
-            }
-          } else {
-            // If document doesn't exist, redirect to setup information
-            router.replace('/SetupInformation');
-          }
-        });
-      } else {
-        // If no user, stop loading and stay on login screen
-        setIsLoading(false);
+    // Cleanup function
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
       }
-    });
-
-    return unsubscribe; // Cleanup on unmount, stops listening for auth changes to prevent memory leaks
+    };
   }, []);
+
+  // 2. Play sound when invoked
+  async function playSound() {
+    if (sound) {
+      await sound.replayAsync();
+    }
+  }
+
+  // DEBUG: Stay on latest screen
+  // useEffect(() => {
+  //   // Setup listener for Firebase Authentication
+  //   // Triggers everytime the user's login state changes
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     setIsLoading(false); // Stop loading once Firebase returns a result
+
+  //     // If user is logged in, check their profile and decide where to send it
+  //     if (user) {
+  //       // Check user profile and redirect accordingly
+  //       // Create a promise to fetch the Firestore document at the specified path
+  //       const userProfileDoc = getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+  //       // Get the actual document result
+  //       userProfileDoc.then((userProfile) => {
+  //         if (userProfile.exists()) {
+  //           // If document exists, extract actual data
+  //           const userProfileData = userProfile.data();
+  //           if (userProfileData.completedInformation === false) {
+  //           // If user has incomplete profile, redirect to setup information
+  //             router.push('/SetupInformation');
+  //           } else {
+  //             // If user has complete profile, redirect to dashboard
+  //             router.push('/');
+  //           }
+  //         } else {
+  //           // If document doesn't exist, redirect to setup information
+  //           router.push('/SetupInformation');
+  //         }
+  //       });
+  //     } else {
+  //       // If no user, stop loading and stay on login screen
+  //       setIsLoading(false);
+  //     }
+  //   });
+
+  //   return unsubscribe; // Cleanup on unmount, stops listening for auth changes to prevent memory leaks
+  // }, []);
 
   return (
     <UserProvider>
@@ -157,10 +154,10 @@ export default function Login() {
         <Image
         source={require("../../assets/images/banner-WeLearn.png")}
         style={globalStyles.banner}
-        resizeMode="contain"
-        />
-        {/* PERSONALIZATION: Status bar color */}
-        <StatusBar backgroundColor="#1773EA" style="light" />
+        resizeMode="contain"/>
+
+        {/* PERSONALIZATION: Status Bar */}
+        <StatusBar backgroundColor="#1773EA" style="light"/>
 
         {/* TITLE */}
         <View style={loginStyles.titleContainer}>
@@ -170,17 +167,15 @@ export default function Login() {
 
         {/* INPUT FORM */}
         <View style={loginStyles.formContainer}>
-
           {/* INPUT => USERNAME/EMAIL */}
           <View style={loginStyles.inputContainer}>
-            <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon} />
+            <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon}/>
             <TextInput
               placeholder="Username or Email"
               placeholderTextColor="rgba(0, 0, 0, 0.2)"
               style={loginStyles.inputField}
               value={email}
-              onChangeText={setEmail}
-            />
+              onChangeText={setEmail}/>
           </View>
 
           {/* INPUT => PASSWORD */}
@@ -192,16 +187,15 @@ export default function Login() {
               style={loginStyles.inputField}
               secureTextEntry={true}
               value={password}
-              onChangeText={setPassword}
-            />
+              onChangeText={setPassword}/>
           </View>
 
-            {/* LOGIN BUTTON */}
-            <TouchableOpacity
-              style={loginStyles.loginButton}
-              onPress={pressLoginButton}
-            ><Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
-            </TouchableOpacity>
+          {/* LOGIN BUTTON */}
+          <TouchableOpacity
+          style={loginStyles.loginButton}
+          onPress={pressLoginButton}>
+          <Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
+          </TouchableOpacity>
 
           {/* LINK => CREATE ACCOUNT */}
           <Link href="/SignUp" style={loginStyles.createAccountLink}>Create an account</Link>

@@ -254,10 +254,6 @@ export default function Courses() {
         router.replace('/CourseOverview');
     }
 
-    const goToSettings = () => {
-        router.replace('/Settings');
-    }
-
     const goToPrivacyAndSupport = () => {
         router.replace('/PrivacyAndSupport');
     }
@@ -334,29 +330,34 @@ export default function Courses() {
         </View>
 
         <View style={courseOverviewStyles.courseOverviewContainer}>
-  {course !== "" && (
-    <>
-      <Text style={courseOverviewStyles.courseTitle}>{course}</Text>
-      <Text style={courseOverviewStyles.courseDepartment}>{department}</Text>
+        <View style={{backgroundColor: colors.secondary, alignSelf: "center", marginTop: 0, marginBottom: 4, width: 280, height: 2}}/>
+        <View style={{backgroundColor: colors.secondary, alignSelf: "center", marginBottom: 40, width: 320, height: 4}}/>
+          {course !== "" && (
+            <>
+              <Text style={courseOverviewStyles.courseTitle}>{course}</Text>
+              <Text style={courseOverviewStyles.courseDepartment}>{department}</Text>
 
-      <Text style={courseOverviewStyles.subjectsHeading}>Schedule</Text>
+              <Text style={courseOverviewStyles.subjectsHeading}>Schedule</Text>
 
-      <View style={courseOverviewStyles.table}>
-        <View style={courseOverviewStyles.tableHeader}>
-          <Text style={[courseOverviewStyles.tableCell, { flex: 2, fontFamily: 'Lklavika-Bold', fontSize: 22 }]}>Subject</Text>
-          <Text style={[courseOverviewStyles.tableCell, { flex: 2, textAlign: "right", fontFamily: 'Lklavika-Bold', fontSize: 22  }]}>Time</Text>
+              <View style={courseOverviewStyles.table}>
+                <View style={courseOverviewStyles.tableHeader}>
+                  <Text style={[courseOverviewStyles.tableCell, { flex: 2, fontFamily: 'Lklavika-Bold', fontSize: 22 }]}>
+                  Subject</Text>
+                  <Text style={[courseOverviewStyles.tableCell, { flex: 2, textAlign: "right", fontFamily: 'Lklavika-Bold', fontSize: 22  }]}>Time</Text>
+                </View>
+
+                {subjectsByCourse[course]?.map((subject, index) => (
+                  <View key={index} style={courseOverviewStyles.tableRow}>
+                    <Text style={[courseOverviewStyles.tableCell, { flex: 2 }]}>{subject.name}</Text>
+                    <Text style={[courseOverviewStyles.tableCell, { flex: 2, textAlign: "right" }]}>{subject.time}</Text>
+                  </View>
+                ))}
+                <View style={{backgroundColor: colors.secondary, alignSelf: "center", marginTop: 60, width: 260, height: 4}}/>
+                <View style={{backgroundColor: colors.secondary, alignSelf: "center", marginTop: 4, width: 240, height: 2}}/>
+              </View>
+            </>
+          )}
         </View>
-
-        {subjectsByCourse[course]?.map((subject, index) => (
-          <View key={index} style={courseOverviewStyles.tableRow}>
-            <Text style={[courseOverviewStyles.tableCell, { flex: 2 }]}>{subject.name}</Text>
-            <Text style={[courseOverviewStyles.tableCell, { flex: 2, textAlign: "right" }]}>{subject.time}</Text>
-          </View>
-        ))}
-      </View>
-    </>
-  )}
-</View>
 
         {/* MENU BURGER BUTTON */}
         <BurgerMenu

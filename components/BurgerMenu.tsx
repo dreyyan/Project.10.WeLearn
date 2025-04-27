@@ -11,12 +11,39 @@ import { db, auth } from "../configurations/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { Modal } from "react-native";
+import { Audio } from 'expo-av';
 
 const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisible: (visible: boolean) => void; }) => {
     // STATE
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [profileImage, setProfileImage] = useState<string | null>(null);
+    const [sound, setSound] = useState<Audio.Sound | null>(null);
+  
+    // Preload SFX
+    useEffect(() => {
+      async function loadSound() {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../assets/SFX/sfx-navigate.wav')
+        );
+        setSound(sound);
+      }
+  
+      loadSound();
+  
+      // cleanup on unmount
+      return () => {
+        if (sound) {
+          sound.unloadAsync();
+        }
+      };
+    }, []);
+  
+    async function playSound() {
+      if (sound) {
+        await sound.replayAsync();
+      }
+    }
     
     // TypeScript type, specify structure and type of data for 'StudentInfo'
     type StudentInfo = {
@@ -62,31 +89,37 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
 
     // Navigation Functions
     const goToDashboard = () => {
+      playSound();
       router.push('/Dashboard');
       setIsVisible(false);
     };
     
     const goToEnrollmentForm = () => {
+      playSound();
       router.push('/EnrollmentForm');
       setIsVisible(false);
     };
     
     const goToDepartments = () => {
+      playSound();
       router.push('/Departments');
       setIsVisible(false);
     };
     
     const goToCourseOverview = () => {
+      playSound();
       router.push('/CourseOverview');
       setIsVisible(false);
     };
     
     const goToPrivacyAndSupport = () => {
+      playSound();
       router.push('/PrivacyAndSupport');
       setIsVisible(false);
     };
     
     const goToLogOut = () => {
+      playSound();
       router.push('/');
       setIsVisible(false);
     };    

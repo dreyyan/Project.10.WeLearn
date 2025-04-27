@@ -1,5 +1,4 @@
-import { Tabs } from "expo-router";
-import CustomTabBar from "../../components/customTabBar"
+import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { View, ActivityIndicator } from "react-native";
 
@@ -20,24 +19,81 @@ export default function RootLayout() {
   }
 
   return (
-    <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{
+  <Stack
+    screenOptions={{
+      headerShown: false,
+      gestureEnabled: true,  // Allow swipe gestures (iOS swipe-back)
+    }}>
+    <Stack.Screen
+      name="index"
+      options={{
         headerShown: false,
+        animation: "fade",
       }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          tabBarLabel: "Home"
-        }}
-      />
-      <Tabs.Screen
-        name="SignUp"
-        options={{
-          tabBarLabel: "Sign Up"
-        }}
-      />
-    </Tabs>
+    />
+    <Stack.Screen
+      name="SignUp"
+      options={{
+        headerShown: false,
+        animation: "slide_from_right",
+      }}
+    />
+    <Stack.Screen
+      name="SetupInformation"
+      options={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
+    <Stack.Screen
+      name="Dashboard"
+      options={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
+    <Stack.Screen
+      name="QR"
+      options={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
+    <Stack.Screen
+      name="EditInformation"
+      options={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
+    <Stack.Screen
+      name="EnrollmentForm"
+      options={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
+    <Stack.Screen
+      name="Departments"
+      options={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
+    <Stack.Screen
+      name="CourseOverview"
+      options={{
+        headerShown: false,
+        animation: "fade",  // Prevent animation on initial load
+      }}
+    />
+    <Stack.Screen
+      name="PrivacyAndSupport"
+      options={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
+  </Stack>
   );
 }

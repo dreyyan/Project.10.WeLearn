@@ -3,9 +3,10 @@ import { colors } from "./colors"
 
 export const globalStyles = StyleSheet.create({
     screen: {
+        backgroundColor: colors.accent,
+
         flex: 1,
         alignItems: 'center',
-        backgroundColor: colors.accent,
     },
     banner: {
         width: 394,
