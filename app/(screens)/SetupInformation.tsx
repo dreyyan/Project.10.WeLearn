@@ -1,13 +1,14 @@
 // REACT NATIVE
 import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
-import { Link, router } from "expo-router";
-import { useState, useEffect } from "react";
+import { Link, router, useFocusEffect } from "expo-router";
+import { useState, useEffect, useCallback } from "react";
 // STYLES
 import { globalStyles, setupInformationStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIREBASE AUTHENTICATION
 import { auth } from "../../configurations/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 // FIRESTORE
 import { db } from "../../configurations/firebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -22,10 +23,10 @@ export default function SetupInformation() {
   const [type, setType] = useState("Student");
   const [ID, setID] = useState("");
 
-  const [currentStep, setCurrentStep] = useState(1);
-
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [completedInformation, setCompletedInformation] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(true); // Loading state while fetching data
 
   // DROPDOWN: Gender
   const [gender, setGender] = useState(null);
@@ -151,9 +152,31 @@ export default function SetupInformation() {
       setCurrentStep(currentStep + 1);
     } else {
       updateStudentProfile(); // Update the profile when finishing the setup
-      router.replace("/Dashboard"); // Navigate to the next screen or complete the setup
+      router.replace("/"); // Navigate to the next screen or complete the setup
     }
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentStep(1);
+      setLoading(true);
+  
+      // Setup listener
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // your logic to fetch Firestore data
+        } else {
+          Alert.alert('Error', 'No user is logged in');
+          setLoading(false);
+        }
+      });
+  
+      // Important: return the unsubscribe properly
+      return () => {
+        unsubscribe();
+      };
+    }, [])
+  );  
 
   return (
     <View style={globalStyles.screen}>
@@ -324,7 +347,7 @@ export default function SetupInformation() {
             />
             <Image
             source={require("../../assets/images/id-placeholder.png")}
-            style={setupInformationStyles.summaryImage}
+            style={setupInformationStyles.summaryImageSetup}
             resizeMode="contain"
             />
             <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>

@@ -1,7 +1,7 @@
 // REACT NATIVE
 import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { useState, useEffect } from "react";
-import { router } from "expo-router";
+import { useState, useEffect, useCallback } from "react";
+import { router, useFocusEffect } from "expo-router";
 // STYLES
 import { dashboardStyles, burgerMenuStyles, globalStyles, enrollmentFormStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
@@ -294,6 +294,62 @@ export default function EnrollmentForm() {
       return false;
     };
 
+    // Screen Change
+    useFocusEffect(
+      useCallback(() => {
+        setCurrentStep(1);
+        setLoading(true);
+
+        // Fetch user data from Firestore
+          const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              const docRef = doc(db, 'users', user.uid, 'profile', 'studentProfile');
+              try {
+                // Attempt to fetch the user profile data from Firestore
+                const docSnap = await getDoc(docRef);
+
+                // If the document exists, store the data in the state
+                if (docSnap.exists()) {
+                  const data = docSnap.data() as StudentInfo;
+                  setStudentInfo(data);
+                  setName(data.name);
+                  setGender(data.gender);
+                  setID(data.ID);
+                  setEmailAddress(user.email || "");
+                } else { // ERROR: Non-existing document
+                  Alert.alert('Error', 'User profile data not found');
+                }
+              } catch (error) {
+                console.error('Error fetching user data:', error);
+                Alert.alert('Error', 'An error occurred while fetching data');
+              } finally {
+                setLoading(false); // Stop the loading state whether success or fail
+              }
+            } else {
+              Alert.alert('Error', 'No user is logged in');
+              setLoading(false);
+            }
+          });
+          return () => unsubscribe(); // Unsubscribe from the auth state listener
+      }, [])
+    );
+    
+    // Inside your component
+    useEffect(() => {
+      // When currentStep changes, reset form fields
+      if (currentStep === 1) {
+        setName('');
+        setDateOfBirth(null);
+        setGender('');
+      } else if (currentStep === 2) {
+        setEmailAddress('');
+        setBirthPlace('');
+        setNationality('');
+        setMobileNumber('');
+        setHouseholdMembers('');
+      }
+    }, [currentStep]);
+
     const submitForm = async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -339,6 +395,36 @@ export default function EnrollmentForm() {
         });
     
         Alert.alert("Success", "Form submitted successfully!");
+        setName('');
+        setDateOfBirth(null);
+        setCivilStatus('');
+        setGender('');
+      
+        setEmailAddress('');
+        setNationality('');
+        setBirthPlace('');
+        setMobileNumber('');
+        setHouseholdMembers('');
+      
+        setReligion('');
+        setDisability('');
+        setAnnualGrossIncome('');
+      
+        setRegion('');
+        setProvince('');
+        setMunicipalityCity('');
+        setBarangay('');
+        setZIPCode('');
+      
+        setStudentType('');
+        setAdmissionStatus('');
+        setEducationLevel('');
+        setYearLevel('');
+        setID('');
+        setLRN('');
+      
+        setSelectedFiles([]);
+        setCertified(false);
       } catch (error) {
         console.error("Error submitting form:", error);
         Alert.alert("Error", "Failed to submit form");
@@ -363,42 +449,6 @@ export default function EnrollmentForm() {
         setCurrentStep(1);
       }
     }
-
-  // Fetch user data from Firestore
-  useEffect(() => {
-    // Setup listener for Firebase Authentication
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const docRef = doc(db, 'users', user.uid, 'profile', 'studentProfile');
-        try {
-          // Attempt to fetch the user profile data from Firestore
-          const docSnap = await getDoc(docRef);
-
-          // If the document exists, store the data in the state
-          if (docSnap.exists()) {
-            const data = docSnap.data() as StudentInfo;
-            setStudentInfo(data);
-            setName(data.name);
-            setGender(data.gender);
-            setID(data.ID);
-            setEmailAddress(user.email || "");
-          } else { // ERROR: Non-existing document
-            Alert.alert('Error', 'User profile data not found');
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          Alert.alert('Error', 'An error occurred while fetching data');
-        } finally {
-          setLoading(false); // Stop the loading state whether success or fail
-        }
-      } else {
-        Alert.alert('Error', 'No user is logged in');
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribe(); // Unsubscribe from the auth state listener
-  }, []); // Empty dependency array means 'Effect' runs once when the component mounts
 
   return (
     <View style={[globalStyles.screen, { flex: 1 }]}>

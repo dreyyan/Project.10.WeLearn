@@ -15,6 +15,7 @@ import * as AuthSession from 'expo-auth-session';
 // FIRESTORE DATABASE
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../configurations/firebaseConfig";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -24,6 +25,8 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const storage = getStorage(); // Initialize storage
 
   // HANDLES
   const pressBackButton = () => {
@@ -59,6 +62,7 @@ export default function SignUp() {
         enrolledSubjects: [""],
         isEnrolled: false,
         completedInformation: false,
+        profileImage: "../../assets/images/profile-placeholder.jpg",
       });
 
     // Check if 'completedInformation' is false and redirect accordingly

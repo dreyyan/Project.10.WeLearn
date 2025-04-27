@@ -1736,17 +1736,28 @@ export const setupInformationStyles = StyleSheet.create({
         left: 237,
         zIndex: 1,
     },
-    cardImage: {
-        width: 80,
-        height: 80,
+    imageButton: {
+        width: 82,
+        height: 82,
 
         position: "absolute",
         top: 60,
         left: 230,
         zIndex: 1,
+    },
+    cardImage: {
+        width: 80,
+        height: 80,
 
         borderRadius: 4,
         borderTopRightRadius: 0
+    },
+    summaryImageSetup: {
+        width: 80,
+        position: "absolute",
+        top: -78,
+        left: 226,
+        zIndex: 1,
     },
     summaryImage: {
         width: 80,

@@ -6,16 +6,17 @@ import { router } from "expo-router";
 import { dashboardStyles, burgerMenuStyles, globalStyles, setupInformationStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../../configurations/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from "@expo/vector-icons";
 import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
-
+import * as ImagePicker from 'expo-image-picker';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 
@@ -35,6 +36,8 @@ export default function dashboard() {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+    const storage = getStorage(); // Initialize storage
 
     const [name, setName] = useState("N/A");
     const [type, setType] = useState("Student");
@@ -82,7 +85,88 @@ export default function dashboard() {
         await Clipboard.setStringAsync(studentInfo.ID);
       }
     };
+
+    const uploadProfileImage = async (uri: string) => {
+      try {
+        const response = await fetch(uri);
+        const blob = await response.blob();
     
+        const user = auth.currentUser;
+        if (!user) {
+          alert('No user logged in');
+          return;
+        }
+    
+        const storageRef = ref(storage, `profileImages/${user.uid}.jpg`);
+        await uploadBytes(storageRef, blob);
+    
+        const downloadURL = await getDownloadURL(storageRef);
+    
+        // Update Firestore profile document
+        const docRef = doc(db, 'users', user.uid, 'profile', 'studentProfile');
+        await updateDoc(docRef, {
+          profileImage: downloadURL,
+        });
+    
+        setProfileImage(downloadURL); // Set in state so it updates UI immediately
+        alert('Profile image updated successfully!');
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Failed to upload image');
+      }
+    };
+
+  // Function to edit profile picture
+  const editProfilePicture = () => {
+    Alert.alert('Choose an option', 'Select a picture', [
+      { text: 'Take Photo', onPress: takePhoto },
+      { text: 'Choose from Gallery', onPress: selectImage },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
+  };
+
+  const selectImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  
+    if (permissionResult.granted === false) {
+      alert("Permission to access gallery is required!");
+      return;
+    }
+  
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,  // enables cropping
+      aspect: [1, 1],       // square crop
+      quality: 1,
+      base64: true,
+    });
+  
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const takePhoto = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+  
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera is required!");
+      return;
+    }
+  
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,  // enables cropping
+      aspect: [1, 1],       // square crop
+      quality: 1,
+      base64: true,
+    });
+  
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+  
   // Fetch user data from Firestore
   useEffect(() => {
     // Setup listener for Firebase Authentication
@@ -160,11 +244,20 @@ export default function dashboard() {
           source={require("../../assets/images/card-banner.png")}
           style={setupInformationStyles.summaryBanner}
           />
+
+          {/* STUDENT PROFILE PICTURE */}
+          <TouchableOpacity
+          onPress={editProfilePicture}
+          style={setupInformationStyles.imageButton}
+          >
           <Image
-          source={require("../../assets/images/profile-placeholder.jpg")}
+          source={profileImage ? { uri: profileImage } : require("../../assets/images/profile-placeholder.jpg")}
           style={setupInformationStyles.cardImage}
           resizeMode="cover"
           />
+          </TouchableOpacity>
+
+          {/* CARD INFORMATION */}
           <Text style={setupInformationStyles.summaryNameLabel}>NAME</Text>
           <Text style={setupInformationStyles.summaryName}>{studentInfo?.name}</Text>
           <Text style={setupInformationStyles.summaryGenderLabel}>GENDER</Text>
