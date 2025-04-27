@@ -23,7 +23,7 @@ export default function RootLayout() {
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
-        headerShown: false
+        headerShown: false,
       }}
     >
       <Tabs.Screen

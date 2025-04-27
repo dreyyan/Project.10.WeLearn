@@ -13,8 +13,6 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { Feather } from "@expo/vector-icons";
-import { Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from 'expo-image-picker';
 // COMPONENTS
@@ -251,7 +249,7 @@ export default function dashboard() {
           style={setupInformationStyles.imageButton}
           >
           <Image
-          source={profileImage ? { uri: profileImage } : require("../../assets/images/profile-placeholder.jpg")}
+          source={profileImage ? { uri: profileImage } : require("../../assets/images/id-placeholder.png")}
           style={setupInformationStyles.cardImage}
           resizeMode="cover"
           />

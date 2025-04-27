@@ -16,6 +16,7 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
     // STATE
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
     const [loading, setLoading] = useState(true); // Loading state while fetching data
+    const [profileImage, setProfileImage] = useState<string | null>(null);
     
     // TypeScript type, specify structure and type of data for 'StudentInfo'
     type StudentInfo = {
@@ -61,32 +62,32 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
 
     // Navigation Functions
     const goToDashboard = () => {
-      router.replace('/(screens)/Dashboard');
+      router.push('/Dashboard');
       setIsVisible(false);
     };
     
     const goToEnrollmentForm = () => {
-      router.replace('/(screens)/EnrollmentForm');
+      router.push('/EnrollmentForm');
       setIsVisible(false);
     };
     
     const goToDepartments = () => {
-      router.replace('/(screens)/Departments');
+      router.push('/Departments');
       setIsVisible(false);
     };
     
     const goToCourseOverview = () => {
-      router.replace('/(screens)/CourseOverview');
+      router.push('/CourseOverview');
       setIsVisible(false);
     };
     
     const goToPrivacyAndSupport = () => {
-      router.replace('/(screens)/PrivacyAndSupport');
+      router.push('/PrivacyAndSupport');
       setIsVisible(false);
     };
     
     const goToLogOut = () => {
-      router.replace('/');
+      router.push('/');
       setIsVisible(false);
     };    
 
@@ -104,9 +105,9 @@ const BurgerMenu = ({ isVisible, setIsVisible }: { isVisible: boolean; setIsVisi
                     {/* PROFILE INFO */}
                     <View style={burgerMenuStyles.profile}>
                     <Image
-                        source={require("../assets/images/profile-placeholder.jpg")}
-                        style={burgerMenuStyles.studentPicture}
-                        resizeMode="cover"
+                    source={profileImage ? { uri: profileImage } : require("../assets/images/id-placeholder.png")}
+                    style={burgerMenuStyles.studentPicture}
+                    resizeMode="cover"
                     />
                     <Text style={burgerMenuStyles.studentName}>{studentInfo?.name}</Text>
                     <Text style={burgerMenuStyles.studentCourse}>{studentInfo?.course}</Text>

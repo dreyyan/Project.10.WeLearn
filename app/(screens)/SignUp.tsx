@@ -19,6 +19,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { Audio } from 'expo-av';
 
 export default function SignUp() {
   // STATES
@@ -27,6 +28,32 @@ export default function SignUp() {
   const [name, setName] = useState('');
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const storage = getStorage(); // Initialize storage
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+
+  // Preload SFX
+  useEffect(() => {
+    async function loadSound() {
+      const { sound } = await Audio.Sound.createAsync(
+        require('../../assets/SFX/sfx-button-press.wav')
+      );
+      setSound(sound);
+    }
+
+    loadSound();
+
+    // cleanup on unmount
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, []);
+
+  async function playSound() {
+    if (sound) {
+      await sound.replayAsync();
+    }
+  }
 
   // HANDLES
   const pressBackButton = () => {
@@ -34,6 +61,7 @@ export default function SignUp() {
   }
 
   const pressSignUpButton = async () => {
+    playSound();
     try {
       // Ensure the user is signed out before attempting to sign up again
       await signOut(auth);
