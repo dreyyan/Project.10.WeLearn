@@ -14,6 +14,7 @@ import { FirebaseError } from "firebase/app";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { Audio } from 'expo-av';
 // CONTEXT
 import UserProvider from '../../context/UserContext';
 
@@ -22,9 +23,36 @@ export default function Login() {
   const [email, setEmail] = useState("ADT07299270@gmail.com");
   const [password, setPassword] = useState("123456");
   const [isLoading, setIsLoading] = useState(true);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
+  // Preload SFX
+  useEffect(() => {
+    async function loadSound() {
+      const { sound } = await Audio.Sound.createAsync(
+        require('../../assets/SFX/sfx-button-press.wav')
+      );
+      setSound(sound);
+    }
+
+    loadSound();
+
+    // cleanup on unmount
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, []);
+
+  async function playSound() {
+    if (sound) {
+      await sound.replayAsync();
+    }
+  }
+  
   // HANDLES
   const pressLoginButton = async () => {
+    playSound();
     try {
       // Log in the user with provided email and password
       // Returns 'userCredential' object if successful
@@ -84,44 +112,44 @@ export default function Login() {
     }
   };
 
-    // LISTEN: Stay on latest screen
-    useEffect(() => {
-      // Setup listener for Firebase Authentication
-      // Triggers everytime the user's login state changes
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        setIsLoading(false); // Stop loading once Firebase returns a result
+  // LISTEN: Stay on latest screen
+  useEffect(() => {
+    // Setup listener for Firebase Authentication
+    // Triggers everytime the user's login state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoading(false); // Stop loading once Firebase returns a result
 
-        // If user is logged in, check their profile and decide where to send it
-        if (user) {
-          // Check user profile and redirect accordingly
-          // Create a promise to fetch the Firestore document at the specified path
-          const userProfileDoc = getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
-          // Get the actual document result
-          userProfileDoc.then((userProfile) => {
-            if (userProfile.exists()) {
-              // If document exists, extract actual data
-              const userProfileData = userProfile.data();
-              if (userProfileData.completedInformation === false) {
-              // If user has incomplete profile, redirect to setup information
-                router.replace('/SetupInformation');
-              } else {
-                // If user has complete profile, redirect to dashboard
-                router.replace('/');
-              }
-            } else {
-              // If document doesn't exist, redirect to setup information
+      // If user is logged in, check their profile and decide where to send it
+      if (user) {
+        // Check user profile and redirect accordingly
+        // Create a promise to fetch the Firestore document at the specified path
+        const userProfileDoc = getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+        // Get the actual document result
+        userProfileDoc.then((userProfile) => {
+          if (userProfile.exists()) {
+            // If document exists, extract actual data
+            const userProfileData = userProfile.data();
+            if (userProfileData.completedInformation === false) {
+            // If user has incomplete profile, redirect to setup information
               router.replace('/SetupInformation');
+            } else {
+              // If user has complete profile, redirect to dashboard
+              router.replace('/');
             }
-          });
-        } else {
-          // If no user, stop loading and stay on login screen
-          setIsLoading(false);
-        }
-      });
-  
-      return unsubscribe; // Cleanup on unmount, stops listening for auth changes to prevent memory leaks
-    }, []);
-  
+          } else {
+            // If document doesn't exist, redirect to setup information
+            router.replace('/SetupInformation');
+          }
+        });
+      } else {
+        // If no user, stop loading and stay on login screen
+        setIsLoading(false);
+      }
+    });
+
+    return unsubscribe; // Cleanup on unmount, stops listening for auth changes to prevent memory leaks
+  }, []);
+
   return (
     <UserProvider>
         <View style={globalStyles.screen}>
