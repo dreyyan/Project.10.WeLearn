@@ -1,5 +1,5 @@
 // REACT NATIVE
-import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback, BackHandler } from "react-native";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES
@@ -114,7 +114,20 @@ export default function dashboard() {
     return () => unsubscribe(); // Unsubscribe from the auth state listener
   }, []); // Empty dependency array means 'Effect' runs once when the component mounts
 
+  useEffect(() => {
+    const backAction = () => {
+      // Return true to block the back button
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+  
   return (
     <View style={dashboardStyles.screen}>
       {/* HEADER */}
@@ -156,8 +169,9 @@ export default function dashboard() {
           <Text style={setupInformationStyles.summaryName}>{studentInfo?.name}</Text>
           <Text style={setupInformationStyles.summaryGenderLabel}>GENDER</Text>
           <Text style={setupInformationStyles.summaryGender}>{studentInfo?.gender}</Text>
-          <Text style={setupInformationStyles.summaryType}>{studentInfo?.type.toUpperCase()}</Text>
-          <Text style={setupInformationStyles.summaryID}>{studentInfo?.ID}</Text>
+          <Text style={setupInformationStyles.summaryTypeLabel}>TYPE</Text>
+          <Text style={setupInformationStyles.summaryType}>{studentInfo?.type}</Text>
+          <Text style={setupInformationStyles.summaryID}>[ {studentInfo?.ID} ]</Text>
           <Text style={setupInformationStyles.summaryDepartment}>{studentInfo?.department}</Text>
           <Text style={setupInformationStyles.summaryCourse}>{studentInfo?.course}</Text>
         </View>

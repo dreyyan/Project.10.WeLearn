@@ -96,14 +96,15 @@ export const privacyAndSupportStyles = StyleSheet.create({
         marginLeft: 6,
     },
     sectionText: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 16,
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 14,
 
         color: colors.secondary,
 
         alignSelf: "flex-start",
 
         marginLeft: 6,
+        marginBottom: 10
     },
 })
 
@@ -445,55 +446,81 @@ export const QRCodeStyles = StyleSheet.create({
     screen: {
         flex: 1,
         alignItems: 'center',
+        backgroundColor: colors.white,
+    },
+    QRCode: {
+        display: "flex",
+        justifyContent: "flex-start",
         backgroundColor: colors.primary,
+        alignItems: "center",
+
+        marginTop: 40,
+        paddingTop: 80,
+
+        borderTopWidth: 3,
+        borderLeftWidth: 3,
+        borderRightWidth: 3,
+        borderColor: colors.secondary,
+        borderRadius: 10,
+
+        width: 320,
+        height: 400,
+    },
+    QRCodeFrame: {
+        width: 258,
+        height: 258,
+        position: "absolute",
+
+        top: 168,
+        left: 68,
+        zIndex: 1000,
+    },
+    detailsContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colors.white,
+
+        width: 320,
+        borderBottomWidth: 3,
+        borderLeftWidth: 3,
+        borderRightWidth: 3,
+        borderColor: colors.secondary,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+
+        marginTop: -50,
+        paddingVertical: 10,
+        paddingBottom: 14
+    },
+    QRName: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 24,
+        width: "100%",
+        textAlign: "center",
+        color: colors.secondary
+    },
+    QRID: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 20,
+
+        color: colors.secondary
     },
     buttonContainer: {
         display: "flex",
         flexDirection: "row",
     },
-    nextButton: {
-        backgroundColor: colors.primary,
-
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        alignSelf: "center",
-
-        width: 200,
-        height: 56,
-
-        borderRadius: 30,
-
-        marginTop: 26,
-        marginBottom: 30,
-
-
-        // iOS Shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        // Android Shadow
-        elevation: 8
-    },
-    nextButtonLabel: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 28,
-
-        color: "white",
-    },
     backButton: {
-        backgroundColor: colors.white,
-
+        backgroundColor: colors.primary,
         alignSelf: "center",
 
         borderRadius: 40,
         borderWidth: 2,
-        borderColor: colors.secondary,
+        borderColor: colors.primary,
 
-        marginTop: 140,
+        marginTop: 80,
         paddingBottom: 6,
-        paddingHorizontal: 24,
+        paddingHorizontal: 20,
 
         // iOS Shadow
         shadowColor: colors.secondary,
@@ -505,66 +532,10 @@ export const QRCodeStyles = StyleSheet.create({
     },
     backButtonLabel: {
         fontFamily: 'Lklavika-Medium',
-        fontSize: 44,
+        fontSize: 34,
 
-        color: colors.secondary
+        color: colors.white
     },
-    QRCode: {
-        display: "flex",
-        justifyContent: "center",
-        backgroundColor: colors.white,
-        alignItems: "center",
-        marginTop: 80,
-
-        borderTopWidth: 4,
-        borderLeftWidth: 4,
-        borderRightWidth: 4,
-        borderRadius: 20,
-        borderColor: colors.secondary,
-
-        width: 340,
-        height: 340,
-    },
-    QRCodeFrame: {
-        width: 220,
-        height: 220,
-        position: "absolute",
-
-        top: 240,
-        left: 87,
-        zIndex: 1000,
-    },
-    QRName: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 24,
-        width: "100%",
-        textAlign: "center",
-        color: colors.secondary
-    },
-    QRID: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 16,
-
-        color: colors.secondary
-    },
-    detailsContainer: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: colors.white,
-
-        width: 340,
-        borderBottomWidth: 5,
-        borderLeftWidth: 4,
-        borderRightWidth: 4,
-        borderColor: colors.secondary,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-
-        marginTop: -50,
-        paddingHorizontal: 0,
-        paddingBottom: 14
-    }
 })
 
 export const editInformationStyles = StyleSheet.create({
@@ -573,7 +544,7 @@ export const editInformationStyles = StyleSheet.create({
         borderColor: colors.primary,
         borderWidth: 2,
 
-        width: 322,
+        width: 318,
         marginTop: 28,
     },
     dropdownContainer: {
@@ -582,7 +553,7 @@ export const editInformationStyles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 8,
 
-        width: 322,
+        width: 318,
         marginTop: 26,
         paddingHorizontal: 10,
         paddingVertical: 12,
@@ -646,11 +617,10 @@ export const editInformationStyles = StyleSheet.create({
         flexDirection: "column",
         backgroundColor: colors.accent,
 
-        width: 368,
+        width: 358,
 
         borderRadius: 20,
 
-        marginTop: 0,
         paddingLeft: 20,
         paddingTop: 4,
         // iOS Shadow
@@ -712,9 +682,8 @@ export const editInformationStyles = StyleSheet.create({
 
         borderRadius: 30,
 
-        marginTop: 26,
+        marginTop: 16,
         marginBottom: 30,
-
 
         // iOS Shadow
         shadowColor: '#000',
@@ -854,9 +823,8 @@ export const enrollmentFormStyles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         backgroundColor: colors.accent,
-
-
-        width: 368,
+        
+        width: 358,
 
         borderRadius: 20,
 
@@ -873,7 +841,7 @@ export const enrollmentFormStyles = StyleSheet.create({
     },
     sectionTitle: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 20,
+        fontSize: 18,
 
         color: colors.secondary,
 
@@ -938,7 +906,7 @@ export const enrollmentFormStyles = StyleSheet.create({
         alignItems: "flex-end",
     },
     checkbox: {
-        width: 110,
+        width: 104,
         height: 40,
     },
     checkboxText: {
@@ -968,11 +936,11 @@ export const enrollmentFormStyles = StyleSheet.create({
     },
     dropdownText: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 14,
+        fontSize: 16,
     },
     dropdownPlaceholder: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 14,
+        fontSize: 16,
 
         color: colors.gray,
 
@@ -980,11 +948,10 @@ export const enrollmentFormStyles = StyleSheet.create({
     },
     dropdownLabel: {
         fontFamily: 'Lklavika-Bold',
-        fontSize: 14,
+        fontSize: 16,
 
         color: colors.secondary,
 
-        marginTop: 2,
         marginLeft: 10,
         lineHeight: 22,
     },
@@ -1050,7 +1017,7 @@ export const enrollmentFormStyles = StyleSheet.create({
         color: "white"
     },
     bottomMargin: {
-        backgroundColor: colors.primary,
+        backgroundColor: colors.white,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
 
@@ -1098,7 +1065,7 @@ export const enrollmentFormStyles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 2,
         height: 170,
-        width: 330,
+        width: 320,
 
         marginTop: 20,
     },
@@ -1142,10 +1109,12 @@ export const enrollmentFormStyles = StyleSheet.create({
         display: "flex",
 
         marginRight: 20,
+        paddingTop: 10,
+        paddingBottom: 14
     },
     applicantCertificationLabel: {
         fontFamily: 'Lklavika-Medium',
-        fontSize: 14,
+        fontSize: 18,
 
         color: colors.secondary,
         textAlign: "justify"
@@ -1665,6 +1634,108 @@ export const setupInformationStyles = StyleSheet.create({
         top: 0,
         left: 0,
     },
+    summaryNameLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 12,
+        fontStyle: "italic",
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 58,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryName: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 18,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 68,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryGenderLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 12,
+        fontStyle: "italic",
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 94,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryGender: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 16,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 104,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryTypeLabel: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 12,
+        fontStyle: "italic",
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 130,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryType: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 16,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 140,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryDepartment: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 18,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 190,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryCourse: {
+        fontFamily: 'Lklavika-Medium',
+        fontSize: 16,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 206,
+        left: 14,
+        zIndex: 1,
+    },
+    summaryID: {
+        fontFamily: 'Lklavika-Bold',
+        fontSize: 12,
+
+        color: colors.secondary,
+
+        position: "absolute",
+        top: 142,
+        left: 237,
+        zIndex: 1,
+    },
     cardImage: {
         width: 80,
         height: 80,
@@ -1674,98 +1745,8 @@ export const setupInformationStyles = StyleSheet.create({
         left: 230,
         zIndex: 1,
 
-        borderWidth: 2,
-        borderColor: colors.secondary,
         borderRadius: 4,
         borderTopRightRadius: 0
-    },
-    summaryType: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 12,
-
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 150,
-        left: 246,
-        zIndex: 1,
-    },
-    summaryID: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 14,
-
-        color: colors.tertiary,
-
-        position: "absolute",
-        top: 138,
-        left: 238,
-        zIndex: 1,
-    },
-    summaryNameLabel: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 14,
-
-        color: colors.tertiary,
-
-        position: "absolute",
-        top: 58,
-        left: 14,
-        zIndex: 1,
-    },
-    summaryName: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 18,
-
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 72,
-        left: 14,
-        zIndex: 1,
-    },
-    summaryGenderLabel: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 14,
-
-        color: colors.tertiary,
-
-        position: "absolute",
-        top: 104,
-        left: 14,
-        zIndex: 1,
-    },
-    summaryGender: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 18,
-
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 118,
-        left: 14,
-        zIndex: 1,
-    },
-    summaryDepartment: {
-        fontFamily: 'Lklavika-Bold',
-        fontSize: 22,
-
-        color: colors.tertiary,
-
-        position: "absolute",
-        top: 180,
-        left: 14,
-        zIndex: 1,
-    },
-    summaryCourse: {
-        fontFamily: 'Lklavika-Medium',
-        fontSize: 18,
-
-        color: colors.secondary,
-
-        position: "absolute",
-        top: 200,
-        left: 14,
-        zIndex: 1,
     },
     summaryImage: {
         width: 80,
@@ -1886,7 +1867,7 @@ export const loginStyles = StyleSheet.create({
         alignSelf: "center",
 
         marginTop: "4%",
-        marginBottom: "0.5%"
+        marginBottom: "0.5%",
     },
 })
 
@@ -1947,8 +1928,8 @@ export const signUpStyles = StyleSheet.create({
         paddingHorizontal: 16,
 
         position: "absolute",
-        top: 260,
-        left: 12,
+        top: 296,
+        left: 10,
         zIndex: 1,
 
         // iOS Shadow
@@ -1978,7 +1959,7 @@ export const signUpStyles = StyleSheet.create({
 
         borderRadius: 30,
 
-        marginTop: 20,
+        marginTop: 0,
         paddingVertical: 12,
         paddingHorizontal: 20,
 
@@ -2039,7 +2020,7 @@ export const signUpStyles = StyleSheet.create({
 
         alignSelf: "center",
 
-        marginTop: 24
+        marginTop: 10
     },
     signUpWithButton: {
         backgroundColor: colors.accent,

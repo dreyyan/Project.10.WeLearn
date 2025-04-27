@@ -125,9 +125,9 @@ export default function QR() {
 
       {/* QR Code */}
       <Image
-        source={require("../../assets/images/frame-qr.png")}
-        style={QRCodeStyles.QRCodeFrame}
-        />
+      source={require("../../assets/images/frame-qr.png")}
+      style={QRCodeStyles.QRCodeFrame}
+      />
       <View style={QRCodeStyles.QRCode}>
         <QRCode value="2024M1207" size={200}/>
       </View>

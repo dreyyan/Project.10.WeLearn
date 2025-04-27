@@ -219,12 +219,12 @@ export default function EditInformation() {
       {/* SCREEN 1: EDIT INFORMATION */}
       <View style={editInformationStyles.formContainer}>
         {/* NAME */}
-        <View style={[editInformationStyles.inputContainer, { width: 320, height: 50 }]}>
+        <View style={[editInformationStyles.inputContainer, { width: 316, height: 50 }]}>
           <Text style={editInformationStyles.sectionLabel}>Full Name</Text>
           <TextInput
             placeholder="Juan de la Cruz"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={[editInformationStyles.inputField, { width: 320, height: 50 }]}
+            style={[editInformationStyles.inputField, { width: 316, height: 50 }]}
             value={name}
             onChangeText={setName}
           />
@@ -285,18 +285,18 @@ export default function EditInformation() {
         zIndex={999}
         />
         {/* ID */}
-        <View style={[editInformationStyles.inputContainer, { width: 320, height: 50 }]}>
+        <View style={[editInformationStyles.inputContainer, { width: 316, height: 50 }]}>
           <Text style={editInformationStyles.sectionLabel}>I.D.</Text>
           <TextInput
             placeholder="2024M0000"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
-            style={[editInformationStyles.inputField, { width: 320, height: 50 }]}
+            style={[editInformationStyles.inputField, { width: 316, height: 50 }]}
             value={ID}
             onChangeText={setID}
           />
         </View>
         {/* BOTTOM MARGIN */}
-        <View style={[editInformationStyles.bottomMargin, { height: 70 }]}/>
+        <View style={[editInformationStyles.bottomMargin, { height: 100 }]}/>
       </View>
 
       {/* NAVIGATION BUTTONS */}
