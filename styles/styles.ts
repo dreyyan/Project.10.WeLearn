@@ -1479,7 +1479,7 @@ export const setupInformationStyles = StyleSheet.create({
 
         position: "absolute",
         top: 600,
-        left: 60,
+        left: 70,
         zIndex: 1,
 
         // iOS Shadow
@@ -1510,7 +1510,7 @@ export const setupInformationStyles = StyleSheet.create({
 
         position: "absolute",
         top: 630,
-        left: 12,
+        left: 18,
         zIndex: 1,
 
         // iOS Shadow

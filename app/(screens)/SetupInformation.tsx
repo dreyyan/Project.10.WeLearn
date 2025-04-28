@@ -16,19 +16,15 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
+// CONTEXT
+import { useUser, User } from '../../context/UserContext';
+import { useAudio } from '../../context/AudioContext';
 
 export default function SetupInformation() {
   // STATES
   const [name, setName] = useState("N/A");
   const [type, setType] = useState("Student");
   const [ID, setID] = useState("");
-
-  const [isEnrolled, setIsEnrolled] = useState(false);
-  const [completedInformation, setCompletedInformation] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [loading, setLoading] = useState(true); // Loading state while fetching data
-
-  // DROPDOWN: Gender
   const [gender, setGender] = useState(null);
   const [genderOpen, setGenderOpen] = useState(false);
   const [genderItems, setGenderItems] = useState([
@@ -36,8 +32,6 @@ export default function SetupInformation() {
     { label: 'Female', value: 'Female' },
     { label: 'Prefer not to say', value: 'Prefer not to say' },
   ]);
-
-  // DROPDOWN: Department
   const [department, setDepartment] = useState(null);
   const [departmentOpen, setDepartmentOpen] = useState(false);
   const [departmentItems, setDepartmentItems] = useState([
@@ -53,8 +47,6 @@ export default function SetupInformation() {
     { label: 'COL', value: 'COL' },
     { label: 'ILS', value: 'ILS' },
   ]);
-
-  // DROPDOWN: Courses
   const [course, setCourse] = useState(null);
   const [courseOpen, setCourseOpen] = useState(false);
   const [courseItems, setCourseItems] = useState<{ label: string, value: string }[]>([]);
@@ -71,28 +63,11 @@ export default function SetupInformation() {
     COL: ["Juris Doctor(J.D.) Program"],
     ILS: ["Pre-Elementary", "Elementary", "Junior High School", "Senior High School"],
   };
+  const [currentStep, setCurrentStep] = useState(1);
 
-  // EFFECTS
-  // LISTEN: Fetch name from the Firestore database
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        // Get the document for the current user
-        const userDocRef = doc(db, "users", user.uid, "profile", "studentProfile"); // assuming "users" is the collection and user.uid is the document ID
-        const userDocSnap = await getDoc(userDocRef);
-  
-        if (userDocSnap.exists()) {
-          // Access the user's name and store it in the state
-          const userData = userDocSnap.data();
-          setName(userData.name); // Assuming name is a field in the document
-        } else {
-          console.log("No such document!");
-        }
-      }
-    };
-    fetchUserData();
-  }, []);
+  // CONTEXT
+  const { setUser } = useUser(); // Use user context
+  const { playButtonPressSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
 
   // LISTEN: Update course items based on selected department
   useEffect(() => {
@@ -104,11 +79,25 @@ export default function SetupInformation() {
     }
   }, [department]);
 
-  // HANDLES
-  const changeTypeSelection = (selectedType: string) => {
-    setType(selectedType);
-  }
+  // LISTEN: Reset screen when user is signed in/out
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) { // User is signed in
+          setCurrentStep(1);
+        } else { // User is signed out
+          playErrorSound();
+          setCurrentStep(1);
+          Alert.alert('Error', 'No user is logged in');
+        }
+      });
 
+      // Clean up on unmount
+      return () => unsubscribe();
+    }, [])
+  );
+
+  // HANDLES
   const isNextDisabled = () => {
     if (currentStep === 3) return !gender;
     if (currentStep === 4) return !(ID.length === 9);
@@ -116,6 +105,10 @@ export default function SetupInformation() {
     if (currentStep === 6) return !course;
     return false;
   };
+
+  const changeTypeSelection = (selectedType: string) => {
+    setType(selectedType);
+  }
 
   const updateStudentProfile = async () => {
     const user = auth.currentUser;
@@ -146,37 +139,18 @@ export default function SetupInformation() {
 
   const pressNextButton = () => {
     if (isNextDisabled()) return; // If button is disabled, do nothing
+    playButtonPressSound();
 
     // Dynamic navigation based on # of screens
     if (currentStep < 8) {
       setCurrentStep(currentStep + 1);
     } else {
+      playSuccessSound();
+      Alert.alert('Setup Complete', 'You have successfully set up your information!');
       updateStudentProfile(); // Update the profile when finishing the setup
       router.replace("/"); // Navigate to the next screen or complete the setup
     }
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      setCurrentStep(1);
-      setLoading(true);
-  
-      // Setup listener
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          // your logic to fetch Firestore data
-        } else {
-          Alert.alert('Error', 'No user is logged in');
-          setLoading(false);
-        }
-      });
-  
-      // Important: return the unsubscribe properly
-      return () => {
-        unsubscribe();
-      };
-    }, [])
-  );  
 
   return (
     <View style={globalStyles.screen}>
@@ -317,22 +291,22 @@ export default function SetupInformation() {
       <View style={setupInformationStyles.titleContainer}>
         <Text style={setupInformationStyles.title}>Select a {departmentItems.find(item => item.value === department)?.label || ""} course:</Text>
         <DropDownPicker
-      open={courseOpen}
-      value={course}
-      items={courseItems}
-      setOpen={setCourseOpen}
-      setValue={setCourse}
-      setItems={setCourseItems}
-      placeholder="Choose course"
-      disabled={!department}
-      style={setupInformationStyles.dropdownMenu}
-      dropDownContainerStyle={setupInformationStyles.dropdownContainer}
-      textStyle={setupInformationStyles.dropdownText}
-      labelStyle={setupInformationStyles.dropdownLabel}
-      placeholderStyle={setupInformationStyles.dropdownPlaceholder}
-      listItemLabelStyle={setupInformationStyles.dropdownLabel}
-      zIndex={999}
-      />
+        open={courseOpen}
+        value={course}
+        items={courseItems}
+        setOpen={setCourseOpen}
+        setValue={setCourse}
+        setItems={setCourseItems}
+        placeholder="Choose course"
+        disabled={!department}
+        style={setupInformationStyles.dropdownMenu}
+        dropDownContainerStyle={setupInformationStyles.dropdownContainer}
+        textStyle={setupInformationStyles.dropdownText}
+        labelStyle={setupInformationStyles.dropdownLabel}
+        placeholderStyle={setupInformationStyles.dropdownPlaceholder}
+        listItemLabelStyle={setupInformationStyles.dropdownLabel}
+        zIndex={999}
+        />
       </View>
       )}
 
@@ -341,23 +315,24 @@ export default function SetupInformation() {
       <View style={setupInformationStyles.titleContainer}>
         <Text style={setupInformationStyles.title}>Personal Information</Text>
         <View style={setupInformationStyles.cardContainer}>
-        <Image
-            source={require("../../assets/images/card-banner.png")}
-            style={setupInformationStyles.summaryBanner}
-            />
-            <Image
-            source={require("../../assets/images/id-placeholder.png")}
-            style={setupInformationStyles.summaryImageSetup}
-            resizeMode="contain"
-            />
-            <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>
-            <Text style={setupInformationStyles.summaryName}>{name}</Text>
-            <Text style={setupInformationStyles.summaryGenderLabel}>Gender:</Text>
-            <Text style={setupInformationStyles.summaryGender}>{gender}</Text>
-            <Text style={setupInformationStyles.summaryType}>{type} </Text>
-            <Text style={setupInformationStyles.summaryID}>{ID}</Text>
-            <Text style={setupInformationStyles.summaryDepartment}>{department}</Text>
-            <Text style={setupInformationStyles.summaryCourse}>{course}</Text>
+          <Image
+          source={require("../../assets/images/card-banner.png")}
+          style={setupInformationStyles.summaryBanner}
+          />
+          <Image
+          source={require("../../assets/images/id-placeholder.png")}
+          style={setupInformationStyles.summaryImageSetup}
+          resizeMode="contain"
+          />
+          <Text style={setupInformationStyles.summaryNameLabel}>Name:</Text>
+          <Text style={setupInformationStyles.summaryName}>{name}</Text>
+          <Text style={setupInformationStyles.summaryGenderLabel}>Gender:</Text>
+          <Text style={setupInformationStyles.summaryGender}>{gender}</Text>
+          <Text style={setupInformationStyles.summaryTypeLabel}>Type:</Text>
+          <Text style={setupInformationStyles.summaryType}>{type}</Text>
+          <Text style={setupInformationStyles.summaryID}>{ID}</Text>
+          <Text style={setupInformationStyles.summaryDepartment}>{department}</Text>
+          <Text style={setupInformationStyles.summaryCourse}>{course}</Text>
         </View>
       </View>
       )}
@@ -375,11 +350,11 @@ export default function SetupInformation() {
       )}
 
       {/* BACK BUTTON */}
-      {currentStep >= 3 && (
+      {currentStep >= 1 && (
       <TouchableOpacity
-        style={setupInformationStyles.backButton}
-        onPress={pressBackButton}
-      ><Text style={setupInformationStyles.backButtonLabel}>‹</Text>
+      style={setupInformationStyles.backButton}
+      onPress={pressBackButton}>
+      <Text style={setupInformationStyles.backButtonLabel}>‹</Text>
       </TouchableOpacity>
       )}
 

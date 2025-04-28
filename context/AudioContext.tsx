@@ -5,9 +5,11 @@ import { Audio } from 'expo-av';
 // Define the type for the context
 interface AudioContextType {
   playButtonPressSound: () => Promise<void>;
+  playButtonDisabledSound: () => Promise<void>;
+  playNavigateSound: () => Promise<void>;
+  playPopupSound: () => Promise<void>;
   playSuccessSound: () => Promise<void>;
   playErrorSound: () => Promise<void>;
-  playNavigateSound: () => Promise<void>;
 }
 
 // Define the props for AudioProvider, including children
@@ -20,7 +22,9 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {  // Added AudioProviderProps
   const [buttonPressSound, setButtonPressSound] = useState<Audio.Sound | null>(null);
+  const [buttonDisabledSound, setButtonDisabledSound] = useState<Audio.Sound | null>(null);
   const [navigateSound, setNavigateSound] = useState<Audio.Sound | null>(null);
+  const [popupSound, setPopupSound] = useState<Audio.Sound | null>(null);
   const [successSound, setSuccessSound] = useState<Audio.Sound | null>(null);
   const [errorSound, setErrorSound] = useState<Audio.Sound | null>(null);
 
@@ -30,9 +34,15 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {  
       const { sound: buttonPress } = await Audio.Sound.createAsync(
         require('../assets/SFX/sfx-button-press.wav')
       );
+      const { sound: buttonDisabled } = await Audio.Sound.createAsync(
+        require('../assets/SFX/sfx-button-disabled.wav')
+      );
       const { sound: navigate } = await Audio.Sound.createAsync(
         require('../assets/SFX/sfx-navigate.wav')
       );
+      const { sound: popup } = await Audio.Sound.createAsync(
+        require('../assets/SFX/sfx-popup.wav')
+      );      
       const { sound: success } = await Audio.Sound.createAsync(
         require('../assets/SFX/sfx-success.wav')
       );
@@ -40,7 +50,9 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {  
         require('../assets/SFX/sfx-error.wav')
       );
       setButtonPressSound(buttonPress);
+      setButtonDisabledSound(buttonDisabled);
       setNavigateSound(navigate);
+      setPopupSound(popup);
       setSuccessSound(success);
       setErrorSound(error);
     }
@@ -52,6 +64,18 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {  
     return () => {
       if (buttonPressSound) {
         buttonPressSound.unloadAsync();
+      }
+      if (buttonDisabledSound) {
+        buttonDisabledSound.unloadAsync();
+      }
+      if (navigateSound) {
+        navigateSound.unloadAsync();
+      }
+      if (popupSound) {
+        popupSound.unloadAsync();
+      }
+      if (successSound) {
+        successSound.unloadAsync();
       }
       if (errorSound) {
         errorSound.unloadAsync();
@@ -66,10 +90,24 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {  
     }
   };
 
+    // [SFX] BUTTON DISABLED
+    const playButtonDisabledSound = async () => {
+      if (buttonDisabledSound) {
+        await buttonDisabledSound.replayAsync();
+      }
+    };
+
   // [SFX] NAVIGATE
   const playNavigateSound = async () => {
     if (navigateSound) {
       await navigateSound.replayAsync();
+    }
+  };
+
+  // [SFX] POPUP
+  const playPopupSound = async () => {
+    if (popupSound) {
+      await popupSound.replayAsync();
     }
   };
 
@@ -88,7 +126,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {  
   };
 
   return (
-    <AudioContext.Provider value={{ playButtonPressSound, playNavigateSound, playSuccessSound, playErrorSound }}>
+    <AudioContext.Provider value={{ playButtonPressSound, playButtonDisabledSound, playNavigateSound, playPopupSound, playSuccessSound, playErrorSound }}>
       {children}
     </AudioContext.Provider>
   );

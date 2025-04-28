@@ -15,7 +15,6 @@ import * as AuthSession from 'expo-auth-session';
 // FIRESTORE DATABASE
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../configurations/firebaseConfig";
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -29,140 +28,12 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const storage = getStorage(); // Initialize storage
 
+  // CONTEXT
+  const { setUser } = useUser(); // Use user context
+  const { playButtonPressSound, playPopupSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
 
-  // HANDLES
-  const pressBackButton = () => {
-    router.replace('/'); // Redirect to login page
-  }
-
-  const pressSignUpButton = async () => {
-    const { setUser } = useUser();
-    playButtonPressSound();
-
-    try {
-      // Ensure the user is signed out before attempting to sign up again
-      await signOut(auth);
-
-      // Create the user's account using the provided email and password
-      // Returns 'userCredential' object if successful
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // Extracts actual user info from 'userCredential'
-      const user = userCredential.user;
-  
-      // Create top-level user document [ CREDENTIALS ]
-      await setDoc(doc(db, "users", user.uid), {
-        email: email,
-        uid: user.uid,
-        createdAt: new Date().toISOString()
-      });
-
-      // Create student profile subdocument [ INFORMATION ]
-      await setDoc(doc(db, "users", user.uid, "profile", "studentProfile"), {
-        name: name,
-        type: undefined,
-        gender: "",
-        ID: "",
-        department: "",
-        course: "",
-        enrolledSubjects: [""],
-        isEnrolled: false,
-        completedInformation: false,
-        profileImage: "../../assets/images/profile-placeholder.jpg",
-      });
-
-      // Set the user in the context
-      setUser({
-        uid: user.uid,
-        email: email,
-        type: undefined,
-        gender: "",
-        ID: "",
-        department: "",
-        course: "",
-      });
-
-      // Check if 'completedInformation' is false and redirect accordingly
-      const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
-
-      // Check if the document exists in the database
-      if (userProfileDoc.exists()) {
-        // If existing document, retrieve document data
-        const userProfileData = userProfileDoc.data();
-        // Check if the user's profile is incomplete
-        if (userProfileData.completedInformation === false) {
-          // If incomplete, redirect to setup information screen
-          Alert.alert("Setup Required", "Please complete your profile setup.", [
-            {
-              text: "Continue",
-              onPress: () => router.replace('/SetupInformation'),
-            },
-          ]);
-        } else {
-          // If profile is complete, redirect to the dashboard
-          Alert.alert("Success", "You have signed up!", [
-            { text: "Continue", onPress: () => router.replace('/') },
-          ]);
-        }
-      } else {
-        // ERROR: Non-existing profile document
-        Alert.alert("Error", "An error occurred while fetching your profile information.");
-      }
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        // Check for specific error codes and provide user-friendly messages
-        switch (error.code) {
-          case 'auth/invalid-email': // ERROR: Invalid email
-            Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
-            break;
-          case 'auth/email-already-in-use': // ERROR: Email already in use
-            Alert.alert("Email Already in Use", "This email address is already registered. Please log in or use a different email.");
-            break;
-          case 'auth/weak-password': // ERROR: Weak password
-            Alert.alert("Weak Password", "Your password must be at least 6 characters long. Please choose a stronger password.");
-            break;
-          default: // Error fallback for unknown Firebase errors
-            Alert.alert("Sign Up Error", "An unknown error occurred. Please try again later.");
-        }
-      } else { // Error fallback for unknown Firebase errors
-        Alert.alert("Sign Up Error", "An unexpected error occurred. Please try again later.");
-      }
-    }
-  };
-
-  const pressSignUpWithButton = async () => {
-    try {
-      // Trigger Google Sign-In prompt
-      const result = await promptAsync();
-      if (result?.type === 'success') {
-        // If the user successfully signs in with Google, extract ID token from the result
-        const { id_token } = result.params;
-
-        // Create Firebase credential using the Google ID token
-        const credential = GoogleAuthProvider.credential(id_token);
-
-        // Register the user using Firebase with the generated credential
-        await signInWithCredential(auth, credential);
-
-        // Display success message and redirect to the dashboard
-        Alert.alert("Success", "Signed up with Google!", [
-          { text: "Continue", onPress: () => router.replace("/") },
-        ]);
-      } else {
-        // ERROR: Cancelled Google Sign-In
-        Alert.alert("Google Sign-In Canceled");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert("Google Sign-In Error", error.message); // Display error message
-      } else { // Error fallback for unknown Google errors
-        Alert.alert("Google Sign-In Error", "An unknown error occurred.");
-      }
-    }
-  };
-
-  // Google Sign-in Setup via Google Auth Provider
+  // SETUP: Google Sign-in via Google Auth Provider
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId: '601466500645-48tht9945jgrcpg1epp7auqsegkqc8dh.apps.googleusercontent.com',
     redirectUri: AuthSession.makeRedirectUri()
@@ -190,6 +61,222 @@ export default function SignUp() {
         });
     }
   }, [response]); // 'Effect' depends on 'response' 
+
+  // HANDLES
+  const pressBackButton = () => {
+    router.replace('/'); // Redirect to login page
+  }
+
+  const pressSignUpButton = async () => {
+    playButtonPressSound();
+
+    try {
+      // Ensure the user is signed out before attempting to sign up again
+      await signOut(auth);
+
+      /* NAME VALIDATION */
+      // ERROR: Empty name
+      if (!name) {
+        playErrorSound();
+        Alert.alert("Name Required", "Please enter a valid name to continue.");
+        return;
+      }
+
+      // ERROR: Out-of-range name length
+      if (name.length < 2 || name.length > 50) {
+        playErrorSound();
+        Alert.alert("Invalid Name", "Name must be between 2 and 50 characters.");
+        return;
+      }
+
+      // ERROR: Invalid characters
+      const nameRegex = /^[A-Za-z\s-]+$/;
+      if (!nameRegex.test(name)) {
+        playErrorSound();
+        Alert.alert("Invalid Name", "Name must contain only letters, spaces, or hyphens.");
+        return;
+      }
+
+      /* EMAIL VALIDATION */
+      // ERROR: Empty email
+      if (!email) {
+        playErrorSound();
+        Alert.alert("Email Required", "Please enter a valid email to continue.");
+        return;
+      }
+
+      // ERROR: Invalid characters
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        playErrorSound();
+        Alert.alert("Invalid Email", "Please enter a valid email address in the format: example@domain.com");
+        return;
+      }
+
+      /* PASSWORD VALIDATION */
+      // ERROR: Empty password
+      if (!password) {
+        playErrorSound();
+        Alert.alert("Password Required", "Please enter a password to continue.");
+        return;
+      }
+      
+      // ERROR: Out-of-range password length
+      if (password.length < 8 || password.length > 20) {
+        playErrorSound();
+        Alert.alert("Invalid Password", "Password must be between 8 and 20 characters.");
+        return;
+      }
+
+      // ERROR: No uppercase letter
+      if (!/[A-Z]/.test(password)) {
+        playErrorSound();
+        Alert.alert("Invalid Password", "Password must contain at least one uppercase letter.");
+        return;
+      }
+
+      // ERROR: No lowercase letter
+      if (!/[a-z]/.test(password)) {
+        playErrorSound();
+        Alert.alert("Invalid Password", "Password must contain at least one lowercase letter.");
+        return;
+      }
+
+      // ERROR: No alphanumeric
+      if (!/[0-9]/.test(password)) {
+        playErrorSound();
+        Alert.alert("Invalid Password", "Password must contain at least one number.");
+        return;
+      }
+
+      // ERROR: No special character
+      if (!/[!@#$%^&*()_+[\]{}|;:,.<>?]/.test(password)) {
+        playErrorSound();
+        Alert.alert("Invalid Password", "Password must contain at least one special character.");
+        return;
+      }
+
+      // Create the user's account using the provided email and password
+      // Returns 'userCredential' object if successful
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Extracts actual user info from 'userCredential'
+      const user = userCredential.user;
+  
+      // Create top-level user document [ CREDENTIALS ]
+      await setDoc(doc(db, "users", user.uid), {
+        email: email,
+        uid: user.uid,
+        createdAt: new Date().toISOString()
+      });
+
+      // Create student profile subdocument [ INFORMATION ]
+      await setDoc(doc(db, "users", user.uid, "profile", "studentProfile"), {
+        name: name,
+        type: "student",
+        gender: "",
+        ID: "",
+        department: "",
+        course: "",
+        enrolledSubjects: [""],
+        isEnrolled: false,
+        completedInformation: false,
+        profileImage: "../../assets/images/profile-placeholder.jpg",
+      });
+
+      // Set the user in the context
+      setUser({
+        uid: user.uid,
+        email: email,
+        type: "student",
+        gender: "",
+        ID: "",
+        department: "",
+        course: "",
+      });
+
+      // Check if 'completedInformation' is false and redirect accordingly
+      const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+
+      // Check if the document exists in the database
+      if (userProfileDoc.exists()) {
+        // If existing document, retrieve document data
+        const userProfileData = userProfileDoc.data();
+        // Check if the user's profile is incomplete
+        if (userProfileData.completedInformation === false) {
+          playPopupSound();
+          // If incomplete, redirect to setup information screen
+          Alert.alert("Setup Required", "Please complete your profile setup.", [
+            {
+              text: "Continue",
+              onPress: () => router.replace('/SetupInformation'),
+            },
+          ]);
+        } else {
+          playSuccessSound();
+          // If profile is complete, redirect to the dashboard
+          Alert.alert("Success", "You have signed up!", [
+            { text: "Continue", onPress: () => router.replace('/') },
+          ]);
+        }
+      } else {
+        playErrorSound();
+        // ERROR: Non-existing profile document
+        Alert.alert("Error", "An error occurred while fetching your profile information.");
+      }
+    } catch (error) {
+      playErrorSound();
+      console.error(error); // Log the full error object to see what went wrong
+      if (error instanceof FirebaseError) {
+        // Check for specific error codes and provide user-friendly messages
+        switch (error.code) {
+          case 'auth/invalid-email': // ERROR: Invalid email
+            Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
+            break;
+          case 'auth/email-already-in-use': // ERROR: Email already in use
+            Alert.alert("Email Already in Use", "This email address is already registered. Please log in or use a different email.");
+            break;
+          default: // Error fallback for unknown Firebase errors
+            Alert.alert("Sign Up Error", "An unknown error occurred. Please try again later.");
+        }
+      } else { // Error fallback for unknown Firebase errors
+        Alert.alert("Sign Up Error", "An unexpected error occurred. Please try again later.");
+      }
+    }
+  };
+
+  const pressSignUpWithButton = async () => {
+    try {
+      // Trigger Google Sign-In prompt
+      const result = await promptAsync();
+      if (result?.type === 'success') {
+        // If the user successfully signs in with Google, extract ID token from the result
+        const { id_token } = result.params;
+
+        // Create Firebase credential using the Google ID token
+        const credential = GoogleAuthProvider.credential(id_token);
+
+        // Register the user using Firebase with the generated credential
+        await signInWithCredential(auth, credential);
+
+        playSuccessSound();
+        // Display success message and redirect to the dashboard
+        Alert.alert("Success", "Signed up with Google!", [
+          { text: "Continue", onPress: () => router.replace("/") },
+        ]);
+      } else {
+        playErrorSound();
+        // ERROR: Cancelled Google Sign-In
+        Alert.alert("Google Sign-In Canceled");
+      }
+    } catch (error) {
+      playErrorSound();
+      if (error instanceof Error) {
+        Alert.alert("Google Sign-In Error", error.message); // Display error message
+      } else { // Error fallback for unknown Google errors
+        Alert.alert("Google Sign-In Error", "An unknown error occurred.");
+      }
+    }
+  };
 
   return (
     <View style={globalStyles.screen}>

@@ -1,6 +1,9 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { View, ActivityIndicator } from "react-native";
+// CONTEXT
+import UserProvider from '../../context/UserContext';
+import { AudioProvider } from '../../context/AudioContext';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -19,81 +22,85 @@ export default function RootLayout() {
   }
 
   return (
-  <Stack
-    screenOptions={{
-      headerShown: false,
-      gestureEnabled: true,  // Allow swipe gestures (iOS swipe-back)
-    }}>
-    <Stack.Screen
-      name="index"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-    <Stack.Screen
-      name="SignUp"
-      options={{
-        headerShown: false,
-        animation: "slide_from_right",
-      }}
-    />
-    <Stack.Screen
-      name="SetupInformation"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-    <Stack.Screen
-      name="Dashboard"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-    <Stack.Screen
-      name="QR"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-    <Stack.Screen
-      name="EditInformation"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-    <Stack.Screen
-      name="EnrollmentForm"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-    <Stack.Screen
-      name="Departments"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-    <Stack.Screen
-      name="CourseOverview"
-      options={{
-        headerShown: false,
-        animation: "fade",  // Prevent animation on initial load
-      }}
-    />
-    <Stack.Screen
-      name="PrivacyAndSupport"
-      options={{
-        headerShown: false,
-        animation: "fade",
-      }}
-    />
-  </Stack>
+    <UserProvider>
+      <AudioProvider>
+        <Stack
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,  // Allow swipe gestures (iOS swipe-back)
+        }}>
+        <Stack.Screen
+          name="index"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          options={{
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
+        <Stack.Screen
+          name="SetupInformation"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="Dashboard"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="QR"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="EditInformation"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="EnrollmentForm"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="Departments"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="CourseOverview"
+          options={{
+            headerShown: false,
+            animation: "fade",  // Prevent animation on initial load
+          }}
+        />
+        <Stack.Screen
+          name="PrivacyAndSupport"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        </Stack>
+      </AudioProvider>
+    </UserProvider>
   );
 }

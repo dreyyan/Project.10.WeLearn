@@ -13,18 +13,17 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
 // CONTEXT
-import UserProvider, { useUser, User } from '../../context/UserContext';
-import { AudioProvider, useAudio } from '../../context/AudioContext';
+import { useUser, User } from '../../context/UserContext';
+import { useAudio } from '../../context/AudioContext';
 
 export default function Login() {
   const { setUser } = useUser(); // Use user context
-  const { playButtonPressSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
+  const { playButtonPressSound, playNavigateSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
 
   // STATES
-  const [email, setEmail] = useState("ADT07299270@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("adriandominic.tan@wvsu.edu.ph");
+  const [password, setPassword] = useState("Password#1");
 
   // HANDLES: Button
   const pressLoginButton = async () => {
@@ -52,7 +51,7 @@ export default function Login() {
   
         // Check if the user's profile is incomplete
         if (profileData?.completedInformation === false) {
-          playErrorSound();
+          playSuccessSound();
           // If incomplete, redirect to setup information screen
           Alert.alert("Setup Required", "Please complete your profile setup.", [
             {
@@ -137,61 +136,57 @@ export default function Login() {
   // }, []);
 
   return (
-    <UserProvider>
-      <AudioProvider>
-          <View style={globalStyles.screen}>
-          {/* HEADER */}
-          <Image
-          source={require("../../assets/images/banner-WeLearn.png")}
-          style={globalStyles.banner}
-          resizeMode="contain"/>
+    <View style={globalStyles.screen}>
+    {/* HEADER */}
+    <Image
+    source={require("../../assets/images/banner-WeLearn.png")}
+    style={globalStyles.banner}
+    resizeMode="contain"/>
 
-          {/* PERSONALIZATION: Status Bar */}
-          <StatusBar backgroundColor="#1773EA" style="light"/>
+    {/* PERSONALIZATION: Status Bar */}
+    <StatusBar backgroundColor="#1773EA" style="light"/>
 
-          {/* TITLE */}
-          <View style={loginStyles.titleContainer}>
-            <Text style={loginStyles.title}>Welcome to WeLearn!</Text>
-            <Text style={loginStyles.subtitle}>"Learn together, grow together."'</Text>
-          </View>
+    {/* TITLE */}
+    <View style={loginStyles.titleContainer}>
+    <Text style={loginStyles.title}>Welcome to WeLearn!</Text>
+    <Text style={loginStyles.subtitle}>"Learn together, grow together."'</Text>
+    </View>
 
-          {/* INPUT FORM */}
-          <View style={loginStyles.formContainer}>
-            {/* INPUT => USERNAME/EMAIL */}
-            <View style={loginStyles.inputContainer}>
-              <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon}/>
-              <TextInput
-                placeholder="Username or Email"
-                placeholderTextColor="rgba(0, 0, 0, 0.2)"
-                style={loginStyles.inputField}
-                value={email}
-                onChangeText={setEmail}/>
-            </View>
+    {/* INPUT FORM */}
+    <View style={loginStyles.formContainer}>
+    {/* INPUT => USERNAME/EMAIL */}
+    <View style={loginStyles.inputContainer}>
+        <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon}/>
+        <TextInput
+        placeholder="Username or Email"
+        placeholderTextColor="rgba(0, 0, 0, 0.2)"
+        style={loginStyles.inputField}
+        value={email}
+        onChangeText={setEmail}/>
+    </View>
 
-            {/* INPUT => PASSWORD */}
-            <View style={loginStyles.inputContainer}>
-              <Ionicons name="lock-closed-outline" size={20} color={colors.primary} style={globalStyles.icon} />
-              <TextInput
-                placeholder="Password"
-                placeholderTextColor="rgba(0, 0, 0, 0.2)"
-                style={loginStyles.inputField}
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}/>
-            </View>
+    {/* INPUT => PASSWORD */}
+    <View style={loginStyles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={20} color={colors.primary} style={globalStyles.icon} />
+        <TextInput
+        placeholder="Password"
+        placeholderTextColor="rgba(0, 0, 0, 0.2)"
+        style={loginStyles.inputField}
+        secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}/>
+    </View>
 
-            {/* LOGIN BUTTON */}
-            <TouchableOpacity
-            style={loginStyles.loginButton}
-            onPress={pressLoginButton}>
-            <Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
-            </TouchableOpacity>
+    {/* LOGIN BUTTON */}
+    <TouchableOpacity
+    style={loginStyles.loginButton}
+    onPress={pressLoginButton}>
+    <Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
+    </TouchableOpacity>
 
-            {/* LINK => CREATE ACCOUNT */}
-            <Link href="/SignUp" style={loginStyles.createAccountLink}>Create an account</Link>
-          </View>
-        </View>
-      </AudioProvider>
-    </UserProvider>
+    {/* LINK => CREATE ACCOUNT */}
+    <Link href="/SignUp" onPress={playNavigateSound} style={loginStyles.createAccountLink}>Create an account</Link>
+    </View>
+</View>
   );
 }
