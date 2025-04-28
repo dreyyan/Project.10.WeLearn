@@ -2,7 +2,9 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Define the type for the user
 interface User {
-  type?: 'student' | 'teacher';  // Example user type (you can adjust based on your actual data)
+  uid: string;
+  email: string,
+  type?: 'student' | 'teacher';
   gender?: string;
   ID?: string;
   department?: string;
@@ -32,8 +34,6 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   );
 };
 
-export default UserProvider;
-
 // Optional: Custom hook to use the UserContext
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
@@ -42,3 +42,6 @@ export const useUser = (): UserContextType => {
   }
   return context;
 };
+
+export default UserProvider;
+export type { User };

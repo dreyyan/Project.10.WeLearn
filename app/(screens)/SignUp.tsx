@@ -20,40 +20,17 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
+// CONTEXT
+import { useUser, User } from '../../context/UserContext';
+import { useAudio } from '../../context/AudioContext';
 
 export default function SignUp() {
   // STATES
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [profileImage, setProfileImage] = useState<string | null>(null);
   const storage = getStorage(); // Initialize storage
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
-  // Preload SFX
-  useEffect(() => {
-    async function loadSound() {
-      const { sound } = await Audio.Sound.createAsync(
-        require('../../assets/SFX/sfx-button-press.wav')
-      );
-      setSound(sound);
-    }
-
-    loadSound();
-
-    // cleanup on unmount
-    return () => {
-      if (sound) {
-        sound.unloadAsync();
-      }
-    };
-  }, []);
-
-  async function playSound() {
-    if (sound) {
-      await sound.replayAsync();
-    }
-  }
 
   // HANDLES
   const pressBackButton = () => {
@@ -61,7 +38,9 @@ export default function SignUp() {
   }
 
   const pressSignUpButton = async () => {
-    playSound();
+    const { setUser } = useUser();
+    playButtonPressSound();
+
     try {
       // Ensure the user is signed out before attempting to sign up again
       await signOut(auth);
@@ -82,7 +61,7 @@ export default function SignUp() {
       // Create student profile subdocument [ INFORMATION ]
       await setDoc(doc(db, "users", user.uid, "profile", "studentProfile"), {
         name: name,
-        type: "",
+        type: undefined,
         gender: "",
         ID: "",
         department: "",
@@ -93,49 +72,61 @@ export default function SignUp() {
         profileImage: "../../assets/images/profile-placeholder.jpg",
       });
 
-    // Check if 'completedInformation' is false and redirect accordingly
-    const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
-    // Check if the document exists in the database
-    if (userProfileDoc.exists()) {
-      // If existing document, retrieve document data
-      const userProfileData = userProfileDoc.data();
-      // Check if the user's profile is incomplete
-      if (userProfileData.completedInformation === false) {
-        // If incomplete, redirect to setup information screen
-        Alert.alert("Setup Required", "Please complete your profile setup.", [
-          {
-            text: "Continue",
-            onPress: () => router.replace('/SetupInformation'),
-          },
-        ]);
+      // Set the user in the context
+      setUser({
+        uid: user.uid,
+        email: email,
+        type: undefined,
+        gender: "",
+        ID: "",
+        department: "",
+        course: "",
+      });
+
+      // Check if 'completedInformation' is false and redirect accordingly
+      const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+
+      // Check if the document exists in the database
+      if (userProfileDoc.exists()) {
+        // If existing document, retrieve document data
+        const userProfileData = userProfileDoc.data();
+        // Check if the user's profile is incomplete
+        if (userProfileData.completedInformation === false) {
+          // If incomplete, redirect to setup information screen
+          Alert.alert("Setup Required", "Please complete your profile setup.", [
+            {
+              text: "Continue",
+              onPress: () => router.replace('/SetupInformation'),
+            },
+          ]);
+        } else {
+          // If profile is complete, redirect to the dashboard
+          Alert.alert("Success", "You have signed up!", [
+            { text: "Continue", onPress: () => router.replace('/') },
+          ]);
+        }
       } else {
-        // If profile is complete, redirect to the dashboard
-        Alert.alert("Success", "You have signed up!", [
-          { text: "Continue", onPress: () => router.replace('/') },
-        ]);
+        // ERROR: Non-existing profile document
+        Alert.alert("Error", "An error occurred while fetching your profile information.");
       }
-    } else {
-      // ERROR: Non-existing profile document
-      Alert.alert("Error", "An error occurred while fetching your profile information.");
-    }
-  } catch (error) {
-    if (error instanceof FirebaseError) {
-      // Check for specific error codes and provide user-friendly messages
-      switch (error.code) {
-        case 'auth/invalid-email': // ERROR: Invalid email
-          Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
-          break;
-        case 'auth/email-already-in-use': // ERROR: Email already in use
-          Alert.alert("Email Already in Use", "This email address is already registered. Please log in or use a different email.");
-          break;
-        case 'auth/weak-password': // ERROR: Weak password
-          Alert.alert("Weak Password", "Your password must be at least 6 characters long. Please choose a stronger password.");
-          break;
-        default: // Error fallback for unknown Firebase errors
-          Alert.alert("Sign Up Error", "An unknown error occurred. Please try again later.");
-      }
-    } else { // Error fallback for unknown Firebase errors
-      Alert.alert("Sign Up Error", "An unexpected error occurred. Please try again later.");
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        // Check for specific error codes and provide user-friendly messages
+        switch (error.code) {
+          case 'auth/invalid-email': // ERROR: Invalid email
+            Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
+            break;
+          case 'auth/email-already-in-use': // ERROR: Email already in use
+            Alert.alert("Email Already in Use", "This email address is already registered. Please log in or use a different email.");
+            break;
+          case 'auth/weak-password': // ERROR: Weak password
+            Alert.alert("Weak Password", "Your password must be at least 6 characters long. Please choose a stronger password.");
+            break;
+          default: // Error fallback for unknown Firebase errors
+            Alert.alert("Sign Up Error", "An unknown error occurred. Please try again later.");
+        }
+      } else { // Error fallback for unknown Firebase errors
+        Alert.alert("Sign Up Error", "An unexpected error occurred. Please try again later.");
       }
     }
   };

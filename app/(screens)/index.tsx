@@ -15,34 +15,44 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 // CONTEXT
-import UserProvider from '../../context/UserContext';
+import UserProvider, { useUser, User } from '../../context/UserContext';
+import { AudioProvider, useAudio } from '../../context/AudioContext';
 
 export default function Login() {
+  const { setUser } = useUser(); // Use user context
+  const { playButtonPressSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
+
   // STATES
   const [email, setEmail] = useState("ADT07299270@gmail.com");
   const [password, setPassword] = useState("123456");
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  
+
   // HANDLES: Button
   const pressLoginButton = async () => {
-    playSound();
+    playButtonPressSound();
+
     try {
       // Log in the user with provided email and password
       // Returns 'userCredential' object if successful
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
       // Extracts actual user info from 'userCredential'
       const user = userCredential.user;
   
       // Attempt to fetch the student profile from Firestore at the specified path
       const userProfileDoc = await getDoc(doc(db, "users", user.uid, "profile", "studentProfile"));
+
       // Check if the document exists in the database
       if (userProfileDoc.exists()) {
-        // If existing document, retrieve document data and log for debugging
-        const userProfileData = userProfileDoc.data();
-        console.log("Fetched Profile Data:", userProfileData); // Logging
+
+        // Get the actual data
+        const profileData = userProfileDoc.data();
+
+        // Set the user into the context
+        setUser(userProfileDoc.data() as User);
   
         // Check if the user's profile is incomplete
-        if (userProfileData.completedInformation === false) {
+        if (profileData?.completedInformation === false) {
+          playErrorSound();
           // If incomplete, redirect to setup information screen
           Alert.alert("Setup Required", "Please complete your profile setup.", [
             {
@@ -51,21 +61,25 @@ export default function Login() {
             },
           ]);
         } else {
+          playSuccessSound();
           // If profile is complete, redirect to the dashboard
           Alert.alert("Success", "You are logged in!", [
             { text: "Continue", onPress: () => router.push('/Dashboard') },
           ]);
         }
       } else {
+        playErrorSound();
         // ERROR: Non-existing profile document
         Alert.alert("New User", "Please complete your profile setup.");
       }
     } catch (error) {
+      playErrorSound();
       // If profile does not exist, log the error
       console.error("Login Error: ", error);
       if (error instanceof FirebaseError) {
         switch (error.code) {
           case 'auth/invalid-email': // ERROR: Invalid Email
+          playErrorSound();
             Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
             break;
           case 'auth/user-not-found': // ERROR: Non-existing User
@@ -83,31 +97,6 @@ export default function Login() {
       }
     }
   };
-
-  /* Sound Effects [SFX] */
-  // 1. Pre-load SFX
-  useEffect(() => {
-    async function loadSound() {
-      const { sound } = await Audio.Sound.createAsync(
-        require('../../assets/SFX/sfx-button-press.wav')
-      );
-      setSound(sound);
-    } loadSound();
-
-    // Cleanup function
-    return () => {
-      if (sound) {
-        sound.unloadAsync();
-      }
-    };
-  }, []);
-
-  // 2. Play sound when invoked
-  async function playSound() {
-    if (sound) {
-      await sound.replayAsync();
-    }
-  }
 
   // DEBUG: Stay on latest screen
   // useEffect(() => {
@@ -149,58 +138,60 @@ export default function Login() {
 
   return (
     <UserProvider>
-        <View style={globalStyles.screen}>
-        {/* HEADER */}
-        <Image
-        source={require("../../assets/images/banner-WeLearn.png")}
-        style={globalStyles.banner}
-        resizeMode="contain"/>
+      <AudioProvider>
+          <View style={globalStyles.screen}>
+          {/* HEADER */}
+          <Image
+          source={require("../../assets/images/banner-WeLearn.png")}
+          style={globalStyles.banner}
+          resizeMode="contain"/>
 
-        {/* PERSONALIZATION: Status Bar */}
-        <StatusBar backgroundColor="#1773EA" style="light"/>
+          {/* PERSONALIZATION: Status Bar */}
+          <StatusBar backgroundColor="#1773EA" style="light"/>
 
-        {/* TITLE */}
-        <View style={loginStyles.titleContainer}>
-          <Text style={loginStyles.title}>Welcome to WeLearn!</Text>
-          <Text style={loginStyles.subtitle}>"Learn together, grow together."'</Text>
-        </View>
-
-        {/* INPUT FORM */}
-        <View style={loginStyles.formContainer}>
-          {/* INPUT => USERNAME/EMAIL */}
-          <View style={loginStyles.inputContainer}>
-            <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon}/>
-            <TextInput
-              placeholder="Username or Email"
-              placeholderTextColor="rgba(0, 0, 0, 0.2)"
-              style={loginStyles.inputField}
-              value={email}
-              onChangeText={setEmail}/>
+          {/* TITLE */}
+          <View style={loginStyles.titleContainer}>
+            <Text style={loginStyles.title}>Welcome to WeLearn!</Text>
+            <Text style={loginStyles.subtitle}>"Learn together, grow together."'</Text>
           </View>
 
-          {/* INPUT => PASSWORD */}
-          <View style={loginStyles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color={colors.primary} style={globalStyles.icon} />
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor="rgba(0, 0, 0, 0.2)"
-              style={loginStyles.inputField}
-              secureTextEntry={true}
-              value={password}
-              onChangeText={setPassword}/>
+          {/* INPUT FORM */}
+          <View style={loginStyles.formContainer}>
+            {/* INPUT => USERNAME/EMAIL */}
+            <View style={loginStyles.inputContainer}>
+              <Ionicons name="person-outline" size={20} color={colors.primary} style={globalStyles.icon}/>
+              <TextInput
+                placeholder="Username or Email"
+                placeholderTextColor="rgba(0, 0, 0, 0.2)"
+                style={loginStyles.inputField}
+                value={email}
+                onChangeText={setEmail}/>
+            </View>
+
+            {/* INPUT => PASSWORD */}
+            <View style={loginStyles.inputContainer}>
+              <Ionicons name="lock-closed-outline" size={20} color={colors.primary} style={globalStyles.icon} />
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="rgba(0, 0, 0, 0.2)"
+                style={loginStyles.inputField}
+                secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}/>
+            </View>
+
+            {/* LOGIN BUTTON */}
+            <TouchableOpacity
+            style={loginStyles.loginButton}
+            onPress={pressLoginButton}>
+            <Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
+            </TouchableOpacity>
+
+            {/* LINK => CREATE ACCOUNT */}
+            <Link href="/SignUp" style={loginStyles.createAccountLink}>Create an account</Link>
           </View>
-
-          {/* LOGIN BUTTON */}
-          <TouchableOpacity
-          style={loginStyles.loginButton}
-          onPress={pressLoginButton}>
-          <Text style={loginStyles.loginButtonLabel}>LOGIN</Text>
-          </TouchableOpacity>
-
-          {/* LINK => CREATE ACCOUNT */}
-          <Link href="/SignUp" style={loginStyles.createAccountLink}>Create an account</Link>
         </View>
-      </View>
+      </AudioProvider>
     </UserProvider>
   );
 }

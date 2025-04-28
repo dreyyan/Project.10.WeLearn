@@ -261,10 +261,6 @@ export default function EnrollmentForm() {
         router.replace('/CourseOverview');
     }
 
-    const goToSettings = () => {
-        router.replace('/Settings');
-    }
-
     const goToPrivacyAndSupport = () => {
         router.replace('/PrivacyAndSupport');
     }
