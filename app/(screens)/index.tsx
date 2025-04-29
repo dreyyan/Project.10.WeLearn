@@ -16,11 +16,19 @@ import { Ionicons } from '@expo/vector-icons';
 // CONTEXT
 import { useUser, User } from '../../context/UserContext';
 import { useAudio } from '../../context/AudioContext';
+import * as Google from 'expo-auth-session/providers/google';
+import { makeRedirectUri } from 'expo-auth-session';
 
 export default function Login() {
   const { setUser } = useUser(); // Use user context
   const { playButtonPressSound, playNavigateSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
 
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: "601466500645-93snompr2ir3ibbgjht4v3ed7agddvbu.apps.googleusercontent.com", // Your Web Client ID
+    redirectUri: makeRedirectUri(),
+    scopes: ["profile", "email"],
+  });
+  
   // STATES
   const [email, setEmail] = useState("adriandominic.tan@wvsu.edu.ph");
   const [password, setPassword] = useState("Password#1");
@@ -74,11 +82,13 @@ export default function Login() {
     } catch (error) {
       playErrorSound();
       // If profile does not exist, log the error
-      console.error("Login Error: ", error);
+      // console.error("Login Error: ", error);
       if (error instanceof FirebaseError) {
         switch (error.code) {
+          case 'auth/invalid-credential': // ERROR: Invalid Credential
+            Alert.alert("Invalid Email", "Incorrect email or password. Please check and try again.");
+            break;
           case 'auth/invalid-email': // ERROR: Invalid Email
-          playErrorSound();
             Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
             break;
           case 'auth/user-not-found': // ERROR: Non-existing User

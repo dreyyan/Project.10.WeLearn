@@ -225,7 +225,7 @@ export default function SignUp() {
       }
     } catch (error) {
       playErrorSound();
-      console.error(error); // Log the full error object to see what went wrong
+      // console.error(error); // Log the full error object to see what went wrong
       if (error instanceof FirebaseError) {
         // Check for specific error codes and provide user-friendly messages
         switch (error.code) {

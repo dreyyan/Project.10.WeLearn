@@ -89,10 +89,6 @@ export default function PrivacyAndSupport() {
         router.replace('/CourseOverview');
     }
 
-    const goToSettings = () => {
-        router.replace('/Settings');
-    }
-
     const goToPrivacyAndSupport = () => {
         router.replace('/PrivacyAndSupport');
     }
@@ -128,7 +124,7 @@ export default function PrivacyAndSupport() {
             Alert.alert('Error', 'User profile data not found');
           }
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          // console.error('Error fetching user data:', error);
           Alert.alert('Error', 'An error occurred while fetching data');
         } finally {
           setLoading(false); // Stop the loading state whether success or fail

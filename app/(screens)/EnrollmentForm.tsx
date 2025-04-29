@@ -39,6 +39,7 @@ export default function EnrollmentForm() {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedFiles, setSelectedFiles] = useState<{ name: string; uri: string; type: string }[]>([]);
     const [certified, setCertified] = useState(false);
+    const [activeDropdown, setActiveDropdown] = useState<null | 'civilStatus' | 'religion' | 'disability' | 'annualGrossIncome' | 'studentType' | 'admissionStatus' | 'educationLevel' | 'yearLevel' | 'region'>(null);
 
     // PERSONAL INFORMATION
     const [name, setName] = useState("");
@@ -236,9 +237,9 @@ export default function EnrollmentForm() {
           });
   
           const data = await response.text();
-          console.log('Upload response:', data);
+          // console.log('Upload response:', data);
         } catch (error) {
-          console.error('Upload error:', error);
+          // console.error('Upload error:', error);
         }
       }
     };
@@ -316,7 +317,7 @@ export default function EnrollmentForm() {
                   Alert.alert('Error', 'User profile data not found');
                 }
               } catch (error) {
-                console.error('Error fetching user data:', error);
+                // console.error('Error fetching user data:', error);
                 Alert.alert('Error', 'An error occurred while fetching data');
               } finally {
                 setLoading(false); // Stop the loading state whether success or fail
@@ -422,7 +423,7 @@ export default function EnrollmentForm() {
         setSelectedFiles([]);
         setCertified(false);
       } catch (error) {
-        console.error("Error submitting form:", error);
+        // console.error("Error submitting form:", error);
         Alert.alert("Error", "Failed to submit form");
       }
     };
@@ -543,7 +544,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Civil Status</Text>
           <DropDownPicker
             placeholder="Select civil status..."
-            open={civilStatusOpen}
+            open={activeDropdown === 'civilStatus'}
+            onOpen={() => setActiveDropdown('civilStatus')}
+            onClose={() => setActiveDropdown(null)}
             value={civilStatus}
             items={civilStatusItems}
             setOpen={setCivilStatusOpen}
@@ -644,7 +647,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Religion</Text>
           <DropDownPicker
             placeholder="Select religion..."
-            open={religionOpen}
+            open={activeDropdown === 'religion'}
+            onOpen={() => setActiveDropdown('religion')}
+            onClose={() => setActiveDropdown(null)}
             value={religion}
             items={religionItems}
             setOpen={setReligionOpen}
@@ -664,7 +669,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Disability</Text>
           <DropDownPicker
             placeholder="Select disability..."
-            open={disabilityOpen}
+            open={activeDropdown === 'disability'}
+            onOpen={() => setActiveDropdown('disability')}
+            onClose={() => setActiveDropdown(null)}
             value={disability}
             items={disabilityItems}
             setOpen={setDisabilityOpen}
@@ -684,7 +691,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Annual Gross Income</Text>
           <DropDownPicker
             placeholder="Select annual gross income..."
-            open={annualGrossIncomeOpen}
+            open={activeDropdown === 'annualGrossIncome'}
+            onOpen={() => setActiveDropdown('annualGrossIncome')}
+            onClose={() => setActiveDropdown(null)}
             value={annualGrossIncome}
             items={annualGrossIncomeItems}
             setOpen={setAnnualGrossIncomeOpen}
@@ -790,7 +799,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Student Type</Text>
           <DropDownPicker
             placeholder="Select student type..."
-            open={studentTypeOpen}
+            open={activeDropdown === 'studentType'}
+            onOpen={() => setActiveDropdown('studentType')}
+            onClose={() => setActiveDropdown(null)}
             value={studentType}
             items={studentTypeItems}
             setOpen={setStudentTypeOpen}
@@ -810,7 +821,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Admission Status</Text>
           <DropDownPicker
             placeholder="Select status..."
-            open={admissionStatusOpen}
+            open={activeDropdown === 'admissionStatus'}
+            onOpen={() => setActiveDropdown('admissionStatus')}
+            onClose={() => setActiveDropdown(null)}
             value={admissionStatus}
             items={admissionStatusItems}
             setOpen={setAdmissionStatusOpen}
@@ -830,7 +843,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Education Level</Text>
           <DropDownPicker
             placeholder="Select education level..."
-            open={educationLevelOpen}
+            open={activeDropdown === 'educationLevel'}
+            onOpen={() => setActiveDropdown('educationLevel')}
+            onClose={() => setActiveDropdown(null)}
             value={educationLevel}
             items={educationLevelItems}
             setOpen={setEducationLevelOpen}
@@ -850,7 +865,9 @@ export default function EnrollmentForm() {
           <Text style={enrollmentFormStyles.sectionLabel}>Year Level</Text>
           <DropDownPicker
             placeholder="Select year..."
-            open={yearLevelOpen}
+            open={activeDropdown === 'yearLevel'}
+            onOpen={() => setActiveDropdown('yearLevel')}
+            onClose={() => setActiveDropdown(null)}
             value={yearLevel}
             items={yearLevelItems}
             setOpen={setYearLevelOpen}

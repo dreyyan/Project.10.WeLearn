@@ -17,6 +17,9 @@ import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from 'expo-image-picker';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
+// CONTEXT
+import { useUser, User } from '../../context/UserContext';
+import { useAudio } from '../../context/AudioContext';
 
 export default function dashboard() {
     // TypeScript type, specify structure and type of data for 'StudentInfo'
@@ -30,6 +33,9 @@ export default function dashboard() {
       isEnrolled: false;
     };
 
+    const { setUser } = useUser(); // Use user context
+    const { playButtonPressSound, playNavigateSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
+
     // STATES
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [loading, setLoading] = useState(true); // Loading state while fetching data
@@ -42,35 +48,22 @@ export default function dashboard() {
     const [ID, setID] = useState("");
 
     // HANDLES
-    const goToDashboard = () => {
-      router.replace('/Dashboard');
-    }
-
-    const goToEnrollmentForm = () => {
-      router.replace('/EnrollmentForm');
-    }
-
-    const goToCourseOverview = () => {
-        router.replace('/CourseOverview');
-    }
-
-    const goToPrivacyAndSupport = () => {
-        router.replace('/PrivacyAndSupport');
-    }
-
-    const goToLogOut = () => {
-        router.replace('/');
-    }
-
     const handleBurgerMenu = () => {
         setIsMenuVisible(true);
     };
 
+    const goToEnrollmentForm = () => {
+      playButtonPressSound();
+      router.replace('/EnrollmentForm');
+    }
+
     const goToQRCode = () => {
+      playButtonPressSound();
       router.replace('/QR');
     }
 
     const goToEditInformation = () => {
+      playButtonPressSound();
       router.replace('/EditInformation');
     }
 
@@ -105,7 +98,7 @@ export default function dashboard() {
         setProfileImage(downloadURL); // Set in state so it updates UI immediately
         alert('Profile image updated successfully!');
       } catch (error) {
-        console.error('Error uploading image:', error);
+        // console.error('Error uploading image:', error);
         alert('Failed to upload image');
       }
     };
@@ -178,7 +171,7 @@ export default function dashboard() {
             // Alert.alert('Error', 'User profile data not found');
           }
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          // console.error('Error fetching user data:', error);
           Alert.alert('Error', 'An error occurred while fetching data');
         } finally {
           setLoading(false); // Stop the loading state whether success or fail

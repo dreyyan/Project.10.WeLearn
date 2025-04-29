@@ -21,6 +21,10 @@ import { useUser, User } from '../../context/UserContext';
 import { useAudio } from '../../context/AudioContext';
 
 export default function SetupInformation() {
+  // CONTEXT
+  const { setUser } = useUser(); // Use user context
+  const { playButtonPressSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
+
   // STATES
   const [name, setName] = useState("N/A");
   const [type, setType] = useState("Student");
@@ -64,10 +68,6 @@ export default function SetupInformation() {
     ILS: ["Pre-Elementary", "Elementary", "Junior High School", "Senior High School"],
   };
   const [currentStep, setCurrentStep] = useState(1);
-
-  // CONTEXT
-  const { setUser } = useUser(); // Use user context
-  const { playButtonPressSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
 
   // LISTEN: Update course items based on selected department
   useEffect(() => {
@@ -126,9 +126,9 @@ export default function SetupInformation() {
           course: course,
           completedInformation: true
         });
-        console.log("Profile updated successfully");
+        // console.log("Profile updated successfully");
       } catch (error) {
-        console.error("Error updating profile: ", error);
+        // console.error("Error updating profile: ", error);
       }
     }
   };
@@ -181,12 +181,12 @@ export default function SetupInformation() {
         <Text style={setupInformationStyles.title}>Are you a student or teacher?</Text>
         <View style={setupInformationStyles.imageContainer}>
           <Image
-          source={require("../../assets/images/vector-1.png")}
+          source={require("../../assets/images/vector-2.png")}
           style={setupInformationStyles.vector}
           resizeMode="cover"
           />
           <Image
-          source={require("../../assets/images/vector-2.png")}
+          source={require("../../assets/images/vector-1.png")}
           style={setupInformationStyles.vector}
           resizeMode="cover"
           />

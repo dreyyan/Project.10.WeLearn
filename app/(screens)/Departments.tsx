@@ -128,7 +128,7 @@ export default function Departments() {
             Alert.alert('Error', 'User profile data not found');
           }
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          // console.error('Error fetching user data:', error);
           Alert.alert('Error', 'An error occurred while fetching data');
         } finally {
           setLoading(false); // Stop the loading state whether success or fail

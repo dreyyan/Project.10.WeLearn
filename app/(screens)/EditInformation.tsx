@@ -13,9 +13,11 @@ import { onAuthStateChanged } from "firebase/auth";
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { Audio } from 'expo-av';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
+// CONTEXT
+import { useUser, User } from '../../context/UserContext';
+import { useAudio } from '../../context/AudioContext';
 
 export default function EditInformation() {
     type StudentInfo = {
@@ -26,53 +28,15 @@ export default function EditInformation() {
         course: string;
     };
 
+    // CONTEXT
+    const { setUser } = useUser(); // Use user context
+    const { playButtonPressSound, playSuccessSound, playErrorSound } = useAudio(); // Use audio context
+
     // STATES
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [loading, setLoading] = useState(true); // Loading state while fetching data
     const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
-    const [currentStep, setCurrentStep] = useState(1);
-    const [successSound, setSuccessSound] = useState<Audio.Sound | null>(null);
-    const [errorSound, setErrorSound] = useState<Audio.Sound | null>(null);
-  
-    // Preload both SFX
-    useEffect(() => {
-      async function loadSounds() {
-        const { sound: success } = await Audio.Sound.createAsync(
-          require('../../assets/SFX/sfx-success.wav')
-        );
-        const { sound: error } = await Audio.Sound.createAsync(
-          require('../../assets/SFX/sfx-error.wav')
-        );
-        setSuccessSound(success);
-        setErrorSound(error);
-      }
-
-      loadSounds();
-
-      // Cleanup on unmount
-      return () => {
-        if (successSound) {
-          successSound.unloadAsync();
-        }
-        if (errorSound) {
-          errorSound.unloadAsync();
-        }
-      };
-    }, []);
-
-    // Function to play the success sound
-    const playSuccessSound = async () => {
-      if (successSound) {
-        await successSound.replayAsync();
-      }
-    };
-
-    // Function to play the error sound
-    const playErrorSound = async () => {
-      if (errorSound) {
-        await errorSound.replayAsync();
-      }
-    };
+    const [activeDropdown, setActiveDropdown] = useState<null | 'gender' | 'department' | 'course'>(null);
 
     const [name, setName] = useState("");
     const [ID, setID] = useState("");
@@ -169,7 +133,7 @@ export default function EditInformation() {
         router.replace("/Dashboard"); // Return to dashboard
       } catch (error) {
         playErrorSound();
-        console.error("Error updating profile:", error);
+        // console.error("Error updating profile:", error);
         Alert.alert("Error", "Failed to update profile");
       }
     };
@@ -197,7 +161,7 @@ export default function EditInformation() {
             Alert.alert('Error', 'User profile data not found');
           }
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          // console.error('Error fetching user data:', error);
           Alert.alert('Error', 'An error occurred while fetching data');
         } finally {
           setLoading(false); // Stop the loading state whether success or fail
@@ -253,7 +217,9 @@ export default function EditInformation() {
         {/* GENDER */}
         <Text style={[editInformationStyles.sectionLabel, {position: "absolute", top: 82, left: 24 }]}>Gender</Text>
         <DropDownPicker
-          open={genderOpen}
+          open={activeDropdown === 'gender'}
+          onOpen={() => setActiveDropdown('gender')}
+          onClose={() => setActiveDropdown(null)}
           value={gender}
           items={genderItems}
           setOpen={setGenderOpen}
@@ -271,7 +237,9 @@ export default function EditInformation() {
         {/* DEPARTMENT */}
         <Text style={[editInformationStyles.sectionLabel, {position: "absolute", top: 160, left: 24 }]}>Department</Text>
         <DropDownPicker
-        open={departmentOpen}
+        open={activeDropdown === 'department'}
+        onOpen={() => setActiveDropdown('department')}
+        onClose={() => setActiveDropdown(null)}
         value={department}
         items={departmentItems}
         setOpen={setDepartmentOpen}
@@ -289,7 +257,9 @@ export default function EditInformation() {
         {/* COURSE */}
         <Text style={[editInformationStyles.sectionLabel, {position: "absolute", top: 238, left: 24 }]}>Course</Text>
         <DropDownPicker
-        open={courseOpen}
+        open={activeDropdown === 'course'}
+        onOpen={() => setActiveDropdown('course')}
+        onClose={() => setActiveDropdown(null)}
         value={course}
         items={courseItems}
         setOpen={setCourseOpen}
