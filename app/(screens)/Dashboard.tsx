@@ -1,5 +1,5 @@
 // REACT NATIVE
-import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback, BackHandler } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Alert, Image, BackHandler } from "react-native";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES

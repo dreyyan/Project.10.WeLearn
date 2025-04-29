@@ -1,5 +1,5 @@
 // REACT NATIVE
-import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
+import { Text, View, Alert, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES
@@ -12,9 +12,6 @@ import { onAuthStateChanged } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import DropDownPicker from 'react-native-dropdown-picker';
-import QRCode from 'react-native-qrcode-svg';
-import Barcode from 'react-native-barcode-svg';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 

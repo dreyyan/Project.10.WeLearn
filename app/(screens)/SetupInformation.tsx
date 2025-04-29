@@ -7,7 +7,6 @@ import { globalStyles, setupInformationStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIREBASE AUTHENTICATION
 import { auth } from "../../configurations/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 // FIRESTORE
 import { db } from "../../configurations/firebaseConfig";

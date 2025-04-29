@@ -18,7 +18,6 @@ import { db } from "../../configurations/firebaseConfig";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
 // CONTEXT
 import { useUser, User } from '../../context/UserContext';
 import { useAudio } from '../../context/AudioContext';
@@ -321,8 +320,8 @@ export default function SignUp() {
         <Text style={signUpStyles.label}>Email</Text>
         <View style={signUpStyles.inputContainer}>
           <Ionicons name="mail-outline" size={20} color={colors.primary} style={globalStyles.icon} />
-          <TextInput
-            placeholder="example@email.com"
+          <TextInput  
+            placeholder="example@domain.com"
             placeholderTextColor="rgba(0, 0, 0, 0.2)"
             style={signUpStyles.inputField}
             value={email}

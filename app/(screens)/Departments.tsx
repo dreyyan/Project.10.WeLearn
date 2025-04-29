@@ -1,20 +1,18 @@
 // REACT NATIVE
-import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
+import { Text, View, TextInput, Alert, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES
 import { burgerMenuStyles, departmentsStyles, globalStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../../configurations/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
-import QRCode from 'react-native-qrcode-svg';
-import Barcode from 'react-native-barcode-svg';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 
@@ -87,10 +85,6 @@ export default function Departments() {
 
     const goToCourseOverview = () => {
         router.replace('/CourseOverview');
-    }
-
-    const goToSettings = () => {
-        router.replace('/Settings');
     }
 
     const goToPrivacyAndSupport = () => {
@@ -173,7 +167,7 @@ export default function Departments() {
         "The College of Dentistry is dedicated to training future dental professionals with the knowledge and skills necessary to provide high-quality dental care. The department emphasizes clinical practice, oral health research, and patient care.",
       dean: "Dr. Liza Assumpta M. Jover",
     },
-    COED: {
+    COE: {
       image: require("../../assets/images/COE.png"),
       about:
         "The College of Education provides programs that prepare students for careers in teaching, counseling, and other education-related fields. It focuses on building the knowledge and skills needed for shaping the future of students across various educational stages.",
@@ -197,13 +191,13 @@ export default function Departments() {
         "The College of Nursing trains students to become highly competent nurses who can provide care to individuals and communities. The department emphasizes clinical practice, patient advocacy, and healthcare delivery.",
       dean: "Dr. Madonna S. Palmes",
     },
-    PESCAR: {
+    COP: {
       image: require("../../assets/images/COP.png"),
       about:
         "The College of PESCAR offers education in physical education, sports, and recreation management. It aims to develop students' knowledge and skills for promoting physical fitness, leading athletic programs, and fostering well-being in communities.",
       dean: "Dr. Porferio J. Barlas Jr.",
     },
-    LAW: {
+    COL: {
       image: require("../../assets/images/COL.png"),
       about:
         "The College of Law offers a comprehensive legal education that prepares students to become competent and ethical legal professionals. It focuses on developing critical thinking, legal research skills, and a deep understanding of the law and its application.",

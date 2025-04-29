@@ -30,8 +30,8 @@ export default function Login() {
   });
   
   // STATES
-  const [email, setEmail] = useState("adriandominic.tan@wvsu.edu.ph");
-  const [password, setPassword] = useState("Password#1");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // HANDLES: Button
   const pressLoginButton = async () => {
@@ -86,7 +86,7 @@ export default function Login() {
       if (error instanceof FirebaseError) {
         switch (error.code) {
           case 'auth/invalid-credential': // ERROR: Invalid Credential
-            Alert.alert("Invalid Email", "Incorrect email or password. Please check and try again.");
+            Alert.alert("Invalid Credentials", "Incorrect email or password. Please check and try again.");
             break;
           case 'auth/invalid-email': // ERROR: Invalid Email
             Alert.alert("Invalid Email", "The email you entered is not valid. Please check and try again.");
@@ -195,7 +195,7 @@ export default function Login() {
     </TouchableOpacity>
 
     {/* LINK => CREATE ACCOUNT */}
-    <Link href="/SignUp" onPress={playNavigateSound} style={loginStyles.createAccountLink}>Create an account</Link>
+    <Link href="/SignUp" style={loginStyles.createAccountLink}>Create an account</Link>
     </View>
 </View>
   );

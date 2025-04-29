@@ -3,7 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-nat
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 // STYLES
-import { burgerMenuStyles, courseOverviewStyles, globalStyles, settingsStyles } from "../../styles/styles"
+import { burgerMenuStyles, courseOverviewStyles, globalStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -12,9 +12,6 @@ import { onAuthStateChanged } from "firebase/auth";
 // LIBRARY COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import DropDownPicker from 'react-native-dropdown-picker';
-import QRCode from 'react-native-qrcode-svg';
-import Barcode from 'react-native-barcode-svg';
 // COMPONENTS
 import BurgerMenu from "@/components/BurgerMenu";
 

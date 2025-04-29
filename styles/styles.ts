@@ -511,6 +511,27 @@ export const QRCodeStyles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
     },
+    scanQRButton: {
+        backgroundColor: colors.primary,
+
+        alignSelf: "center",
+
+        borderRadius: 8,
+
+        marginTop: 20,
+        marginBottom: 6,
+        paddingTop: 8,
+        paddingBottom: 10,
+        paddingHorizontal: 10,
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        // Android Shadow
+        elevation: 8
+    },
     backButton: {
         backgroundColor: colors.primary,
         alignSelf: "center",
@@ -519,7 +540,7 @@ export const QRCodeStyles = StyleSheet.create({
         borderWidth: 2,
         borderColor: colors.primary,
 
-        marginTop: 80,
+        marginTop: 36,
         paddingBottom: 6,
         paddingHorizontal: 20,
 

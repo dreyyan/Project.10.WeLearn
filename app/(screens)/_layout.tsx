@@ -27,7 +27,7 @@ export default function RootLayout() {
         <Stack
         screenOptions={{
           headerShown: false,
-          gestureEnabled: true,  // Allow swipe gestures (iOS swipe-back)
+          gestureEnabled: true, // Allow swipe gestures (iOS swipe-back)
         }}>
         <Stack.Screen
           name="index"
@@ -89,7 +89,7 @@ export default function RootLayout() {
           name="CourseOverview"
           options={{
             headerShown: false,
-            animation: "fade",  // Prevent animation on initial load
+            animation: "fade",
           }}
         />
         <Stack.Screen

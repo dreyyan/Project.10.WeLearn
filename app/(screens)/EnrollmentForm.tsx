@@ -1,9 +1,9 @@
 // REACT NATIVE
-import { Text, View, TextInput, TouchableOpacity, Alert, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { router, useFocusEffect } from "expo-router";
 // STYLES
-import { dashboardStyles, burgerMenuStyles, globalStyles, enrollmentFormStyles } from "../../styles/styles"
+import { burgerMenuStyles, globalStyles, enrollmentFormStyles } from "../../styles/styles"
 import { colors } from "@/styles/colors";
 // FIRESTORE DATABASE & FIREBASE AUTHENTICATION
 import { doc, getDoc, setDoc } from "firebase/firestore";
