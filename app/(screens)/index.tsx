@@ -1,6 +1,6 @@
 // REACT NATIVE
 import { Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, router } from "expo-router";
 // STYLES
 import { globalStyles, loginStyles } from "../../styles/styles"
